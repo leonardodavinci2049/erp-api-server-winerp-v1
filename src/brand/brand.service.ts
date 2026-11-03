@@ -46,10 +46,11 @@ export class BrandService {
 
   async taskBrandCreateV2(dataJsonDto: BrandCreateV2Dto) {
     try {
-      const queryString = BrandCreateV2Query(dataJsonDto);
+      const { queryString, queryParams } = BrandCreateV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultRecordCreateType;
 
       return processProcedureResultMutation(resultData, 'Brand create failed');
@@ -84,10 +85,11 @@ export class BrandService {
 
   async taskBrandFindAllV2(dataJsonDto: BrandFindAllV2Dto) {
     try {
-      const queryString = BrandFindAllV2Query(dataJsonDto);
+      const { queryString, queryParams } = BrandFindAllV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultBrandFindAllData;
 
       return processProcedureResultMultiQuery(
@@ -104,10 +106,12 @@ export class BrandService {
 
   async taskBrandFindManagerAllV2(dataJsonDto: BrandFindManagerAllV2Dto) {
     try {
-      const queryString = BrandFindManagerAllV2Query(dataJsonDto);
+      const { queryString, queryParams } =
+        BrandFindManagerAllV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultBrandFindManagerAllData;
 
       return processProcedureResultMultiQuery(
@@ -124,10 +128,11 @@ export class BrandService {
 
   async taskBrandFindIdV2(dataJsonDto: BrandFindIdV2Dto) {
     try {
-      const queryString = BrandFindIdV2Query(dataJsonDto);
+      const { queryString, queryParams } = BrandFindIdV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultBrandFindAllData;
 
       return processProcedureResultMultiQuery(
@@ -168,10 +173,11 @@ export class BrandService {
 
   async taskBrandUpdateV2(dataJsonDto: BrandUpdateV2Dto) {
     try {
-      const queryString = BrandUpdateV2Query(dataJsonDto);
+      const { queryString, queryParams } = BrandUpdateV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultRecordUpdateType;
 
       return processProcedureResultMutation(resultData, 'Brand update failed');
@@ -184,15 +190,14 @@ export class BrandService {
 
   async taskBrandDeleteV2(dataJsonDto: BrandDeleteV2Dto) {
     try {
-      const queryString = BrandDeleteV2Query(dataJsonDto);
+      const { queryString, queryParams } = BrandDeleteV2Query(dataJsonDto);
 
       const resultData = (await this.dbService.selectExecute(
         queryString,
+        queryParams,
       )) as unknown as SpResultRecordUpdateType;
 
       return processProcedureResultMutation(resultData, 'Brand delete failed');
-
-      
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;

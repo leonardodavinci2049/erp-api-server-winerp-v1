@@ -52,7 +52,7 @@ pnpm run test:cov         # vitest run --coverage
 - Analysis-only work, continuation of an existing feature, or an explicit user instruction to work on the current branch are exceptions to automatic branch creation.
 - If `develop` has uncommitted changes from previous work, do not stash, move, discard, or include them in a new feature. Ask the user to commit or otherwise resolve them before creating the branch.
 - Do not merge, finish, delete, or push branches without explicit user authorization.
-- The source of truth for project versioning is the `"version"` property in `package.json` (currently `"0.0.1"`). The patch value must be incremented on each release and assigned to the release name, e.g. `release/1.8.0`, `hotfix/1.8.1`.
+- The source of truth for project versioning is the `"version"` property in `package.json`. The patch value must be incremented on each release and assigned to the release name, e.g. `release/1.8.0`, `hotfix/1.8.1`.
 
 ## Before committing
 
@@ -75,7 +75,7 @@ HTTP request -> controller -> service -> query -> DatabaseService
 HTTP POST /api/<feature>/v2/<action>
   -> Controller (@UseGuards(AuthGuard), DTO validation)
   -> Service (orchestration, error handling, ResultModel)
-  -> Query (pure function that returns the `CALL sp_...(...)` string)
+  -> Query (pure function that returns `{ queryString, queryParams }` with `?` placeholders)
   -> DatabaseService (mysql2 pool)
 
 GET / (outside /api) -> ServeStaticModule -> pageroot/
@@ -89,7 +89,7 @@ GET / (outside /api) -> ServeStaticModule -> pageroot/
 ## Database & Stored Procedures
 
 - All access via `src/database/database.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
-- The v2 query layer builds `CALL sp_...(...)` strings by interpolating fields from **validated DTOs** — SP calls do not use `?` placeholders. DTO validation is the input gate: keep DTOs strict, never build these strings from unvalidated data, and do not introduce new raw-SQL patterns beyond SP calls.
+- All queries — raw SQL and `call sp_...(...)` — use `?` placeholders with a typed params array returned by the query function as `{ queryString, queryParams }`; never concatenate or interpolate DTO data into SQL strings. DTO validation is the first barrier; placeholders are the second. Coalesce optional DTO fields (`?? null`) so `undefined` never reaches mysql2.
 - Every tenant-bound operation must preserve `pe_system_client_id` and `pe_store_id`; never remove tenant filters.
 - Stored procedure definitions are **not maintained in this repo** — `stored-procedures/` is a local placeholder directory (currently empty). Before changing or exposing a procedure, verify its signature, parameter order, and result sets against the development database.
 - Row interfaces extend `RowDataPacket` (mysql2); keep `as unknown as ...` casts at the mysql2 boundary; multi-result-set SPs need explicit tuples.
