@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { processProcedureResultMutation } from '../core/process-result/process-procedure-result.mutation.js';
 import { processProcedureResultMultiQuery } from '../core/process-result/process-procedure-result.query.js';
 import { processSqlResultQuery } from '../core/process-result/process-sql-result.query.js';
-import { MESSAGES } from '../core/utils/constants/globalConstants.js';
+import { RESPONSE_CODES } from '../core/utils/constants/globalConstants.js';
+import { logServiceError } from '../core/utils/functions/log_service_error.js';
 import { ResultModel } from '../core/utils/result.model.js';
 import { DatabaseService } from '../database/database.service.js';
 import { BrandCreateV2Dto } from './dto/brand-create-v2.dto.js';
@@ -55,9 +56,13 @@ export class BrandService {
 
       return processProcedureResultMutation(resultData, 'Brand create failed');
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandCreateV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível criar a marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -77,9 +82,13 @@ export class BrandService {
         'Dados carregados com sucesso.',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandSearchAllV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível pesquisar as marcas.',
+        0,
+        [],
+      );
     }
   }
 
@@ -98,9 +107,13 @@ export class BrandService {
         'Brand find All not found',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandFindAllV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível consultar as marcas.',
+        0,
+        [],
+      );
     }
   }
 
@@ -120,9 +133,13 @@ export class BrandService {
         'Brand find manager All not found',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandFindManagerAllV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível consultar as marcas.',
+        0,
+        [],
+      );
     }
   }
 
@@ -141,9 +158,13 @@ export class BrandService {
         'Brand find All not found',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandFindIdV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível consultar a marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -165,9 +186,13 @@ export class BrandService {
         'Dados carregados com sucesso.',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandFindManagerIdV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível consultar a marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -182,9 +207,13 @@ export class BrandService {
 
       return processProcedureResultMutation(resultData, 'Brand update failed');
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdateV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar a marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -199,9 +228,13 @@ export class BrandService {
 
       return processProcedureResultMutation(resultData, 'Brand delete failed');
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandDeleteV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível excluir a marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -220,9 +253,13 @@ export class BrandService {
         'Brand field update failed',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdGeneralFieldV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar o campo da marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -241,9 +278,13 @@ export class BrandService {
         'Brand flag active update failed',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdInlFlagActiveV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar o campo da marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -261,9 +302,13 @@ export class BrandService {
         'Brand name update failed',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdInlNameV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar o campo da marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -281,9 +326,13 @@ export class BrandService {
         'Brand notes update failed',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdInlNotesV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar o campo da marca.',
+        0,
+        [],
+      );
     }
   }
 
@@ -301,9 +350,13 @@ export class BrandService {
         'Brand slug update failed',
       );
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : MESSAGES.UNKNOWN_ERROR;
-      return new ResultModel(100404, errorMessage, 0, []);
+      await logServiceError('brand', 'taskBrandUpdInlSlugV2', err);
+      return new ResultModel(
+        RESPONSE_CODES.NOT_FOUND,
+        'Não foi possível atualizar o campo da marca.',
+        0,
+        [],
+      );
     }
   }
 }
