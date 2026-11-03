@@ -2,34 +2,81 @@ import { resultQueryData } from './procedure.result.js';
 import type { ResultModel } from './result.model.js';
 
 interface SpDefaultFeedback {
-  sp_return_id?: string;
-  sp_message?: string;
-  sp_error_id?: number;
+  sp_return_id?: string | number | null;
+  sp_message?: string | null;
+  sp_error_id?: number | null;
+}
+
+export class InvalidProcedureQueryResultError extends Error {
+  constructor() {
+    super('Procedure returned an invalid query result.');
+    this.name = 'InvalidProcedureQueryResultError';
+  }
+}
+
+function getResultSets(resultData: unknown): unknown[] {
+  if (!Array.isArray(resultData) || !Array.isArray(resultData[0])) {
+    throw new InvalidProcedureQueryResultError();
+  }
+  return resultData;
+}
+
+function getResultSet(value: unknown): unknown[] {
+  if (value == null) return [];
+  if (!Array.isArray(value)) throw new InvalidProcedureQueryResultError();
+  return value;
+}
+
+function isFeedbackResultSet(resultSet: unknown[]): boolean {
+  const first = resultSet[0];
+  return (
+    typeof first === 'object' &&
+    first !== null &&
+    !Array.isArray(first) &&
+    'sp_error_id' in first
+  );
+}
+
+function getFeedback(value: unknown): SpDefaultFeedback[] {
+  return getResultSet(value).map((item: unknown) => {
+    if (typeof item !== 'object' || item === null || Array.isArray(item)) {
+      throw new InvalidProcedureQueryResultError();
+    }
+    const row = item as Record<string, unknown>;
+    if (
+      (row.sp_return_id != null &&
+        typeof row.sp_return_id !== 'string' &&
+        typeof row.sp_return_id !== 'number') ||
+      (row.sp_message != null && typeof row.sp_message !== 'string') ||
+      (row.sp_error_id != null &&
+        (typeof row.sp_error_id !== 'number' ||
+          !Number.isInteger(row.sp_error_id)))
+    ) {
+      throw new InvalidProcedureQueryResultError();
+    }
+    return row as SpDefaultFeedback;
+  });
 }
 
 export function processProcedureResultQuery<T extends { id: string }>(
-  resultData: unknown[] | [unknown[], unknown[]],
+  resultData: unknown,
   notFoundMessage: string,
 ): ResultModel {
-  const firstResultSet = resultData[0] as unknown[];
-  const secondResultSet = resultData[1] as unknown[];
+  const resultSets = getResultSets(resultData);
+  const firstResultSet = getResultSet(resultSets[0]);
 
   // Verifica se o primeiro array é na verdade o feedback (isso acontece quando não há registros e a procedure "pula" o SELECT)
-  const isFirstResultFeedback =
-    firstResultSet.length > 0 &&
-    typeof firstResultSet[0] === 'object' &&
-    firstResultSet[0] !== null &&
-    'sp_error_id' in firstResultSet[0];
+  const isFirstResultFeedback = isFeedbackResultSet(firstResultSet);
 
   let tblRecords: T[];
   let DefaultFeedback: SpDefaultFeedback[];
 
   if (isFirstResultFeedback) {
     tblRecords = [];
-    DefaultFeedback = firstResultSet as SpDefaultFeedback[];
+    DefaultFeedback = getFeedback(firstResultSet);
   } else {
     tblRecords = firstResultSet as T[];
-    DefaultFeedback = (secondResultSet as SpDefaultFeedback[]) || [];
+    DefaultFeedback = getFeedback(resultSets[1]);
   }
 
   const qtRecords: number = tblRecords.length;
@@ -55,33 +102,30 @@ export function processProcedureResultQuery<T extends { id: string }>(
 }
 
 export function processProcedureResultQueryWithoutId<T>(
-  resultData: unknown[] | [unknown[], unknown[]],
+  resultData: unknown,
   notFoundMessage: string,
 ): ResultModel {
-  const firstResultSet = resultData[0] as unknown[];
-  const secondResultSet = resultData[1] as unknown[];
+  const resultSets = getResultSets(resultData);
+  const firstResultSet = getResultSet(resultSets[0]);
 
-  const isFirstResultFeedback =
-    firstResultSet.length > 0 &&
-    typeof firstResultSet[0] === 'object' &&
-    firstResultSet[0] !== null &&
-    'sp_error_id' in firstResultSet[0];
+  const isFirstResultFeedback = isFeedbackResultSet(firstResultSet);
 
   let tblRecords: T[];
   let DefaultFeedback: SpDefaultFeedback[];
 
   if (isFirstResultFeedback) {
     tblRecords = [];
-    DefaultFeedback = firstResultSet as SpDefaultFeedback[];
+    DefaultFeedback = getFeedback(firstResultSet);
   } else {
     tblRecords = firstResultSet as T[];
-    DefaultFeedback = (secondResultSet as SpDefaultFeedback[]) || [];
+    DefaultFeedback = getFeedback(resultSets[1]);
   }
 
   const qtRecords: number = tblRecords.length;
 
   const errorId: number = DefaultFeedback[0]?.sp_error_id ?? 0;
-  const recordId: string = DefaultFeedback[0]?.sp_return_id || '0';
+  // Preserve numeric IDs returned by existing procedures at runtime.
+  const recordId = (DefaultFeedback[0]?.sp_return_id || '0') as string;
   let Feedback = DefaultFeedback[0]?.sp_message || '';
 
   if (qtRecords === 0 && errorId === 0) {
@@ -119,7 +163,7 @@ export function processProcedureResultQueryWithoutId<T>(
  * ```
  */
 export function processProcedureResultMultiQuery(
-  resultData: unknown[],
+  resultData: unknown,
   resultSetNames: string[],
   notFoundMessage: string,
 ): ResultModel {
@@ -129,30 +173,28 @@ export function processProcedureResultMultiQuery(
 
   // Verifica se o primeiro array é na verdade o feedback
   // (isso acontece quando não há registros e a procedure "pula" os SELECTs)
-  const firstResultSet = resultData[0] as unknown[];
-  const isFirstResultFeedback =
-    firstResultSet.length > 0 &&
-    typeof firstResultSet[0] === 'object' &&
-    firstResultSet[0] !== null &&
-    'sp_error_id' in firstResultSet[0];
+  const resultSets = getResultSets(resultData);
+  const firstResultSet = getResultSet(resultSets[0]);
+  const isFirstResultFeedback = isFeedbackResultSet(firstResultSet);
 
   if (isFirstResultFeedback) {
     for (const name of resultSetNames) {
       data[name] = [];
     }
-    DefaultFeedback = firstResultSet as SpDefaultFeedback[];
+    DefaultFeedback = getFeedback(firstResultSet);
   } else {
     for (let i = 0; i < resultSetNames.length; i++) {
-      const resultSet = (resultData[i] as unknown[]) || [];
+      const resultSet = getResultSet(resultSets[i]);
       data[resultSetNames[i]] = resultSet;
       totalRecords += resultSet.length;
     }
     const feedbackIndex = resultSetNames.length;
-    DefaultFeedback = (resultData[feedbackIndex] as SpDefaultFeedback[]) || [];
+    DefaultFeedback = getFeedback(resultSets[feedbackIndex]);
   }
 
   const errorId: number = DefaultFeedback[0]?.sp_error_id ?? 0;
-  const recordId: string = DefaultFeedback[0]?.sp_return_id || '0';
+  // Preserve numeric IDs returned by existing procedures at runtime.
+  const recordId = (DefaultFeedback[0]?.sp_return_id || '0') as string;
   let Feedback = DefaultFeedback[0]?.sp_message || '';
 
   if (totalRecords === 0 && errorId === 0) {
