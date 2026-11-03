@@ -1,5 +1,5 @@
-import { ResultModel } from '../result.model.js';
-import { MESSAGES, RESPONSE_CODES } from '../constants/globalConstants.js';
+import { ResultModel } from '../utils/result.model.js';
+import { MESSAGES, RESPONSE_CODES } from '../utils/constants/globalConstants.js';
 
 export function resultQueryData<T>(
   crudId: number,
