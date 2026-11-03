@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEbService Gestor - ComSuporte</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="main-container">
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="/images/logo_comsuporte.png" alt="Compuorte Logo" class="logo-image" />
+      </div>
+    </header>
+
+    <div class="content-container">
+      <div class="left-panel">
+        <div class="welcome-text">
+          <h1>WebService API<br />Suporte APP 01</h1>
+          <p>
+            API de Gerenciamento do WEBSERVICE da APP 01
+            Desenvolvida para centralizar e automatizar os principais processos administrativos, operacionais e de
+            suporte técnico da plataforma ComSuporte.
+          </p>
+        </div>
+        <div class="solutions-container">
+          <div>Quer conhecer nossas soluções? </div>
+          <div class="contact-info">
+            <img src="/images/cst-whatsapp.png" alt="Entre em contato pelo WhatsApp" width="15" height="15">
+            <a href="https://api.whatsapp.com/send?phone=5516992770660" target="_blank" rel="noopener" class="contact-link">(16) 99277-0660</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="login-form">
+          <h2>Acessar Documentação </h2>
+
+          <div id="error-message" class="error-message">
+            Login e senha incorretos, tente novamente.
+          </div>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label for="email">Email ou número de telefone </label>
+              <input type="email" id="email" name="email" required placeholder="Digite seu usuário de acesso" />
+            </div>
+
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input type="password" id="password" name="password" required placeholder="Digite sua senha"" />
+              </div>
+
+              <div class=" checkbox-group">
+              <input type="checkbox" id="remember-me" name="remember-me" />
+              <label for="remember-me">Lembrar-me</label>
+            </div>
+
+            <button type="submit" class="signin-button">Acessar</button>
+          </form>
+
+          <div class="forgot-password">
+            <a href="#">Esqueceu sua senha?</a>
+          </div>
+
+          <div class="terms">
+            Ao clicar em "Acessar", você concorda<br />
+            <a href="#">Termos de Serviço</a> | <a href="#">Política de Privacidade</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-content">
+        <p>© Copyright © 2007-<span id="current-year"></span> | ComSuporte Assistência em Informática Ltda | CNPJ
+          09.061.131/0001-53 - Todos os direitos Reservados. - Build 0.2.0</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="scripts.js"></script>
+  <script>
+    // Atualiza o ano dinamicamente
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>

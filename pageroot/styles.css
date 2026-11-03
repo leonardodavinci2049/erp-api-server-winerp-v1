@@ -1,0 +1,458 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("images/image-background02.jpg");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.site-header {
+  background-color: transparent;
+  padding: 15px 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  box-shadow: none;
+}
+
+.logo-container {
+  width: 50%;
+  max-width: 1200px;
+  padding: 0;
+  margin-left: 80px; /* Match with left-panel padding */
+}
+
+@media (min-width: 1200px) {
+  .logo-container {
+    width: 40%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 80px; /* Alinha com o padding do left-panel */
+  }
+}
+
+@media (min-width: 1600px) {
+  .logo-container {
+    width: 35%;
+    min-width: 550px; /* Mesmo valor do min-width do left-panel */
+    max-width: 600px;
+    padding-left: 80px; /* Mantém o mesmo padding do left-panel */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1920px) {
+  .logo-container {
+    max-width: 650px; /* Aumenta levemente para telas muito largas */
+    padding-left: 80px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-container {
+    width: 100%;
+    margin-left: 30px; /* Match with left-panel padding em telas menores */
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container {
+    margin-left: 20px; /* Match with left-panel padding em telas muito pequenas */
+  }
+}
+
+.logo-image {
+  max-height: 50px;
+}
+
+.content-container {
+  display: flex;
+  flex: 1;
+  height: 100vh;
+}
+
+.left-panel {
+  width: 50%;
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.welcome-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.welcome-text p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.right-panel {
+  width: 50%;
+  padding: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form {
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-form h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox-group input {
+  margin-right: 8px;
+}
+
+.signin-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.signin-button:hover {
+  background-color: #c0392b;
+}
+
+.forgot-password {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.forgot-password a {
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.terms {
+  margin-top: 30px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  text-align: center;
+}
+
+.terms a {
+  color: white;
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.solutions-container {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    height: auto; /* Permite que o conteúdo se expanda verticalmente */
+    min-height: 100vh; /* Mantém pelo menos a altura da viewport */
+    overflow-y: auto; /* Garante que o scroll funcione */
+  }
+
+  .content-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+    padding: 30px;
+    height: auto; /* Altura automática baseada no conteúdo */
+    min-height: unset; /* Remove altura mínima fixa */
+  }
+
+  .left-panel {
+    padding-bottom: 50px; /* Adiciona espaço abaixo da primeira coluna */
+  }
+
+  .right-panel {
+    padding-top: 0; /* Reduz o espaço acima da segunda coluna */
+  }
+
+  .site-header {
+    position: relative;
+  }
+
+  /* Garante que os painéis não se sobreponham */
+  .welcome-text,
+  .social-icons,
+  .login-form {
+    position: relative; /* Evita problemas de sobreposição */
+  }
+
+  .solutions-container {
+    margin-top: 30px;
+  }
+}
+
+/* Para telas muito pequenas (celulares) */
+@media (max-width: 480px) {
+  .left-panel,
+  .right-panel {
+    padding: 20px; /* Reduz ainda mais o padding */
+  }
+
+  .welcome-text h1 {
+    font-size: 2.5rem; /* Reduz o tamanho da fonte para telas menores */
+  }
+
+  .login-form h2 {
+    font-size: 1.8rem; /* Reduz o tamanho da fonte para telas menores */
+  }
+
+  .solutions-container {
+    margin-top: 40px;
+  }
+}
+
+/* Ajustes para telas grandes */
+@media (min-width: 1200px) {
+  .content-container {
+    justify-content: center;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 40%; /* Reduz a largura das colunas para evitar muito espaço entre elas */
+    max-width: 600px; /* Aumenta a largura máxima para evitar encolhimento */
+    min-width: 500px; /* Estabelece uma largura mínima */
+  }
+
+  .left-panel {
+    padding-right: 40px; /* Reduz o espaçamento à direita */
+  }
+
+  .right-panel {
+    padding-left: 40px; /* Reduz o espaçamento à esquerda */
+  }
+
+  .logo-container {
+    width: 40%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 80px; /* Alinha com o padding do left-panel */
+  }
+}
+
+/* Para telas ainda maiores */
+@media (min-width: 1600px) {
+  .left-panel,
+  .right-panel {
+    width: 35%; /* Reduz a largura em telas muito grandes, mas mantém um tamanho confortável */
+    min-width: 550px; /* Aumenta a largura mínima para telas maiores */
+  }
+
+  .content-container {
+    justify-content: center;
+    padding: 0 50px; /* Adiciona um padding lateral para centralizar melhor */
+  }
+
+  .logo-container {
+    width: 35%;
+    min-width: 550px; /* Mesmo valor do min-width do left-panel */
+    max-width: 600px;
+    padding-left: 80px; /* Mantém o mesmo padding do left-panel */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (min-width: 1920px) {
+  .content-container {
+    max-width: 1800px; /* Limita a largura máxima em telas muito grandes */
+    margin: 0 auto; /* Centraliza o conteúdo */
+    padding: 0 100px; /* Aumenta o padding lateral */
+  }
+
+  .logo-container {
+    max-width: 650px; /* Aumenta levemente para telas muito largas */
+    padding-left: 80px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Novo estilo para alinhar o conteúdo verticalmente */
+@media (min-width: 769px) {
+  .left-panel {
+    justify-content: center; /* Centraliza verticalmente em vez de usar space-between */
+  }
+
+  .welcome-text {
+    margin-bottom: 50px; /* Espaço entre o texto de boas-vindas e os ícones sociais */
+  }
+
+  /* Alinhar o texto "Welcome" com "Sign in" */
+  .welcome-text h1 {
+    margin-top: 8px; /* Ajuste fino para alinhar com o cabeçalho "Sign in" */
+  }
+}
+
+/* Estilos para o rodapé */
+.site-footer {
+  width: 100%;
+  padding: 15px 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.footer-content p {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+/* Ajustes para o rodapé em telas responsivas */
+@media (max-width: 768px) {
+  .site-footer {
+    position: relative;
+    margin-top: 30px;
+  }
+
+  .footer-content p {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-content p {
+    font-size: 0.6rem;
+  }
+}
+
+/* Estilo para o link de contato */
+.contact-info {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.contact-info img {
+  margin-right: 5px;
+}
+
+.contact-link {
+  color: white;
+  text-decoration: underline;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.contact-link:hover {
+  opacity: 1;
+}
