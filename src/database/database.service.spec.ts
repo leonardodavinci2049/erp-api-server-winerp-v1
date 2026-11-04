@@ -6,11 +6,13 @@ const mocks = vi.hoisted(() => {
   const release = vi.fn();
   const getConnection = vi.fn().mockResolvedValue({ release });
   const end = vi.fn().mockResolvedValue(undefined);
+  const pool = { getConnection, end };
   return {
     release,
     getConnection,
     end,
-    createPool: vi.fn(() => ({ getConnection, end })),
+    pool,
+    createPool: vi.fn(() => pool),
   };
 });
 
@@ -54,6 +56,11 @@ describe('DatabaseService', () => {
       }),
     );
     await vi.waitFor(() => expect(mocks.release).toHaveBeenCalledOnce());
+  });
+
+  it('expõe o pool para os serviços de operação', () => {
+    const service = module.get(DatabaseService);
+    expect(service.getPool()).toBe(mocks.pool);
   });
 
   it('encerra o pool quando o módulo é fechado', async () => {

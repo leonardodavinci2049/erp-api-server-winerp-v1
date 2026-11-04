@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '../database/database.module.js';
 import { DbOperationService } from './db.operation.service.js';
-import { DbOperationController } from './db.operation.controller.js';
 
 @Module({
-  controllers: [DbOperationController],
+  imports: [DatabaseModule],
   providers: [DbOperationService],
+  exports: [DbOperationService],
 })
 export class DbOperationModule {}
