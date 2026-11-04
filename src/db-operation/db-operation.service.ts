@@ -28,7 +28,7 @@ export class DbOperationService {
    * Runs an INSERT, UPDATE, or DELETE through mysql2's `query` API.
    * Use when the mutation needs `query` behavior; pass values separately in `params`.
    */
-  async ModifyQuery(
+  async mutationQuery(
     queryString: string,
     params?: QueryParams,
   ): Promise<ResultSetHeader> {
@@ -40,7 +40,7 @@ export class DbOperationService {
    * Runs a read statement through mysql2's prepared-statement `execute` API.
    * Use for parameterized reads; values in `params` are bound to the statement.
    */
-  async selectExecute<T extends RowDataPacket>(
+  async selectProcedure<T extends RowDataPacket>(
     queryString: string,
     params?: QueryParams,
   ): Promise<T[]> {
@@ -54,7 +54,7 @@ export class DbOperationService {
    * Runs an INSERT, UPDATE, or DELETE through mysql2's prepared-statement `execute` API.
    * Use for parameterized mutations; values in `params` are bound to the statement.
    */
-  async mutationExecute(
+  async mutationProcedure(
     queryString: string,
     params?: QueryParams,
   ): Promise<ResultSetHeader> {
@@ -69,7 +69,7 @@ export class DbOperationService {
    * Use when the procedure returns rows; `procedureName` must be a trusted internal
    * identifier because it is inserted into the SQL text, while `params` are bound.
    */
-  async selectProcedure<T extends RowDataPacket>(
+  async callProcedure<T extends RowDataPacket>(
     procedureName: string,
     params?: SqlParam[],
   ): Promise<T[][]> {

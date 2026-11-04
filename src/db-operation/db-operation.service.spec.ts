@@ -74,12 +74,12 @@ describe('DbOperationService', () => {
     expect(mocks.execute).not.toHaveBeenCalled();
   });
 
-  it('selectExecute retorna as linhas via pool.execute', async () => {
+  it('selectProcedure retorna as linhas via pool.execute', async () => {
     const rows = [{ id: 1 }] as unknown as RowDataPacket[];
     mocks.execute.mockResolvedValueOnce([rows, []]);
 
     await expect(
-      service.selectExecute('SELECT * FROM tbl WHERE id = ?', [1]),
+      service.selectProcedure('SELECT * FROM tbl WHERE id = ?', [1]),
     ).resolves.toEqual(rows);
     expect(mocks.execute).toHaveBeenCalledWith(
       'SELECT * FROM tbl WHERE id = ?',
@@ -88,12 +88,12 @@ describe('DbOperationService', () => {
     expect(mocks.query).not.toHaveBeenCalled();
   });
 
-  it('mutationExecute retorna o ResultSetHeader via pool.execute', async () => {
+  it('mutationProcedure retorna o ResultSetHeader via pool.execute', async () => {
     const header = { affectedRows: 1 } as unknown as ResultSetHeader;
     mocks.execute.mockResolvedValueOnce([header, []]);
 
     await expect(
-      service.mutationExecute('UPDATE tbl SET name = ? WHERE id = ?', [
+      service.mutationProcedure('UPDATE tbl SET name = ? WHERE id = ?', [
         'novo',
         1,
       ]),
@@ -104,12 +104,12 @@ describe('DbOperationService', () => {
     );
   });
 
-  it('ModifyQuery retorna o ResultSetHeader via pool.query', async () => {
+  it('mutationQuery retorna o ResultSetHeader via pool.query', async () => {
     const header = { affectedRows: 2 } as unknown as ResultSetHeader;
     mocks.query.mockResolvedValueOnce([header, []]);
 
     await expect(
-      service.ModifyQuery('UPDATE tbl SET name = ? WHERE id = ?', ['novo', 1]),
+      service.mutationQuery('UPDATE tbl SET name = ? WHERE id = ?', ['novo', 1]),
     ).resolves.toBe(header);
     expect(mocks.query).toHaveBeenCalledWith(
       'UPDATE tbl SET name = ? WHERE id = ?',
@@ -143,21 +143,21 @@ describe('DbOperationService', () => {
     expect(mocks.release).toHaveBeenCalledOnce();
   });
 
-  it('selectProcedure monta o CALL com placeholders', async () => {
+  it('callProcedure monta o CALL com placeholders', async () => {
     const resultSets = [[{ id: 1 }]] as unknown as RowDataPacket[][];
     mocks.execute.mockResolvedValueOnce([resultSets, []]);
 
     await expect(
-      service.selectProcedure('sp_teste', [1, 'a']),
+      service.callProcedure('sp_teste', [1, 'a']),
     ).resolves.toEqual(resultSets);
     expect(mocks.execute).toHaveBeenCalledWith('CALL sp_teste(?,?)', [1, 'a']);
   });
 
-  it('selectProcedure sem parâmetros não gera placeholders', async () => {
+  it('callProcedure sem parâmetros não gera placeholders', async () => {
     const resultSets = [[]] as unknown as RowDataPacket[][];
     mocks.execute.mockResolvedValueOnce([resultSets, []]);
 
-    await expect(service.selectProcedure('sp_teste')).resolves.toEqual(
+    await expect(service.callProcedure('sp_teste')).resolves.toEqual(
       resultSets,
     );
     expect(mocks.execute).toHaveBeenCalledWith('CALL sp_teste()', undefined);

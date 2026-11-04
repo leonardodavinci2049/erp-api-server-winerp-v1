@@ -49,7 +49,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandCreateV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordCreateType;
@@ -70,7 +70,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandFindSearchV2Query(dataJsonDto);
 
-      const resultData = await this.dbService.selectExecute<TblBrandFindSearch>(
+      const resultData = await this.dbService.selectProcedure<TblBrandFindSearch>(
         queryString,
         queryParams,
       );
@@ -96,7 +96,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandFindAllV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultBrandFindAllData;
@@ -122,7 +122,7 @@ export class BrandService {
       const { queryString, queryParams } =
         BrandFindManagerAllV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultBrandFindManagerAllData;
@@ -147,7 +147,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandFindIdV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultBrandFindAllData;
@@ -174,7 +174,7 @@ export class BrandService {
         BrandFindManagerIdV2Query(dataJsonDto);
 
       const resultData =
-        await this.dbService.selectExecute<TblBrandFindManagerId>(
+        await this.dbService.selectProcedure<TblBrandFindManagerId>(
           queryString,
           queryParams,
         );
@@ -200,7 +200,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandUpdateV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -221,7 +221,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandDeleteV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -243,7 +243,7 @@ export class BrandService {
       const { queryString, queryParams } =
         BrandUpdGeneralFieldQuery(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -268,7 +268,7 @@ export class BrandService {
       const { queryString, queryParams } =
         BrandUpdInlFlagActiveV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -292,7 +292,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandUpdInlNameV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -316,7 +316,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandUpdInlNotesV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
@@ -340,7 +340,7 @@ export class BrandService {
     try {
       const { queryString, queryParams } = BrandUpdInlSlugV2Query(dataJsonDto);
 
-      const resultData = (await this.dbService.selectExecute(
+      const resultData = (await this.dbService.selectProcedure(
         queryString,
         queryParams,
       )) as unknown as SpResultRecordUpdateType;
