@@ -15,4 +15,10 @@ describe('AppConfigService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should return the creation message', () => {
+    const result = service.create();
+
+    expect(result).toBe('This action adds a new appConfig');
+  });
 });
