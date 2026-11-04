@@ -14,7 +14,7 @@ Nested instruction files supplement/override this one — read the closest `AGEN
 - **NestJS Config v12** (`@nestjs/config`) for environment loading — `ConfigModule.forRoot({ isGlobal: true })` in `app.module.ts`.
 - **NestJS Serve Static v12** (`@nestjs/serve-static`) to serve the static page in `pageroot/` at the root; routes under `/api` are excluded.
 - **NestJS Throttler v6** (`@nestjs/throttler`) for request rate limiting — `ThrottlerModule` + `ThrottlerGuard` registered as `APP_GUARD` in `src/app.main/app.module.ts`.
-- **MySQL2** (`mysql2`) for DB access through the singleton pool in `DatabaseService`.
+- **MySQL2** (`mysql2`) for DB access through the singleton pool in `DbConnectionService`.
 - **Zod v4** (`zod`) for boot-time validation of environment variables.
 - **class-validator / class-transformer** for DTO validation on all business routes.
 - **oxlint** (`.oxlintrc.json`, run with `--type-aware`) for linting and **prettier** (`.prettierrc`) for formatting. There is no ESLint and no Biome in this project.
@@ -67,7 +67,7 @@ Variables are Zod-validated at boot in `src/core/config/envs.ts` (fails fast): `
 ### Directory and flow map
 
 ```text
-HTTP request -> controller -> service -> query -> DatabaseService
+HTTP request -> controller -> service -> query -> DbConnectionService
                                 |           |
                                 v           v
                          result helpers  MySQL/MariaDB
@@ -76,19 +76,19 @@ HTTP POST /api/<feature>/v2/<action>
   -> Controller (@UseGuards(AuthGuard), DTO validation)
   -> Service (orchestration, error handling, ResultModel)
   -> Query (pure function that returns `{ queryString, queryParams }` with `?` placeholders)
-  -> DatabaseService (mysql2 pool)
+  -> DbConnectionService (mysql2 pool)
 
 GET / (outside /api) -> ServeStaticModule -> pageroot/
 ```
 
-- Feature module layout: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`, `query/`, `types/`, plus `entities/` when adopted. Register new modules in the `imports` array of `src/app.main/app.module.ts`; import `DatabaseModule` where `DatabaseService` is used.
+- Feature module layout: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`, `query/`, `types/`, plus `entities/` when adopted. Register new modules in the `imports` array of `src/app.main/app.module.ts`; import `DbConnectionModule` where `DbConnectionService` is used.
 - Controllers hold HTTP/DTO concerns only — no SQL or business rules.
 - Imports are relative with explicit `.js` extensions (`nodenext`/ESM). No path aliases are configured — do not use absolute `src/...` imports.
 - Globals are split across two files: `src/main.ts` sets the global prefix `/api`, the `ValidationPipe` (`whitelist`/`forbidNonWhitelisted`/`transform`/implicit conversion), and CORS; `src/app.main/app.module.ts` registers `ConfigModule` (global), `ServeStaticModule` (`pageroot/`), and `ThrottlerModule` with `ThrottlerGuard` as `APP_GUARD`. Do not weaken auth, validation, or rate limiting without documented impact analysis.
 
 ## Database & Stored Procedures
 
-- All access via `src/db-connection/database.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
+- All access via `src/db-connection/db-connection.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
 - All queries — raw SQL and `call sp_...(...)` — use `?` placeholders with a typed params array returned by the query function as `{ queryString, queryParams }`; never concatenate or interpolate DTO data into SQL strings. DTO validation is the first barrier; placeholders are the second. Coalesce optional DTO fields (`?? null`) so `undefined` never reaches mysql2.
 - Every tenant-bound operation must preserve `pe_system_client_id` and `pe_store_id`; never remove tenant filters.
 - Stored procedure definitions are **not maintained in this repo** — `stored-procedures/` is a local placeholder directory (currently empty). Before changing or exposing a procedure, verify its signature, parameter order, and result sets against the development database.
