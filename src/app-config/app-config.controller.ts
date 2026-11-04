@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AppConfigService } from './app-config.service.js';
+import { getLocalTimestamp } from '../core/utils/functions/get_local_timestamp.js';
 
 @Controller('app-config')
 export class AppConfigController {
@@ -12,7 +13,7 @@ export class AppConfigController {
       status: 'online',
       version: '1.0.1',
       documentation: '/',
-      timestamp: new Date().toISOString(),
+      timestamp: getLocalTimestamp('America/Fortaleza'),
       endpoints: {
         base: '/api',
         auth: '/api/app-config',
