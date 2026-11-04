@@ -1,7 +1,7 @@
 import { BrandUpdGeneralFieldDto } from '../dto/brand-upd-general-field.dto.js';
 
 interface BrandUpdGeneralFieldQueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -40,23 +40,7 @@ export function BrandUpdGeneralFieldQuery(
   const olValueNumeric = dataJsonDto.pe_value_numeric ?? null;
   const olValueDate = dataJsonDto.pe_value_date ?? null;
 
-  const queryString = `call sp_brand_upd_general_field_v2(
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-      )`;
+  const procedureName = 'sp_brand_upd_general_field_v2';
 
   const queryParams: BrandUpdGeneralFieldQueryResult['queryParams'] = [
     olAppId,
@@ -76,5 +60,5 @@ export function BrandUpdGeneralFieldQuery(
     olValueDate,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

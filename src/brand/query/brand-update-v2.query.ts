@@ -2,7 +2,7 @@ import { generateSlug } from '../../core/utils/generators/generate-slug.js';
 import type { BrandUpdateV2Dto } from '../dto/brand-update-v2.dto.js';
 
 interface QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -37,8 +37,7 @@ export function BrandUpdateV2Query(dataJsonDto: BrandUpdateV2Dto): QueryResult {
   const olNotes = dataJsonDto.pe_notes;
   const olInactive = dataJsonDto.pe_inactive;
 
-  const queryString =
-    'call sp_brand_update_v2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const procedureName = 'sp_brand_update_v2';
   const queryParams: QueryResult['queryParams'] = [
     olAppId,
     olSystemClientId,
@@ -56,5 +55,5 @@ export function BrandUpdateV2Query(dataJsonDto: BrandUpdateV2Dto): QueryResult {
     olInactive,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

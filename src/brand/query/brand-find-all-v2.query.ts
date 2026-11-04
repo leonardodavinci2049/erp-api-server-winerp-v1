@@ -1,7 +1,7 @@
 import type { BrandFindAllV2Dto } from '../dto/brand-find-all-v2.dto.js';
 
 interface QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -32,8 +32,7 @@ export function BrandFindAllV2Query(
   const olInactive = dataJsonDto.pe_inactive;
   const olLimit = dataJsonDto.pe_limit;
 
-  const queryString =
-    'call sp_brand_find_all_v2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const procedureName = 'sp_brand_find_all_v2';
   const queryParams: QueryResult['queryParams'] = [
     olAppId,
     olSystemClientId,
@@ -48,5 +47,5 @@ export function BrandFindAllV2Query(
     olLimit,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

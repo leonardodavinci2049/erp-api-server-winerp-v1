@@ -1,7 +1,7 @@
 import { BrandUpdInlSlugV2Dto } from '../dto/brand-upd-inl-slug-v2.dto.js';
 
 interface BrandUpdInlSlugV2QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -30,18 +30,7 @@ export function BrandUpdInlSlugV2Query(
   const olBrandId = dataJsonDto.pe_brand_id;
   const olSlug = dataJsonDto.pe_slug ?? null;
 
-  const queryString = `call sp_brand_upd_inl_slug_v2(
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-      )`;
+  const procedureName = 'sp_brand_upd_inl_slug_v2';
 
   const queryParams: BrandUpdInlSlugV2QueryResult['queryParams'] = [
     olAppId,
@@ -56,5 +45,5 @@ export function BrandUpdInlSlugV2Query(
     olSlug,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

@@ -1,7 +1,7 @@
 import { BrandUpdInlFlagActiveV2Dto } from '../dto/brand-upd-inl-flag-active-v2.dto.js';
 
 interface BrandUpdInlFlagActiveV2QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -30,18 +30,7 @@ export function BrandUpdInlFlagActiveV2Query(
   const olBrandId = dataJsonDto.pe_brand_id;
   const olInactive = dataJsonDto.pe_inactive;
 
-  const queryString = `call sp_brand_upd_inl_flag_active_v2(
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-      )`;
+  const procedureName = 'sp_brand_upd_inl_flag_active_v2';
 
   const queryParams: BrandUpdInlFlagActiveV2QueryResult['queryParams'] = [
     olAppId,
@@ -56,5 +45,5 @@ export function BrandUpdInlFlagActiveV2Query(
     olInactive,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }
