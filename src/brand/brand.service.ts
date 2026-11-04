@@ -5,7 +5,7 @@ import { processSqlResultQuery } from '../core/process-result/process-sql-result
 import { RESPONSE_CODES } from '../core/utils/constants/globalConstants.js';
 import { logServiceError } from '../core/utils/functions/log_service_error.js';
 import { ResultModel } from '../core/utils/result.model.js';
-import { DbOperationService } from '../db.operation/db.operation.service.js';
+import { DbOperationService } from '../db-operation/db-operation.service.js';
 import { BrandCreateV2Dto } from './dto/brand-create-v2.dto.js';
 import { BrandDeleteV2Dto } from './dto/brand-delete-v2.dto.js';
 import { BrandFindAllV2Dto } from './dto/brand-find-all-v2.dto.js';
