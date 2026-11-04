@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { DatabaseService } from '../db-connection/database.service.js';
+import { DbConnectionService } from '../db-connection/db-connection.service.js';
 import { DbOperationService } from './db-operation.service.js';
 
-vi.mock('../db-connection/database.service.js', () => ({
-  DatabaseService: class DatabaseService {},
+vi.mock('../db-connection/db-connection.service.js', () => ({
+  DbConnectionService: class DbConnectionService {},
 }));
 
 const mocks = vi.hoisted(() => {
@@ -54,7 +54,7 @@ describe('DbOperationService', () => {
       providers: [
         DbOperationService,
         {
-          provide: DatabaseService,
+          provide: DbConnectionService,
           useValue: {
             getPool: mocks.getPool,
             getConnection: mocks.getConnection,

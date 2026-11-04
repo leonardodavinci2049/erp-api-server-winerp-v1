@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../db-connection/database.module.js';
+import { DbConnectionModule } from '../db-connection/db-connection.module.js';
 import { DbOperationService } from './db-operation.service.js';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DbConnectionModule],
   providers: [DbOperationService],
   exports: [DbOperationService],
 })
