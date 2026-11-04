@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../database/database.module.js';
+import { DatabaseModule } from '../db-connection/database.module.js';
 import { DbOperationService } from './db-operation.service.js';
 
 @Module({

@@ -88,7 +88,7 @@ GET / (outside /api) -> ServeStaticModule -> pageroot/
 
 ## Database & Stored Procedures
 
-- All access via `src/database/database.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
+- All access via `src/db-connection/database.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
 - All queries — raw SQL and `call sp_...(...)` — use `?` placeholders with a typed params array returned by the query function as `{ queryString, queryParams }`; never concatenate or interpolate DTO data into SQL strings. DTO validation is the first barrier; placeholders are the second. Coalesce optional DTO fields (`?? null`) so `undefined` never reaches mysql2.
 - Every tenant-bound operation must preserve `pe_system_client_id` and `pe_store_id`; never remove tenant filters.
 - Stored procedure definitions are **not maintained in this repo** — `stored-procedures/` is a local placeholder directory (currently empty). Before changing or exposing a procedure, verify its signature, parameter order, and result sets against the development database.

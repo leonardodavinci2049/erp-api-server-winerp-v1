@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { DatabaseService } from '../database/database.service.js';
+import { DatabaseService } from '../db-connection/database.service.js';
 import {
   ProcedureResult,
   QueryParams,
   SqlParam,
-} from '../database/database.types.js';
+} from '../db-connection/database.types.js';
 
 @Injectable()
 export class DbOperationService {
