@@ -4,7 +4,7 @@ import { processProcedureResultMultiQuery } from '../core/process-result/process
 import { processSqlResultQuery } from '../core/process-result/process-sql-result.query.js';
 import { RESPONSE_CODES } from '../core/utils/constants/globalConstants.js';
 import { logServiceError } from '../core/utils/functions/log_service_error.js';
-import { ResultModel } from '../core/utils/result.model.js';
+import { ResultModel } from '../core/process-result/result.model.js';
 import { DbOperationService } from '../db-operation/db-operation.service.js';
 import { BrandCreateV2Dto } from './dto/brand-create-v2.dto.js';
 import { BrandDeleteV2Dto } from './dto/brand-delete-v2.dto.js';
@@ -60,7 +60,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível criar a marca.',
-        0,
+        '',
         [],
       );
     }
@@ -86,7 +86,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível pesquisar as marcas.',
-        0,
+        '',
         [],
       );
     }
@@ -111,7 +111,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível consultar as marcas.',
-        0,
+        '',
         [],
       );
     }
@@ -137,7 +137,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível consultar as marcas.',
-        0,
+        '',
         [],
       );
     }
@@ -162,7 +162,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível consultar a marca.',
-        0,
+        '',
         [],
       );
     }
@@ -190,7 +190,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível consultar a marca.',
-        0,
+        '',
         [],
       );
     }
@@ -211,7 +211,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar a marca.',
-        0,
+        '',
         [],
       );
     }
@@ -232,7 +232,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível excluir a marca.',
-        0,
+        '',
         [],
       );
     }
@@ -257,7 +257,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar o campo da marca.',
-        0,
+        '',
         [],
       );
     }
@@ -282,7 +282,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar o campo da marca.',
-        0,
+        '',
         [],
       );
     }
@@ -306,7 +306,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar o campo da marca.',
-        0,
+        '',
         [],
       );
     }
@@ -330,7 +330,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar o campo da marca.',
-        0,
+        '',
         [],
       );
     }
@@ -354,7 +354,7 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível atualizar o campo da marca.',
-        0,
+        '',
         [],
       );
     }
