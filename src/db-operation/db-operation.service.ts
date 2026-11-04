@@ -44,7 +44,7 @@ export class DbOperationService {
   }
 
   // Insert/Update/Delete usando execute
-  async ModifyExecute(
+  async mutationExecute(
     queryString: string,
     params?: QueryParams,
   ): Promise<ResultSetHeader> {
@@ -85,11 +85,11 @@ export class DbOperationService {
  */
 
   // Para procedimentos armazenados que retornam múltiplos conjuntos de resultados
-  async chamarProcedimento<T extends RowDataPacket>(
-    nomeProcedimento: string,
+  async callProcedure<T extends RowDataPacket>(
+    procedureName: string,
     params?: SqlParam[],
   ): Promise<T[][]> {
-    const query = `CALL ${nomeProcedimento}(${params ? params.map(() => '?').join(',') : ''})`;
+    const query = `CALL ${procedureName}(${params ? params.map(() => '?').join(',') : ''})`;
     const [results] = await this.database
       .getPool()
       .execute<T[][]>(query, params);
