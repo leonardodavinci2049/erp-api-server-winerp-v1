@@ -1,7 +1,7 @@
 import type { BrandDeleteV2Dto } from '../dto/brand-delete-v2.dto.js';
 
 interface QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -26,7 +26,7 @@ export function BrandDeleteV2Query(dataJsonDto: BrandDeleteV2Dto): QueryResult {
   const olPersonId = dataJsonDto.pe_person_id ?? null;
   const olBrandId = dataJsonDto.pe_brand_id;
 
-  const queryString = 'call sp_brand_delete_v2(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const procedureName = 'sp_brand_delete_v2';
   const queryParams: QueryResult['queryParams'] = [
     olAppId,
     olSystemClientId,
@@ -39,5 +39,5 @@ export function BrandDeleteV2Query(dataJsonDto: BrandDeleteV2Dto): QueryResult {
     olBrandId,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

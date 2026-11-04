@@ -3,7 +3,7 @@ import { generateSlug } from '../../core/utils/generators/generate-slug.js';
 import type { BrandCreateV2Dto } from '../dto/brand-create-v2.dto.js';
 
 interface QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     string,
     number,
@@ -36,8 +36,7 @@ export function BrandCreateV2Query(dataJsonDto: BrandCreateV2Dto): QueryResult {
   const olImagePath = dataJsonDto.pe_image_path;
   const olNotes = dataJsonDto.pe_notes;
 
-  const queryString =
-    'call sp_brand_create_v2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const procedureName = 'sp_brand_create_v2';
   const queryParams: QueryResult['queryParams'] = [
     olUuid,
     olAppId,
@@ -54,5 +53,5 @@ export function BrandCreateV2Query(dataJsonDto: BrandCreateV2Dto): QueryResult {
     olNotes,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

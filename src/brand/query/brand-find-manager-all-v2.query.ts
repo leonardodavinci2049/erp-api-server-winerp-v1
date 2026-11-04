@@ -1,7 +1,7 @@
 import type { BrandFindManagerAllV2Dto } from '../dto/brand-find-manager-all-v2.dto.js';
 
 interface QueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -38,8 +38,7 @@ export function BrandFindManagerAllV2Query(
   const olColumnId = dataJsonDto.pe_column_id;
   const olOrderId = dataJsonDto.pe_order_id;
 
-  const queryString =
-    'call sp_brand_find_manager_all_v2(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  const procedureName = 'sp_brand_find_manager_all_v2';
   const queryParams: QueryResult['queryParams'] = [
     olAppId,
     olSystemClientId,
@@ -57,5 +56,5 @@ export function BrandFindManagerAllV2Query(
     olOrderId,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }
