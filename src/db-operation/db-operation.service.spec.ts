@@ -143,21 +143,21 @@ describe('DbOperationService', () => {
     expect(mocks.release).toHaveBeenCalledOnce();
   });
 
-  it('callProcedure monta o CALL com placeholders', async () => {
+  it('selectProcedure monta o CALL com placeholders', async () => {
     const resultSets = [[{ id: 1 }]] as unknown as RowDataPacket[][];
     mocks.execute.mockResolvedValueOnce([resultSets, []]);
 
     await expect(
-      service.callProcedure('sp_teste', [1, 'a']),
+      service.selectProcedure('sp_teste', [1, 'a']),
     ).resolves.toEqual(resultSets);
     expect(mocks.execute).toHaveBeenCalledWith('CALL sp_teste(?,?)', [1, 'a']);
   });
 
-  it('callProcedure sem parâmetros não gera placeholders', async () => {
+  it('selectProcedure sem parâmetros não gera placeholders', async () => {
     const resultSets = [[]] as unknown as RowDataPacket[][];
     mocks.execute.mockResolvedValueOnce([resultSets, []]);
 
-    await expect(service.callProcedure('sp_teste')).resolves.toEqual(
+    await expect(service.selectProcedure('sp_teste')).resolves.toEqual(
       resultSets,
     );
     expect(mocks.execute).toHaveBeenCalledWith('CALL sp_teste()', undefined);

@@ -69,7 +69,7 @@ export class DbOperationService {
    * Use when the procedure returns rows; `procedureName` must be a trusted internal
    * identifier because it is inserted into the SQL text, while `params` are bound.
    */
-  async callProcedure<T extends RowDataPacket>(
+  async selectProcedure<T extends RowDataPacket>(
     procedureName: string,
     params?: SqlParam[],
   ): Promise<T[][]> {
