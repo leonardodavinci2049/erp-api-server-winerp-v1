@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbConnectionService } from './db-connection.service.js';
+import { DatabasePoolQueueFullError } from './db-connection.errors.js';
 
 const mocks = vi.hoisted(() => {
   const release = vi.fn();
@@ -16,10 +17,14 @@ const mocks = vi.hoisted(() => {
     on,
     pool,
     createPool: vi.fn(() => pool),
+    writeLocalLog: vi.fn().mockResolvedValue(true),
   };
 });
 
 vi.mock('mysql2/promise', () => ({ createPool: mocks.createPool }));
+vi.mock('../core/utils/functions/write_local_log.js', () => ({
+  writeLocalLog: mocks.writeLocalLog,
+}));
 vi.mock('../core/config/envs.js', () => ({
   envs: {
     DATABASE_HOST: 'localhost',
@@ -54,6 +59,7 @@ describe('DbConnectionService', () => {
   });
 
   it('cria o pool com a configuração e libera a conexão de verificação', async () => {
+    const loggerLog = vi.spyOn(Logger.prototype, 'log');
     await module.init();
 
     expect(module.get(DbConnectionService)).toBeDefined();
@@ -65,6 +71,33 @@ describe('DbConnectionService', () => {
       }),
     );
     expect(mocks.createPool).toHaveBeenCalledOnce();
+    expect(mocks.release).toHaveBeenCalledOnce();
+    expect(loggerLog).toHaveBeenCalledWith(
+      'Connected to the MariaDB database successfully.',
+    );
+    expect(mocks.writeLocalLog).not.toHaveBeenCalled();
+  });
+
+  it('announces success only after a connection has been acquired', async () => {
+    const loggerLog = vi.spyOn(Logger.prototype, 'log');
+    let resolveConnection!: (value: { release: typeof mocks.release }) => void;
+    mocks.getConnection.mockReturnValueOnce(
+      new Promise((resolve) => {
+        resolveConnection = resolve;
+      }),
+    );
+    const service = module.get(DbConnectionService);
+    const initialization = service.onModuleInit();
+
+    expect(loggerLog).not.toHaveBeenCalled();
+    expect(mocks.release).not.toHaveBeenCalled();
+
+    resolveConnection({ release: mocks.release });
+    await initialization;
+
+    expect(loggerLog).toHaveBeenCalledExactlyOnceWith(
+      'Connected to the MariaDB database successfully.',
+    );
     expect(mocks.release).toHaveBeenCalledOnce();
   });
 
@@ -78,9 +111,11 @@ describe('DbConnectionService', () => {
     await module.close();
     closed = true;
     expect(mocks.end).toHaveBeenCalledOnce();
+    expect(mocks.writeLocalLog).not.toHaveBeenCalled();
   });
 
   it('falha a inicialização e fecha o pool quando o banco está indisponível', async () => {
+    const loggerLog = vi.spyOn(Logger.prototype, 'log');
     const connectionError = Object.assign(new Error('private details'), {
       code: 'ECONNREFUSED',
     });
@@ -90,6 +125,39 @@ describe('DbConnectionService', () => {
       'Initial MariaDB connection check failed.',
     );
     expect(mocks.end).toHaveBeenCalledOnce();
+    expect(loggerLog).not.toHaveBeenCalledWith(
+      'Connected to the MariaDB database successfully.',
+    );
+    expect(mocks.writeLocalLog).toHaveBeenCalledExactlyOnceWith(
+      'DbConnectionService',
+      {
+        event: 'database_connection_initialization_failed',
+        message: 'Initial MariaDB connection check failed (ECONNREFUSED).',
+        code: 'ECONNREFUSED',
+      },
+      'error',
+    );
+  });
+
+  it('classifies a full waiting queue separately from SQL and connection errors', async () => {
+    const service = module.get(DbConnectionService);
+    mocks.getConnection.mockRejectedValueOnce(
+      new Error('Queue limit reached.'),
+    );
+
+    await expect(service.getConnection()).rejects.toBeInstanceOf(
+      DatabasePoolQueueFullError,
+    );
+    expect(mocks.release).not.toHaveBeenCalled();
+    expect(mocks.writeLocalLog).toHaveBeenCalledExactlyOnceWith(
+      'DbConnectionService',
+      {
+        event: 'database_pool_queue_full',
+        message: 'MariaDB connection pool waiting queue is full.',
+        code: null,
+      },
+      'error',
+    );
   });
 
   it('registra somente o código e repassa a falha ao obter conexão', async () => {
@@ -104,6 +172,15 @@ describe('DbConnectionService', () => {
     await expect(service.getConnection()).rejects.toBe(connectionError);
     expect(loggerError).toHaveBeenCalledWith(
       'Failed to acquire a MariaDB connection (POOL_ERROR).',
+    );
+    expect(mocks.writeLocalLog).toHaveBeenCalledExactlyOnceWith(
+      'DbConnectionService',
+      {
+        event: 'database_connection_acquisition_failed',
+        message: 'Failed to acquire a MariaDB connection (POOL_ERROR).',
+        code: 'POOL_ERROR',
+      },
+      'error',
     );
   });
 
@@ -140,5 +217,62 @@ describe('DbConnectionService', () => {
     expect(secondClose).toBe(firstClose);
     await expect(firstClose).rejects.toBe(closeError);
     expect(mocks.end).toHaveBeenCalledOnce();
+    expect(mocks.writeLocalLog).toHaveBeenCalledExactlyOnceWith(
+      'DbConnectionService',
+      {
+        event: 'database_pool_close_failed',
+        message: 'Failed to close the MariaDB connection pool.',
+        code: null,
+      },
+      'error',
+    );
+  });
+
+  it('omits unsafe driver codes and messages from persisted diagnostics', async () => {
+    const service = module.get(DbConnectionService);
+    const error = Object.assign(new Error('password=private'), {
+      code: 'SQL with private data',
+      sql: 'SELECT private_data',
+    });
+    mocks.getConnection.mockRejectedValueOnce(error);
+
+    await expect(service.getConnection()).rejects.toBe(error);
+
+    expect(mocks.writeLocalLog).toHaveBeenCalledExactlyOnceWith(
+      'DbConnectionService',
+      {
+        event: 'database_connection_acquisition_failed',
+        message: 'Failed to acquire a MariaDB connection.',
+        code: null,
+      },
+      'error',
+    );
+  });
+
+  it('preserves acquisition errors when the local log cannot be written', async () => {
+    const service = module.get(DbConnectionService);
+    const error = new Error('Connection unavailable');
+    mocks.getConnection.mockRejectedValueOnce(error);
+    mocks.writeLocalLog.mockResolvedValueOnce(false);
+
+    await expect(service.getConnection()).rejects.toBe(error);
+    expect(mocks.writeLocalLog).toHaveBeenCalledOnce();
+  });
+
+  it('preserves startup failure when cleanup and both log writes fail', async () => {
+    const service = module.get(DbConnectionService);
+    mocks.getConnection.mockRejectedValueOnce(
+      new Error('Connection unavailable'),
+    );
+    mocks.end.mockRejectedValueOnce(new Error('Pool close failed'));
+    mocks.writeLocalLog
+      .mockResolvedValueOnce(false)
+      .mockResolvedValueOnce(false);
+
+    await expect(service.onModuleInit()).rejects.toThrow(
+      'Initial MariaDB connection check failed.',
+    );
+    expect(mocks.end).toHaveBeenCalledOnce();
+    expect(mocks.writeLocalLog).toHaveBeenCalledTimes(2);
   });
 });
