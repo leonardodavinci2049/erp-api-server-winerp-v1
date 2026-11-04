@@ -54,7 +54,18 @@ export class DbOperationService {
     return results as ResultSetHeader;
   }
 
- 
+   // Para procedimentos armazenados que retornam múltiplos conjuntos de resultados
+  async callProcedure<T extends RowDataPacket>(
+    procedureName: string,
+    params?: SqlParam[],
+  ): Promise<T[][]> {
+    const query = `CALL ${procedureName}(${params ? params.map(() => '?').join(',') : ''})`;
+    const [results] = await this.database
+      .getPool()
+      .execute<T[][]>(query, params);
+    return results;
+  }
+  
   // Operações com transação
   async runInTransaction<T>(
     callback: (connection: PoolConnection) => Promise<T>,
@@ -84,15 +95,5 @@ export class DbOperationService {
 
  */
 
-  // Para procedimentos armazenados que retornam múltiplos conjuntos de resultados
-  async callProcedure<T extends RowDataPacket>(
-    procedureName: string,
-    params?: SqlParam[],
-  ): Promise<T[][]> {
-    const query = `CALL ${procedureName}(${params ? params.map(() => '?').join(',') : ''})`;
-    const [results] = await this.database
-      .getPool()
-      .execute<T[][]>(query, params);
-    return results;
-  }
+
 }
