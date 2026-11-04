@@ -5,6 +5,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { fileURLToPath } from 'node:url';
 import { DbOperationModule } from '../db-operation/db-operation.module.js';
+import { BrandModule } from '../brand/brand.module.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 
@@ -26,6 +27,7 @@ import { AppService } from './app.service.js';
       },
     ]),
     DbOperationModule,
+    BrandModule,
   ],
   controllers: [AppController],
   providers: [
