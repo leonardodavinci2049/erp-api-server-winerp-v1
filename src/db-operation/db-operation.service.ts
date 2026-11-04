@@ -5,12 +5,15 @@ import { QueryParams, SqlParam } from '../database/database.types.js';
 
 @Injectable()
 export class DbOperationService {
-  // Logger instance
+  /** Logs transaction failures with the service context. */
   private readonly logger = new Logger(DbOperationService.name);
 
   constructor(private readonly database: DatabaseService) {}
 
-  // Método para SELECT (sem transação)
+  /**
+   * Runs a read query through mysql2's `query` API, outside an explicit transaction.
+   * Use when the statement needs `query` behavior; pass values separately in `params`.
+   */
   async selectQuery<T extends RowDataPacket>(
     queryString: string,
     params?: QueryParams,
@@ -21,7 +24,10 @@ export class DbOperationService {
     return results;
   }
 
- // Insert/Update/Delete usando query
+  /**
+   * Runs an INSERT, UPDATE, or DELETE through mysql2's `query` API.
+   * Use when the mutation needs `query` behavior; pass values separately in `params`.
+   */
   async ModifyQuery(
     queryString: string,
     params?: QueryParams,
@@ -30,9 +36,10 @@ export class DbOperationService {
     return results as ResultSetHeader;
   }
 
-
-
-  // Método para SELECT com segurança reforçada
+  /**
+   * Runs a read statement through mysql2's prepared-statement `execute` API.
+   * Use for parameterized reads; values in `params` are bound to the statement.
+   */
   async selectExecute<T extends RowDataPacket>(
     queryString: string,
     params?: QueryParams,
@@ -43,7 +50,10 @@ export class DbOperationService {
     return results;
   }
 
-  // Insert/Update/Delete usando execute
+  /**
+   * Runs an INSERT, UPDATE, or DELETE through mysql2's prepared-statement `execute` API.
+   * Use for parameterized mutations; values in `params` are bound to the statement.
+   */
   async mutationExecute(
     queryString: string,
     params?: QueryParams,
@@ -54,7 +64,11 @@ export class DbOperationService {
     return results as ResultSetHeader;
   }
 
-   // Para procedimentos armazenados que retornam múltiplos conjuntos de resultados
+  /**
+   * Calls a stored procedure and returns each result set as a separate array.
+   * Use when the procedure returns rows; `procedureName` must be a trusted internal
+   * identifier because it is inserted into the SQL text, while `params` are bound.
+   */
   async callProcedure<T extends RowDataPacket>(
     procedureName: string,
     params?: SqlParam[],
@@ -65,8 +79,11 @@ export class DbOperationService {
       .execute<T[][]>(query, params);
     return results;
   }
-  
-  // Operações com transação
+  /**
+   * Runs multiple database operations atomically on one checked-out connection.
+   * Use when all callback operations must commit or roll back together, and execute
+   * every statement through the provided `connection` rather than the shared pool.
+   */
   async runInTransaction<T>(
     callback: (connection: PoolConnection) => Promise<T>,
   ): Promise<T> {
@@ -85,15 +102,4 @@ export class DbOperationService {
       connection.release();
     }
   }
-
-  //🧪 Exemplo de uso com transação
-
-  /* await this.dbOperationService.runInTransaction(async (conn) => {
-  await conn.execute('UPDATE users SET balance = balance - ? WHERE id = ?', [100, 1]);
-  await conn.execute('UPDATE users SET balance = balance + ? WHERE id = ?', [100, 2]);
-});
-
- */
-
-
 }
