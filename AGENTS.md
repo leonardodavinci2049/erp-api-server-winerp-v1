@@ -62,7 +62,7 @@ pnpm run test:cov         # vitest run --coverage
 
 ## Environment
 
-Variables are Zod-validated at boot in `src/core/config/envs.ts` (fails fast): `APP_API_URL`, `APP_SWAGGER_URL`, `APP_JWT_SECRET`, `APP_PORT`, `API_KEY`, optional `REVALIDATE_SECRET`, `DATABASE_HOST/PORT/USER/PASSWORD/NAME`, plus pool tuning with defaults — `DATABASE_POOL_CONNECTION_LIMIT` (10), `DATABASE_POOL_QUEUE_LIMIT` (100), `DATABASE_CONNECT_TIMEOUT_MS` (10000). `.env` is gitignored and machine-local. Never expose its values in commands, logs, docs, or reports.
+Variables are Zod-validated at boot in `src/core/config/envs.ts` (fails fast): `APP_API_URL`, `APP_SWAGGER_URL`, `APP_JWT_SECRET`, `APP_PORT`, `API_KEY`, optional `REVALIDATE_SECRET`, `DATABASE_HOST/PORT/USER/PASSWORD/NAME`, plus pool tuning with defaults — `DATABASE_POOL_CONNECTION_LIMIT` (10), `DATABASE_POOL_QUEUE_LIMIT` (100), `DATABASE_CONNECT_TIMEOUT_MS` (10000). The pool limit applies per API process; queue limit `0` means unlimited. `connectTimeout` limits establishing a database connection, not queue wait or query execution. Size the aggregate pool across all API processes against MariaDB capacity. `.env` is gitignored and machine-local. Never expose its values in commands, logs, docs, or reports.
 
 ### Directory and flow map
 
@@ -88,7 +88,7 @@ GET / (outside /api) -> ServeStaticModule -> pageroot/
 
 ## Database & Stored Procedures
 
-- All access via `src/db-connection/db-connection.service.ts`: `selectQuery`/`selectExecute` (reads), `ModifyExecute`/`ModifyQuery` (mutations), `runInTransaction` (atomic multi-step, rollback + connection release), and `getConnection` (manual pool access).
+- `DbConnectionService` creates one mysql2 pool, validates initial connectivity during Nest module initialization, exposes the pool/checked-out connections, and closes it during module shutdown. `src/main.ts` enables shutdown hooks for process signals. SQL operations and transactions belong to `src/db-operation/db-operation.service.ts`: `selectQuery` (reads), `mutationQuery` (writes), `callProcedure`, and `runInTransaction` (atomic multi-step, rollback + connection release).
 - All queries — raw SQL and `call sp_...(...)` — use `?` placeholders with a typed params array returned by the query function as `{ queryString, queryParams }`; never concatenate or interpolate DTO data into SQL strings. DTO validation is the first barrier; placeholders are the second. Coalesce optional DTO fields (`?? null`) so `undefined` never reaches mysql2.
 - Every tenant-bound operation must preserve `pe_system_client_id` and `pe_store_id`; never remove tenant filters.
 - Stored procedure definitions are **not maintained in this repo** — `stored-procedures/` is a local placeholder directory (currently empty). Before changing or exposing a procedure, verify its signature, parameter order, and result sets against the development database.
