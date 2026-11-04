@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../database/database.module.js';
+import { DbOperationModule } from '../db.operation/db.operation.module.js';
 import { BrandController } from './brand.controller.js';
 import { BrandService } from './brand.service.js';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DbOperationModule],
   controllers: [BrandController],
   providers: [BrandService],
 })
