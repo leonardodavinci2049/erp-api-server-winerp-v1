@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { DatabaseService } from '../database/database.service.js';
-import { DbOperationService } from './db.operation.service.js';
+import { DbOperationService } from './db-operation.service.js';
 
 vi.mock('../database/database.service.js', () => ({
   DatabaseService: class DatabaseService {},
