@@ -6,10 +6,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const loggerApp = new Logger('WSERPADMIN');
 
-  // Set the global prefix for all routes
+  app.enableShutdownHooks();
+
+  // Set the global prefix for all routes.
   app.setGlobalPrefix('api');
 
-  // Enable CORS for all routes
+  // Enable CORS for all routes.
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // remove properties that do not have decorators
@@ -21,7 +23,7 @@ async function bootstrap() {
     }),
   );
 
-  // security measure to only make available the listed methods
+  // Restrict the methods available to cross-origin requests.
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

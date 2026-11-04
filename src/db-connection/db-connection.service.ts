@@ -1,20 +1,20 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 import { createPool, Pool, PoolConnection, PoolOptions } from 'mysql2/promise';
 import { envs } from '../core/config/envs.js';
 
 @Injectable()
-export class DbConnectionService {
-  // Property to hold the connection to MySQL database
-  private poolConnection: Pool;
-  // Logger instance
+export class DbConnectionService implements OnModuleInit, OnModuleDestroy {
+  private readonly poolConnection: Pool;
+  private poolClosed = false;
+  private lastPoolSaturationWarningAt: number | undefined;
   private readonly logger = new Logger(DbConnectionService.name);
 
-  // Call the connect method when an instance of DbConnectionService is created
   constructor() {
-    this.connect();
-  }
-
-  public connect() {
     const config: PoolOptions = {
       host: envs.DATABASE_HOST,
       port: envs.DATABASE_PORT,
@@ -28,24 +28,33 @@ export class DbConnectionService {
     };
 
     this.poolConnection = createPool(config);
-
-    // Testa a conexão real com o banco de dados
-    this.poolConnection
-      .getConnection()
-      .then((connection) => {
-        this.logger.log(
-          `Conectado ao banco de dados MySQL (${envs.DATABASE_HOST}:${envs.DATABASE_PORT})`,
-        );
-        connection.release();
-      })
-      .catch((error: Error) => {
-        this.logger.error(
-          `Falha ao conectar ao banco de dados MySQL (${envs.DATABASE_HOST}:${envs.DATABASE_PORT}): ${error.message}`,
-        );
-      });
+    this.poolConnection.on('enqueue', () => this.logPoolSaturation());
   }
 
-  // Expõe o pool para os serviços de operação (DbOperationService)
+  async onModuleInit(): Promise<void> {
+    let connection: PoolConnection | undefined;
+
+    try {
+      connection = await this.poolConnection.getConnection();
+      this.logger.log('Initial MariaDB connection check succeeded.');
+    } catch (error: unknown) {
+      const code = this.getErrorCode(error);
+      this.logger.error(
+        `Initial MariaDB connection check failed${code ? ` (${code})` : ''}.`,
+      );
+      try {
+        await this.closePool();
+      } catch {
+        this.logger.error(
+          'Failed to close the pool after initialization failure.',
+        );
+      }
+      throw new Error('Initial MariaDB connection check failed.');
+    } finally {
+      connection?.release();
+    }
+  }
+
   getPool(): Pool {
     return this.poolConnection;
   }
@@ -53,37 +62,52 @@ export class DbConnectionService {
   async getConnection(): Promise<PoolConnection> {
     try {
       return await this.poolConnection.getConnection();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to get database connection: ${message}`, error);
+    } catch (error: unknown) {
+      const code = this.getErrorCode(error);
+      this.logger.error(
+        `Failed to acquire a MariaDB connection${code ? ` (${code})` : ''}.`,
+      );
       throw error;
     }
   }
 
-  // Fechamento do pool ao encerrar módulo
   async onModuleDestroy(): Promise<void> {
+    await this.closePool();
+  }
+
+  private async closePool(): Promise<void> {
+    if (this.poolClosed) return;
+
+    this.poolClosed = true;
     await this.poolConnection.end();
-    this.logger.log('MySQL connection pool closed');
+    this.logger.log('MariaDB connection pool closed.');
   }
-}
 
-export class ErroConexaoBancoDados extends Error {
-  constructor(
-    mensagem: string,
-    public readonly erroOriginal: Error,
-  ) {
-    super(mensagem);
-    this.name = 'ErroConexaoBancoDados';
+  private getErrorCode(error: unknown): string | undefined {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      typeof error.code === 'string'
+    ) {
+      return error.code;
+    }
+
+    return undefined;
   }
-}
 
-export class ErroExecucaoConsulta extends Error {
-  constructor(
-    mensagem: string,
-    public readonly consulta: string,
-    public readonly erroOriginal: Error,
-  ) {
-    super(mensagem);
-    this.name = 'ErroExecucaoConsulta';
+  private logPoolSaturation(): void {
+    const now = Date.now();
+    if (
+      this.lastPoolSaturationWarningAt !== undefined &&
+      now - this.lastPoolSaturationWarningAt < 60_000
+    ) {
+      return;
+    }
+
+    this.lastPoolSaturationWarningAt = now;
+    this.logger.warn(
+      'MariaDB connection pool is saturated; requests are waiting for a connection.',
+    );
   }
 }

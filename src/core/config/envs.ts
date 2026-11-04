@@ -21,11 +21,13 @@ const envsSchema = z
     DATABASE_USER: z.string().min(1),
     DATABASE_PASSWORD: z.string().min(1),
     DATABASE_NAME: z.string().min(1),
+    // Connection limits apply per API process.
     DATABASE_POOL_CONNECTION_LIMIT: z.coerce
       .number()
       .int()
       .positive()
       .default(10),
+    // Zero leaves the waiting queue unlimited.
     DATABASE_POOL_QUEUE_LIMIT: z
       .string()
       .trim()

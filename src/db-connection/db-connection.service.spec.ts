@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DbConnectionService } from './db-connection.service.js';
@@ -6,11 +7,13 @@ const mocks = vi.hoisted(() => {
   const release = vi.fn();
   const getConnection = vi.fn().mockResolvedValue({ release });
   const end = vi.fn().mockResolvedValue(undefined);
-  const pool = { getConnection, end };
+  const on = vi.fn();
+  const pool = { getConnection, end, on };
   return {
     release,
     getConnection,
     end,
+    on,
     pool,
     createPool: vi.fn(() => pool),
   };
@@ -44,9 +47,12 @@ describe('DbConnectionService', () => {
 
   afterEach(async () => {
     if (!closed) await module.close();
+    vi.restoreAllMocks();
   });
 
   it('cria o pool com a configuração e libera a conexão de verificação', async () => {
+    await module.init();
+
     expect(module.get(DbConnectionService)).toBeDefined();
     expect(mocks.createPool).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -55,7 +61,8 @@ describe('DbConnectionService', () => {
         connectTimeout: 10000,
       }),
     );
-    await vi.waitFor(() => expect(mocks.release).toHaveBeenCalledOnce());
+    expect(mocks.createPool).toHaveBeenCalledOnce();
+    expect(mocks.release).toHaveBeenCalledOnce();
   });
 
   it('expõe o pool para os serviços de operação', () => {
@@ -64,8 +71,60 @@ describe('DbConnectionService', () => {
   });
 
   it('encerra o pool quando o módulo é fechado', async () => {
+    await module.init();
     await module.close();
     closed = true;
     expect(mocks.end).toHaveBeenCalledOnce();
+  });
+
+  it('falha a inicialização e fecha o pool quando o banco está indisponível', async () => {
+    const connectionError = Object.assign(new Error('private details'), {
+      code: 'ECONNREFUSED',
+    });
+    mocks.getConnection.mockRejectedValueOnce(connectionError);
+
+    await expect(module.init()).rejects.toThrow(
+      'Initial MariaDB connection check failed.',
+    );
+    expect(mocks.end).toHaveBeenCalledOnce();
+  });
+
+  it('registra somente o código e repassa a falha ao obter conexão', async () => {
+    await module.init();
+    const service = module.get(DbConnectionService);
+    const connectionError = Object.assign(new Error('private details'), {
+      code: 'POOL_ERROR',
+    });
+    const loggerError = vi.spyOn(Logger.prototype, 'error');
+    mocks.getConnection.mockRejectedValueOnce(connectionError);
+
+    await expect(service.getConnection()).rejects.toBe(connectionError);
+    expect(loggerError).toHaveBeenCalledWith(
+      'Failed to acquire a MariaDB connection (POOL_ERROR).',
+    );
+  });
+
+  it('registra saturação do pool no máximo uma vez por minuto', async () => {
+    const service = module.get(DbConnectionService);
+    const loggerWarn = vi.spyOn(Logger.prototype, 'warn');
+    const [, onSaturation] = mocks.on.mock.calls[0] as [string, () => void];
+
+    onSaturation();
+    onSaturation();
+
+    expect(loggerWarn).toHaveBeenCalledOnce();
+    expect(loggerWarn).toHaveBeenCalledWith(
+      'MariaDB connection pool is saturated; requests are waiting for a connection.',
+    );
+    expect(service.getPool()).toBe(mocks.pool);
+  });
+
+  it('propaga a falha ao encerrar o pool', async () => {
+    const closeError = new Error('pool close failed');
+    mocks.end.mockRejectedValueOnce(closeError);
+
+    await expect(
+      module.get(DbConnectionService).onModuleDestroy(),
+    ).rejects.toBe(closeError);
   });
 });
