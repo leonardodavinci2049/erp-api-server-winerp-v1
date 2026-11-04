@@ -3,13 +3,13 @@ import { createPool, Pool, PoolConnection, PoolOptions } from 'mysql2/promise';
 import { envs } from '../core/config/envs.js';
 
 @Injectable()
-export class DatabaseService {
+export class DbConnectionService {
   // Property to hold the connection to MySQL database
   private poolConnection: Pool;
   // Logger instance
-  private readonly logger = new Logger(DatabaseService.name);
+  private readonly logger = new Logger(DbConnectionService.name);
 
-  // Call the connect method when an instance of DatabaseService is created
+  // Call the connect method when an instance of DbConnectionService is created
   constructor() {
     this.connect();
   }

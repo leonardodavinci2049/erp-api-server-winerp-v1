@@ -1,18 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import { DatabaseService } from '../db-connection/database.service.js';
+import { DbConnectionService } from '../db-connection/db-connection.service.js';
 import {
   ProcedureResult,
   QueryParams,
   SqlParam,
-} from '../db-connection/database.types.js';
+} from '../db-connection/db-connection.types.js';
 
 @Injectable()
 export class DbOperationService {
   /** Logs transaction failures with the service context. */
   private readonly logger = new Logger(DbOperationService.name);
 
-  constructor(private readonly database: DatabaseService) {}
+  constructor(private readonly dbConnection: DbConnectionService) {}
 
   /**
    * Runs a read query through mysql2's `query` API.
@@ -25,7 +25,7 @@ export class DbOperationService {
     params?: QueryParams,
     connection?: PoolConnection,
   ): Promise<T[]> {
-    const executor = connection ?? this.database.getPool();
+    const executor = connection ?? this.dbConnection.getPool();
     const [results] = await executor.query<T[]>(queryString, params);
     return results;
   }
@@ -41,7 +41,7 @@ export class DbOperationService {
     params?: QueryParams,
     connection?: PoolConnection,
   ): Promise<ResultSetHeader> {
-    const executor = connection ?? this.database.getPool();
+    const executor = connection ?? this.dbConnection.getPool();
     const [results] = await executor.query<ResultSetHeader>(
       queryString,
       params,
@@ -73,7 +73,7 @@ export class DbOperationService {
       .map((part) => `\`${part}\``)
       .join('.');
     const placeholders = params?.map(() => '?').join(',') ?? '';
-    const executor = connection ?? this.database.getPool();
+    const executor = connection ?? this.dbConnection.getPool();
     const [results] = await executor.execute(
       `CALL ${identifier}(${placeholders})`,
       params,
@@ -95,7 +95,7 @@ export class DbOperationService {
   async runInTransaction<T>(
     callback: (connection: PoolConnection) => Promise<T>,
   ): Promise<T> {
-    const connection = await this.database.getConnection();
+    const connection = await this.dbConnection.getConnection();
     let transactionStarted = false;
     let canRelease = false;
 

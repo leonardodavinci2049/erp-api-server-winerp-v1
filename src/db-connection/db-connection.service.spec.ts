@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DatabaseService } from './database.service.js';
+import { DbConnectionService } from './db-connection.service.js';
 
 const mocks = vi.hoisted(() => {
   const release = vi.fn();
@@ -30,7 +30,7 @@ vi.mock('../core/config/envs.js', () => ({
   },
 }));
 
-describe('DatabaseService', () => {
+describe('DbConnectionService', () => {
   let module: TestingModule;
   let closed: boolean;
 
@@ -38,7 +38,7 @@ describe('DatabaseService', () => {
     vi.clearAllMocks();
     closed = false;
     module = await Test.createTestingModule({
-      providers: [DatabaseService],
+      providers: [DbConnectionService],
     }).compile();
   });
 
@@ -47,7 +47,7 @@ describe('DatabaseService', () => {
   });
 
   it('cria o pool com a configuração e libera a conexão de verificação', async () => {
-    expect(module.get(DatabaseService)).toBeDefined();
+    expect(module.get(DbConnectionService)).toBeDefined();
     expect(mocks.createPool).toHaveBeenCalledWith(
       expect.objectContaining({
         connectionLimit: 10,
@@ -59,7 +59,7 @@ describe('DatabaseService', () => {
   });
 
   it('expõe o pool para os serviços de operação', () => {
-    const service = module.get(DatabaseService);
+    const service = module.get(DbConnectionService);
     expect(service.getPool()).toBe(mocks.pool);
   });
 
