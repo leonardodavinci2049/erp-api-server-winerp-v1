@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { createPool, Pool, PoolConnection, PoolOptions } from 'mysql2/promise';
 import { envs } from '../core/config/envs.js';
+import { writeLocalLog } from '../core/utils/functions/write_local_log.js';
+import { DatabasePoolQueueFullError } from './db-connection.errors.js';
 
 @Injectable()
 export class DbConnectionService
@@ -43,19 +45,18 @@ export class DbConnectionService
 
     try {
       connection = await this.poolConnection.getConnection();
-      this.logger.log('Initial MariaDB connection check succeeded.');
+      this.logger.log('Connected to the MariaDB database successfully.');
     } catch (error: unknown) {
       // Em falha, registra apenas um código seguro e encerra o pool parcial.
-      const code = this.getErrorCode(error);
-      this.logger.error(
-        `Initial MariaDB connection check failed${code ? ` (${code})` : ''}.`,
+      await this.logError(
+        'database_connection_initialization_failed',
+        'Initial MariaDB connection check failed',
+        error,
       );
       try {
         await this.closePool();
       } catch {
-        this.logger.error(
-          'Failed to close the pool after initialization failure.',
-        );
+        // closePool records its own failure; preserve the initialization error.
       }
       throw new Error('Initial MariaDB connection check failed.');
     } finally {
@@ -74,9 +75,19 @@ export class DbConnectionService
     try {
       return await this.poolConnection.getConnection();
     } catch (error: unknown) {
-      const code = this.getErrorCode(error);
-      this.logger.error(
-        `Failed to acquire a MariaDB connection${code ? ` (${code})` : ''}.`,
+      // mysql2 provides no error code for queue rejection. Classify only during
+      // acquisition so a SQL error with the same message is not misidentified.
+      if (error instanceof Error && error.message === 'Queue limit reached.') {
+        await this.logError(
+          'database_pool_queue_full',
+          'MariaDB connection pool waiting queue is full',
+        );
+        throw new DatabasePoolQueueFullError();
+      }
+      await this.logError(
+        'database_connection_acquisition_failed',
+        'Failed to acquire a MariaDB connection',
+        error,
       );
       throw error;
     }
@@ -94,8 +105,33 @@ export class DbConnectionService
       .then(() => this.poolConnection.end())
       .then(() => {
         this.logger.log('MariaDB connection pool closed.');
+      })
+      .catch(async (error: unknown) => {
+        await this.logError(
+          'database_pool_close_failed',
+          'Failed to close the MariaDB connection pool',
+          error,
+        );
+        throw error;
       });
     return this.poolClosePromise;
+  }
+
+  /** Persist only fixed messages and validated codes, never the driver error. */
+  private async logError(
+    event: string,
+    message: string,
+    error?: unknown,
+  ): Promise<void> {
+    const code = this.getErrorCode(error);
+    const safeMessage = `${message}${code ? ` (${code})` : ''}.`;
+    this.logger.error(safeMessage);
+    // The helper returns false on write failure, preserving the database error.
+    await writeLocalLog(
+      DbConnectionService.name,
+      { event, message: safeMessage, code: code ?? null },
+      'error',
+    );
   }
 
   private getErrorCode(error: unknown): string | undefined {
