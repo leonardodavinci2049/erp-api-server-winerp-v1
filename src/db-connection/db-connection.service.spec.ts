@@ -46,8 +46,11 @@ describe('DbConnectionService', () => {
   });
 
   afterEach(async () => {
-    if (!closed) await module.close();
-    vi.restoreAllMocks();
+    try {
+      if (!closed) await module.close();
+    } finally {
+      vi.restoreAllMocks();
+    }
   });
 
   it('cria o pool com a configuração e libera a conexão de verificação', async () => {
@@ -105,6 +108,7 @@ describe('DbConnectionService', () => {
   });
 
   it('registra saturação do pool no máximo uma vez por minuto', async () => {
+    const now = vi.spyOn(Date, 'now').mockReturnValue(1_000_000);
     const service = module.get(DbConnectionService);
     const loggerWarn = vi.spyOn(Logger.prototype, 'warn');
     const [, onSaturation] = mocks.on.mock.calls[0] as [string, () => void];
@@ -116,6 +120,12 @@ describe('DbConnectionService', () => {
     expect(loggerWarn).toHaveBeenCalledWith(
       'MariaDB connection pool is saturated; requests are waiting for a connection.',
     );
+    now.mockReturnValue(1_059_999);
+    onSaturation();
+    expect(loggerWarn).toHaveBeenCalledOnce();
+    now.mockReturnValue(1_060_000);
+    onSaturation();
+    expect(loggerWarn).toHaveBeenCalledTimes(2);
     expect(service.getPool()).toBe(mocks.pool);
   });
 
@@ -123,8 +133,12 @@ describe('DbConnectionService', () => {
     const closeError = new Error('pool close failed');
     mocks.end.mockRejectedValueOnce(closeError);
 
-    await expect(
-      module.get(DbConnectionService).onModuleDestroy(),
-    ).rejects.toBe(closeError);
+    const service = module.get(DbConnectionService);
+    const firstClose = service.onApplicationShutdown();
+    const secondClose = service.onApplicationShutdown();
+
+    expect(secondClose).toBe(firstClose);
+    await expect(firstClose).rejects.toBe(closeError);
+    expect(mocks.end).toHaveBeenCalledOnce();
   });
 });
