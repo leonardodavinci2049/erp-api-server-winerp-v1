@@ -21,6 +21,17 @@ export class DbOperationService {
     return results;
   }
 
+ // Insert/Update/Delete usando query
+  async ModifyQuery(
+    queryString: string,
+    params?: QueryParams,
+  ): Promise<ResultSetHeader> {
+    const [results] = await this.database.getPool().query(queryString, params);
+    return results as ResultSetHeader;
+  }
+
+
+
   // Método para SELECT com segurança reforçada
   async selectExecute<T extends RowDataPacket>(
     queryString: string,
@@ -43,15 +54,7 @@ export class DbOperationService {
     return results as ResultSetHeader;
   }
 
-  // Insert/Update/Delete usando query
-  async ModifyQuery(
-    queryString: string,
-    params?: QueryParams,
-  ): Promise<ResultSetHeader> {
-    const [results] = await this.database.getPool().query(queryString, params);
-    return results as ResultSetHeader;
-  }
-
+ 
   // Operações com transação
   async runInTransaction<T>(
     callback: (connection: PoolConnection) => Promise<T>,
