@@ -71,7 +71,7 @@ export class DbConnectionService
   }
 
   async getConnection(): Promise<PoolConnection> {
-    // Reserva uma conexão para transações ou operações que precisam dela diretamente.
+    // Acquires a connection for database operations.
     try {
       return await this.poolConnection.getConnection();
     } catch (error: unknown) {
