@@ -6,8 +6,8 @@ import { DbConnectionService } from '../db-connection/db-connection.service.js';
 import { DatabasePoolQueueFullError } from '../db-connection/db-connection.errors.js';
 import { DbOperationService } from './db-operation.service.js';
 
-vi.mock('../db-connection/db-connection.service.js', () => ({
-  DbConnectionService: class DbConnectionService {},
+vi.mock('../core/config/envs.js', () => ({
+  envs: {},
 }));
 
 const mocks = vi.hoisted(() => {
@@ -44,6 +44,9 @@ describe('DbOperationService', () => {
   beforeEach(async () => {
     vi.clearAllMocks();
     vi.spyOn(Logger.prototype, 'error').mockImplementation(loggerError);
+    vi.spyOn(DbConnectionService.prototype, 'getConnection').mockImplementation(
+      mocks.getConnection,
+    );
     module = await Test.createTestingModule({
       providers: [
         DbOperationService,
@@ -52,6 +55,9 @@ describe('DbOperationService', () => {
           useValue: {
             getPool: mocks.getPool,
             getConnection: mocks.getConnection,
+            withConnection: DbConnectionService.prototype.withConnection.bind(
+              DbConnectionService.prototype,
+            ),
           },
         },
       ],
