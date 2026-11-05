@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PoolConnection, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
+import { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { writeLocalLog } from '../core/utils/functions/write_local_log.js';
 import { DatabasePoolQueueFullError } from '../db-connection/db-connection.errors.js';
 import { DbConnectionService } from '../db-connection/db-connection.service.js';
@@ -25,8 +25,10 @@ export class DbOperationService {
     queryString: string,
     params?: QueryParams,
   ): Promise<T[]> {
-    const [results] = await this.withConnection('selectQuery', (executor) =>
-      executor.query<T[]>(queryString, params),
+    const [results] = await this.trackOperation('selectQuery', () =>
+      this.dbConnection.withConnection((executor) =>
+        executor.query<T[]>(queryString, params),
+      ),
     );
     return results;
   }
@@ -40,8 +42,10 @@ export class DbOperationService {
     queryString: string,
     params?: QueryParams,
   ): Promise<ResultSetHeader> {
-    const [results] = await this.withConnection('mutationQuery', (executor) =>
-      executor.query<ResultSetHeader>(queryString, params),
+    const [results] = await this.trackOperation('mutationQuery', () =>
+      this.dbConnection.withConnection((executor) =>
+        executor.query<ResultSetHeader>(queryString, params),
+      ),
     );
     return results;
   }
@@ -68,28 +72,15 @@ export class DbOperationService {
       .map((part) => `\`${part}\``)
       .join('.');
     const placeholders = params?.map(() => '?').join(',') ?? '';
-    const [results] = await this.withConnection('callProcedure', (executor) =>
-      executor.execute(`CALL ${identifier}(${placeholders})`, params),
+    const [results] = await this.trackOperation('callProcedure', () =>
+      this.dbConnection.withConnection((executor) =>
+        executor.execute(`CALL ${identifier}(${placeholders})`, params),
+      ),
     );
 
     // mysql2's generic CALL type does not describe multiple heterogeneous row sets.
     // Row validation remains the responsibility of the result processors.
     return results as unknown as ProcedureResult<T>;
-  }
-
-  /** Acquires and releases a connection for each operation. */
-  private async withConnection<T>(
-    operation: string,
-    callback: (connection: PoolConnection) => Promise<T>,
-  ): Promise<T> {
-    return this.trackOperation(operation, async () => {
-      const acquiredConnection = await this.dbConnection.getConnection();
-      try {
-        return await callback(acquiredConnection);
-      } finally {
-        acquiredConnection.release();
-      }
-    });
   }
 
   /** Includes pool wait and cleanup; successful operations remain silent. */

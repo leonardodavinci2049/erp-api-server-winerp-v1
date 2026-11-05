@@ -106,6 +106,59 @@ describe('DbConnectionService', () => {
     expect(service.getPool()).toBe(mocks.pool);
   });
 
+  it('withConnection waits for the callback before releasing and returns its result', async () => {
+    const service = module.get(DbConnectionService);
+    const result = { id: 42 };
+    let finishCallback!: (value: typeof result) => void;
+    const callback = vi.fn(
+      () =>
+        new Promise<typeof result>((resolve) => {
+          finishCallback = resolve;
+        }),
+    );
+
+    const pending = service.withConnection(callback);
+
+    await vi.waitFor(() => expect(callback).toHaveBeenCalledOnce());
+    expect(callback).toHaveBeenCalledWith({ release: mocks.release });
+    expect(mocks.getConnection).toHaveBeenCalledOnce();
+    expect(mocks.release).not.toHaveBeenCalled();
+
+    finishCallback(result);
+    await expect(pending).resolves.toBe(result);
+    expect(mocks.release).toHaveBeenCalledOnce();
+    expect(mocks.writeLocalLog).not.toHaveBeenCalled();
+  });
+
+  it.each(['sync', 'async'] as const)(
+    'withConnection releases the connection and preserves a %s callback failure',
+    async (failure) => {
+      const service = module.get(DbConnectionService);
+      const error = new Error('Callback failed');
+      const callback = vi.fn((): Promise<never> => {
+        if (failure === 'sync') throw error;
+        return Promise.reject(error);
+      });
+
+      await expect(service.withConnection(callback)).rejects.toBe(error);
+
+      expect(mocks.release).toHaveBeenCalledOnce();
+      expect(mocks.writeLocalLog).not.toHaveBeenCalled();
+    },
+  );
+
+  it('withConnection does not call the callback or release when acquisition fails', async () => {
+    const service = module.get(DbConnectionService);
+    const error = new Error('Connection unavailable');
+    mocks.getConnection.mockRejectedValueOnce(error);
+    const callback = vi.fn().mockResolvedValue(undefined);
+
+    await expect(service.withConnection(callback)).rejects.toBe(error);
+
+    expect(callback).not.toHaveBeenCalled();
+    expect(mocks.release).not.toHaveBeenCalled();
+  });
+
   it('encerra o pool quando o módulo é fechado', async () => {
     await module.init();
     await module.close();

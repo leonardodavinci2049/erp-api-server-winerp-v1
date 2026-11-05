@@ -93,6 +93,18 @@ export class DbConnectionService
     }
   }
 
+  /** Acquires a connection and returns it to the pool after the callback settles. */
+  async withConnection<T>(
+    callback: (connection: PoolConnection) => Promise<T>,
+  ): Promise<T> {
+    const connection = await this.getConnection();
+    try {
+      return await callback(connection);
+    } finally {
+      connection.release();
+    }
+  }
+
   // O Nest fecha o adaptador HTTP antes deste hook, dando tempo às requisições ativas.
   onApplicationShutdown(): Promise<void> {
     return this.closePool();
