@@ -1,7 +1,5 @@
 # API WinERP para Aplicações Desktop
 
-API REST multi-tenant destinada à integração com aplicações desktop utilizadas pelos clientes WinERP. Este serviço faz parte de um conjunto de APIs que inclui o projeto `srvapi01`: ambos atendem os mesmos clientes e compartilham o contexto de negócio, mas este projeto tem como público consumidor as aplicações desktop.
-
 O projeto está em fase inicial. A base atual inclui a aplicação NestJS, acesso a MySQL/MariaDB, processamento compartilhado de resultados e um módulo de gerenciamento de marcas. Novos módulos de negócio e requisitos específicos de integração desktop serão documentados conforme forem implementados.
 
 ## Estado atual

@@ -59,6 +59,8 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # project generated files
+ecosystem.config.cjs
+.well-known
 /logs
 /scripts
 /docs
