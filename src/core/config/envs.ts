@@ -5,9 +5,7 @@ import { z } from 'zod';
 const envsSchema = z
   .object({
     APP_API_URL: z.string().min(1),
-    APP_SWAGGER_URL: z.string().min(1),
 
-    APP_JWT_SECRET: z.string().min(1),
     APP_PORT: z.coerce.number().positive(),
     API_KEY: z.string().min(1),
     REVALIDATE_SECRET: z.preprocess(
@@ -56,9 +54,7 @@ const envVars = validationResult.data;
 
 export const envs = {
   APP_API_URL: envVars.APP_API_URL,
-  APP_SWAGGER_URL: envVars.APP_SWAGGER_URL,
 
-  APP_JWT_SECRET: envVars.APP_JWT_SECRET,
   APP_PORT: envVars.APP_PORT,
   API_KEY: envVars.API_KEY,
   REVALIDATE_SECRET: envVars.REVALIDATE_SECRET,
