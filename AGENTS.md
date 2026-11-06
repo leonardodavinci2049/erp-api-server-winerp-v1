@@ -25,7 +25,7 @@ Arquivos de instrução aninhados complementam ou substituem este — leia o `AG
 
 Não há wrapper de dotenv na CLI: o `.env` é carregado no código (`import 'dotenv/config'` no topo de `src/core/config/envs.ts`) e validado na inicialização. Executar `pnpm dev` ou qualquer verificação dependente do banco exige um `.env` válido na raiz do projeto.
 
-A porta usada pelo projeto é definida pela variável de ambiente `APP_PORT` (recorre a `3000` em `src/main.ts`).
+A porta de operação da API é definida pela variável de ambiente `APP_PORT`, lida em `src/main.ts` (`process.env.APP_PORT ?? 3000`). Use sempre essa variável em execuções locais, scripts e chamadas HTTP (por exemplo, `http://localhost:$APP_PORT/api/...`); nunca fixe a porta no código.
 
 ```bash
 pnpm install
@@ -110,6 +110,7 @@ Proporcional ao risco: oxlint nos arquivos alterados e, conforme aplicável, `pn
 - O idioma padrão de desenvolvimento é inglês (EUA). Comentários de código, mensagens de erro,nomes de arquivo devem usar inglês.
 - documentação , arquivos AGENTS e  README use o Português do Brasil.
 - Mensagens voltadas ao usuário, labels e texto de interface: português do Brasil (público brasileiro).
+- A porta de operação da API vem da variável de ambiente `APP_PORT`; consulte-a para montar URLs e validar a aplicação em execução, em vez de assumir `3000` ou qualquer valor fixo.
 - Um `AGENTS.md`/`AGENTS.override.md` mais próximo pode complementar ou substituir estas regras; leia as instruções mais específicas primeiro.
 
 ## Comunicação e entrega
