@@ -1,116 +1,118 @@
 # AGENTS.md — erp-api-server-winerp-v1
 
-## Project
+## Projeto
 
-Multi-tenant B2B REST API (internal name `WSERPADMIN`): NestJS 12, TypeScript (`nodenext` + ESM via `"type": "module"`, `strict: true` with `strictPropertyInitialization: false`), MySQL/MariaDB via raw SQL + Stored Procedures over `mysql2`, **no ORM**. Package manager: `pnpm`. Trust `package.json`, `tsconfig.json`, `.oxlintrc.json`, `.prettierrc`, and code over `README.md` — it is the stock NestJS starter and is stale (e.g. it documents a `start:dev` script that was renamed to `dev`).
+API REST B2B multi-tenant (nome interno `erp-api-server-winerp-v1`): NestJS 12, TypeScript (`nodenext` + ESM via `"type": "module"`, `strict: true` com `strictPropertyInitialization: false`), MySQL/MariaDB via SQL puro + Stored Procedures sobre `mysql2`, **sem ORM**. Gerenciador de pacotes: `pnpm`. Confie em `package.json`, `tsconfig.json`, `.oxlintrc.json`, `.prettierrc` e no código em vez do `README.md` — ele é o starter padrão do NestJS e está desatualizado (por exemplo, documenta um script `start:dev` que foi renomeado para `dev`).
 
-Nested instruction files supplement/override this one — read the closest `AGENTS.md` first (e.g. `src/brand/AGENTS.md`, written in Brazilian Portuguese).
+Arquivos de instrução aninhados complementam ou substituem este — leia o `AGENTS.md` mais próximo primeiro (por exemplo, `src/brand/AGENTS.md`, escrito em português do Brasil).
 
-## Main technologies and dependencies
+## Principais tecnologias e dependências
 
-`package.json` is the source of truth for versions (major families listed below).
+`package.json` é a fonte da verdade para as versões (principais famílias listadas abaixo).
 
-- **NestJS v12** (`@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`) for the REST API framework and application lifecycle.
-- **NestJS Config v12** (`@nestjs/config`) for environment loading — `ConfigModule.forRoot({ isGlobal: true })` in `app.module.ts`.
-- **NestJS Serve Static v12** (`@nestjs/serve-static`) to serve the static page in `pageroot/` at the root; routes under `/api` are excluded.
-- **NestJS Throttler v6** (`@nestjs/throttler`) for request rate limiting — `ThrottlerModule` + `ThrottlerGuard` registered as `APP_GUARD` in `src/app.main/app.module.ts`.
-- **MySQL2** (`mysql2`) for DB access through the singleton pool in `DbConnectionService`.
-- **Zod v4** (`zod`) for boot-time validation of environment variables.
-- **class-validator / class-transformer** for DTO validation on all business routes.
-- **oxlint** (`.oxlintrc.json`, run with `--type-aware`) for linting and **prettier** (`.prettierrc`) for formatting. There is no ESLint and no Biome in this project.
-- **vitest v4** for unit (`.spec.ts`) and e2e (`.e2e-spec.ts`) tests.
-- **TypeScript v6** for static typing and compilation.
+- **NestJS v12** (`@nestjs/common`, `@nestjs/core`, `@nestjs/platform-express`) para o framework da API REST e o ciclo de vida da aplicação.
+- **NestJS Config v12** (`@nestjs/config`) para carregamento de ambiente — `ConfigModule.forRoot({ isGlobal: true })` em `app.module.ts`.
+- **NestJS Serve Static v12** (`@nestjs/serve-static`) para servir a página estática em `pageroot/` na raiz; rotas sob `/api` são excluídas.
+- **NestJS Throttler v6** (`@nestjs/throttler`) para limitação de taxa de requisições — `ThrottlerModule` + `ThrottlerGuard` registrados como `APP_GUARD` em `src/app.main/app.module.ts`.
+- **MySQL2** (`mysql2`) para acesso ao banco por meio do pool singleton em `DbConnectionService`.
+- **Zod v4** (`zod`) para validação das variáveis de ambiente na inicialização.
+- **class-validator / class-transformer** para validação de DTO em todas as rotas de negócio.
+- **oxlint** (`.oxlintrc.json`, executado com `--type-aware`) para lint e **prettier** (`.prettierrc`) para formatação. Não há ESLint nem Biome neste projeto.
+- **vitest v4** para testes unitários (`.spec.ts`) e e2e (`.e2e-spec.ts`).
+- **TypeScript v6** para tipagem estática e compilação.
 
-## Build and Development Commands
+## Comandos de build e desenvolvimento
 
-There is no CLI dotenv wrapper: `.env` is loaded in code (`import 'dotenv/config'` at the top of `src/core/config/envs.ts`) and validated at boot. Running `pnpm dev` or any DB-dependent check requires a valid `.env` in the project root.
+Não há wrapper de dotenv na CLI: o `.env` é carregado no código (`import 'dotenv/config'` no topo de `src/core/config/envs.ts`) e validado na inicialização. Executar `pnpm dev` ou qualquer verificação dependente do banco exige um `.env` válido na raiz do projeto.
 
-The port used by the project is defined by the `APP_PORT` environment variable (falls back to `3000` in `src/main.ts`).
+A porta de operação da API é definida pela variável de ambiente `APP_PORT`, lida em `src/main.ts` (`process.env.APP_PORT ?? 3000`). Use sempre essa variável em execuções locais, scripts e chamadas HTTP (por exemplo, `http://localhost:$APP_PORT/api/...`); nunca fixe a porta no código.
 
 ```bash
 pnpm install
 pnpm run dev              # nest start --watch
-pnpm run build            # nest build — compile + type checking; there is NO separate typecheck script
-pnpm run lint             # oxlint --type-aware src/ test/ (read-only)
-pnpm run format           # prettier --write (writes fixes)
-pnpm run test             # vitest run — unit tests (**/*.spec.ts)
+pnpm run build            # nest build — compila + verifica tipos; NÃO existe script separado de typecheck
+pnpm run lint             # oxlint --type-aware src/ test/ (somente leitura)
+pnpm run format           # prettier --write (escreve correções)
+pnpm run test             # vitest run — testes unitários (**/*.spec.ts)
 pnpm run test:e2e         # vitest run --config vitest.config.e2e.ts (**/*.e2e-spec.ts)
 pnpm run test:cov         # vitest run --coverage
 ```
 
-- There are no `:check` script variants. `lint` is read-only; `format` writes — restrict it to task-scope files and review the diff.
-- Unit tests mock `mysql2` and `envs`, so they run without a reachable database. E2E tests and authenticated HTTP checks need a valid `.env` (usually a reachable DB) — don't confuse environment failure with code failure.
-- Shared helper scripts (git-flow release, schema generation, docs) live in the `scripts/` symlink to `erp-base-project/scripts`.
+- Não existem variantes de script `:check`. `lint` é somente leitura; `format` escreve — restrinja-o aos arquivos do escopo da tarefa e revise o diff.
+- Testes unitários fazem mock de `mysql2` e `envs`, então rodam sem banco acessível. Testes E2E e verificações HTTP autenticadas exigem um `.env` válido (geralmente um banco acessível) — não confunda falha de ambiente com falha de código.
+- Scripts auxiliares compartilhados (release git-flow, geração de schema, docs) ficam no symlink `scripts/` para `erp-base-project/scripts`.
 
-## Git workflow
+## Fluxo de trabalho Git
 
-- The project follows **git flow**.
-- The base branch is `develop` — never work on `main`.
-- For every new task that results in file changes, create a feature branch from a clean, up-to-date `develop` before editing files.
-- If the user provides a branch name or task number, use it when it is compatible with the `feature/` prefix (for example, `feature/featr-NNN`).
-- If the user does not provide a branch name or task number, do not stop only to ask for one. Derive a concise, descriptive kebab-case name from the task and create `feature/<task-slug>` (for example, `feature/use-manager-create-services`).
-- Analysis-only work, continuation of an existing feature, or an explicit user instruction to work on the current branch are exceptions to automatic branch creation.
-- If `develop` has uncommitted changes from previous work, do not stash, move, discard, or include them in a new feature. Ask the user to commit or otherwise resolve them before creating the branch.
-- Do not merge, finish, delete, or push branches without explicit user authorization.
-- The source of truth for project versioning is the `"version"` property in `package.json`. The patch value must be incremented on each release and assigned to the release name, e.g. `release/1.8.0`, `hotfix/1.8.1`.
+- O projeto segue **git flow**.
+- A branch base é `develop` — nunca trabalhe em `main`.
+- Para cada nova tarefa que resulte em alterações de arquivos, crie uma branch de feature a partir de uma `develop` limpa e atualizada antes de editar arquivos.
+- Se o usuário fornecer um nome de branch ou número de tarefa, use-o quando for compatível com o prefixo `feature/` (por exemplo, `feature/featr-NNN`).
+- Se o usuário não fornecer nome de branch nem número de tarefa, não pare apenas para perguntar. Derive um nome kebab-case conciso e descritivo da tarefa e crie `feature/<task-slug>` (por exemplo, `feature/use-manager-create-services`).
+- Trabalho somente de análise, continuação de uma feature existente ou instrução explícita do usuário para trabalhar na branch atual são exceções à criação automática de branch.
+- Se `develop` tiver alterações não commitadas de trabalho anterior, não faça stash, não mova, não descarte nem inclua em uma nova feature. Peça ao usuário para commitar ou resolver de outra forma antes de criar a branch.
+- Não faça merge, finish, delete nem push de branches sem autorização explícita do usuário.
+- A fonte da verdade para o versionamento do projeto é a propriedade `"version"` em `package.json`. O valor de patch deve ser incrementado a cada release e atribuído ao nome da release, por exemplo, `release/1.8.0`, `hotfix/1.8.1`.
 
-## Before committing
+## Antes de commitar
 
-1. `pnpm run lint` (oxlint — read-only check)
-2. `pnpm run build` (catches type errors — no separate typecheck command)
-3. `pnpm run test` (vitest unit tests)
+1. `pnpm run lint` (oxlint — verificação somente leitura)
+2. `pnpm run build` (captura erros de tipo — não há comando separado de typecheck)
+3. `pnpm run test` (testes unitários vitest)
 
-## Environment
+## Ambiente
 
-Variables are Zod-validated at boot in `src/core/config/envs.ts` (fails fast): `APP_API_URL`, `APP_SWAGGER_URL`, `APP_JWT_SECRET`, `APP_PORT`, `API_KEY`, optional `REVALIDATE_SECRET`, `DATABASE_HOST/PORT/USER/PASSWORD/NAME`, plus pool tuning with defaults — `DATABASE_POOL_CONNECTION_LIMIT` (10), `DATABASE_POOL_QUEUE_LIMIT` (100), `DATABASE_CONNECT_TIMEOUT_MS` (10000). The pool limit applies per API process; queue limit `0` means unlimited. `connectTimeout` limits establishing a database connection, not queue wait or query execution. Size the aggregate pool across all API processes against MariaDB capacity. `.env` is gitignored and machine-local. Never expose its values in commands, logs, docs, or reports.
+As variáveis são validadas com Zod na inicialização em `src/core/config/envs.ts` (falha rápida): `APP_API_URL`, `APP_SWAGGER_URL`, `APP_JWT_SECRET`, `APP_PORT`, `API_KEY`, `REVALIDATE_SECRET` opcional, `DATABASE_HOST/PORT/USER/PASSWORD/NAME`, além do ajuste fino do pool com padrões — `DATABASE_POOL_CONNECTION_LIMIT` (10), `DATABASE_POOL_QUEUE_LIMIT` (100), `DATABASE_CONNECT_TIMEOUT_MS` (10000). O limite do pool se aplica por processo da API; limite de fila `0` significa ilimitado. `connectTimeout` limita o estabelecimento de uma conexão com o banco, não a espera na fila nem a execução da consulta. Dimensione o pool agregado entre todos os processos da API conforme a capacidade do MariaDB. O `.env` é ignorado pelo git e local a cada máquina. Nunca exponha seus valores em comandos, logs, docs ou relatórios.
 
-### Directory and flow map
+### Mapa de diretórios e fluxo
 
 ```text
-HTTP request -> controller -> service -> query -> DbConnectionService
+requisição HTTP -> controller -> service -> query -> DbConnectionService
                                 |           |
                                 v           v
-                         result helpers  MySQL/MariaDB
+                     helpers de resultado  MySQL/MariaDB
 
 HTTP POST /api/<feature>/v2/<action>
-  -> Controller (@UseGuards(AuthGuard), DTO validation)
-  -> Service (orchestration, error handling, ResultModel)
-  -> Query (pure function that returns `{ queryString, queryParams }` with `?` placeholders)
-  -> DbConnectionService (mysql2 pool)
+  -> Controller (@UseGuards(AuthGuard), validação de DTO)
+  -> Service (orquestração, tratamento de erros, ResultModel)
+  -> Query (função pura que retorna `{ queryString, queryParams }` com placeholders `?`)
+  -> DbConnectionService (pool mysql2)
 
-GET / (outside /api) -> ServeStaticModule -> pageroot/
+GET / (fora de /api) -> ServeStaticModule -> pageroot/
 ```
 
-- Feature module layout: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`, `query/`, `types/`, plus `entities/` when adopted. Register new modules in the `imports` array of `src/app.main/app.module.ts`; import `DbConnectionModule` where `DbConnectionService` is used.
-- Controllers hold HTTP/DTO concerns only — no SQL or business rules.
-- Imports are relative with explicit `.js` extensions (`nodenext`/ESM). No path aliases are configured — do not use absolute `src/...` imports.
-- Globals are split across two files: `src/main.ts` sets the global prefix `/api`, the `ValidationPipe` (`whitelist`/`forbidNonWhitelisted`/`transform`/implicit conversion), and CORS; `src/app.main/app.module.ts` registers `ConfigModule` (global), `ServeStaticModule` (`pageroot/`), and `ThrottlerModule` with `ThrottlerGuard` as `APP_GUARD`. Do not weaken auth, validation, or rate limiting without documented impact analysis.
+- Layout de módulo de feature: `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`, `query/`, `types/`, mais `entities/` quando adotado. Registre novos módulos no array `imports` de `src/app.main/app.module.ts`; importe `DbConnectionModule` onde `DbConnectionService` for usado.
+- Controllers cuidam apenas de preocupações HTTP/DTO — sem SQL nem regras de negócio.
+- Imports são relativos com extensões `.js` explícitas (`nodenext`/ESM). Não há aliases de caminho configurados — não use imports absolutos `src/...`.
+- Os globais estão divididos em dois arquivos: `src/main.ts` define o prefixo global `/api`, o `ValidationPipe` (`whitelist`/`forbidNonWhitelisted`/`transform`/conversão implícita) e o CORS; `src/app.main/app.module.ts` registra `ConfigModule` (global), `ServeStaticModule` (`pageroot/`) e `ThrottlerModule` com `ThrottlerGuard` como `APP_GUARD`. Não enfraqueça autenticação, validação ou rate limiting sem análise de impacto documentada.
 
-## Database & Stored Procedures
+## Banco de dados e Stored Procedures
 
-- `DbConnectionService` creates one mysql2 pool, validates initial connectivity during Nest module initialization, exposes the pool/checked-out connections, and closes it in `onApplicationShutdown`, after the HTTP adapter has closed. Concurrent close requests share the same promise, including failures. `src/main.ts` enables shutdown hooks for process signals. SQL operations belong to `src/db-operation/db-operation.service.ts`: `selectQuery` (reads), `mutationQuery` (writes), and `callProcedure`. Stored procedures own transaction control.
-- All queries — raw SQL and `call sp_...(...)` — use `?` placeholders with a typed params array returned by the query function as `{ queryString, queryParams }`; never concatenate or interpolate DTO data into SQL strings. DTO validation is the first barrier; placeholders are the second. Coalesce optional DTO fields (`?? null`) so `undefined` never reaches mysql2.
-- Every tenant-bound operation must preserve `pe_system_client_id` and `pe_store_id`; never remove tenant filters.
-- Stored procedure definitions are **not maintained in this repo** — `stored-procedures/` is a local placeholder directory (currently empty). Before changing or exposing a procedure, verify its signature, parameter order, and result sets against the development database.
-- Row interfaces extend `RowDataPacket` (mysql2); keep `as unknown as ...` casts at the mysql2 boundary; multi-result-set SPs need explicit tuples.
-- Reuse processors from `src/core/process-result/`, the `ResultModel` envelope, and `RESPONSE_CODES`/`MESSAGES` from `src/core/utils/constants/globalConstants.ts` — no new response formats, no magic codes.
-- No `DROP`, `TRUNCATE`, mass deletion, destructive DDL, or data corrections without explicit authorization; show target and expected impact before any DB write.
+- `DbConnectionService` cria um pool mysql2, valida a conectividade inicial durante a inicialização do módulo Nest, expõe o pool/conexões obtidas e o fecha em `onApplicationShutdown`, após o adapter HTTP ter fechado. Solicitações de fechamento concorrentes compartilham a mesma promise, incluindo falhas. `src/main.ts` habilita shutdown hooks para sinais de processo. Operações SQL pertencem a `src/db-operation/db-operation.service.ts`: `selectQuery` (leituras), `mutationQuery` (escritas) e `callProcedure`. Stored procedures controlam as transações.
+- Todas as consultas — SQL puro e `call sp_...(...)` — usam placeholders `?` com um array de parâmetros tipado retornado pela função de query como `{ queryString, queryParams }`; nunca concatene ou interpole dados de DTO em strings SQL. A validação de DTO é a primeira barreira; os placeholders são a segunda. Faça coalescência dos campos opcionais do DTO (`?? null`) para que `undefined` nunca chegue ao mysql2.
+- Toda operação vinculada a tenant deve preservar `pe_system_client_id` e `pe_store_id`; nunca remova filtros de tenant.
+- As definições de stored procedure **não são mantidas neste repositório** — `stored-procedures/` é um diretório placeholder local (atualmente vazio). Antes de alterar ou expor um procedure, verifique sua assinatura, ordem dos parâmetros e result sets contra o banco de desenvolvimento.
+- Interfaces de linha estendem `RowDataPacket` (mysql2); mantenha os casts `as unknown as ...` na fronteira do mysql2; SPs com múltiplos result sets precisam de tuplas explícitas.
+- Reutilize os processors de `src/core/process-result/`, o envelope `ResultModel` e `RESPONSE_CODES`/`MESSAGES` de `src/core/utils/constants/globalConstants.ts` — sem novos formatos de resposta, sem códigos mágicos.
+- Sem `DROP`, `TRUNCATE`, exclusão em massa, DDL destrutivo ou correções de dados sem autorização explícita; mostre o alvo e o impacto esperado antes de qualquer escrita no banco.
 
-## HTTP contracts
+## Contratos HTTP
 
-- Auth: `Authorization: Bearer <API_KEY>` or `x-api-key` header (checked by `AuthGuard` in `src/core/guards/auth.guard.ts`). All business routes are `POST` with JSON bodies validated by `class-validator` DTOs that match the real contract.
-- Preserve field names, types, codes, messages, and result-set shape for existing consumers. Never return raw DB errors, SQL with data, credentials, or stack traces.
+- Auth: header `Authorization: Bearer <API_KEY>` ou `x-api-key` (verificado pelo `AuthGuard` em `src/core/guards/auth.guard.ts`). Todas as rotas de negócio são `POST` com corpos JSON validados por DTOs `class-validator` que correspondem ao contrato real.
+- Preserve nomes de campos, tipos, códigos, mensagens e o formato do result set para consumidores existentes. Nunca retorne erros brutos do banco, SQL com dados, credenciais ou stack traces.
 
-## Verification
+## Verificação
 
-Proportional to risk: oxlint on changed files, then as applicable `pnpm run build`, `pnpm run test` (vitest, mocked DB), `pnpm run test:e2e`/authenticated HTTP tests against the dev DB, and `git diff --check`. Distinguish static checks, unit tests, e2e tests, and authenticated HTTP tests. If a check fails from a pre-existing issue or unavailable environment, record the command and limitation; don't modify unrelated files to make it pass. Review the task diff before finishing; confirm no secrets leaked.
+Proporcional ao risco: oxlint nos arquivos alterados e, conforme aplicável, `pnpm run build`, `pnpm run test` (vitest, banco com mock), `pnpm run test:e2e`/testes HTTP autenticados contra o banco de dev, e `git diff --check`. Diferencie verificações estáticas, testes unitários, testes e2e e testes HTTP autenticados. Se uma verificação falhar por um problema pré-existente ou ambiente indisponível, registre o comando e a limitação; não modifique arquivos não relacionados para fazê-la passar. Revise o diff da tarefa antes de finalizar; confirme que nenhum segredo vazou.
 
-## Important Constraints
+## Restrições importantes
 
-- The default development language is US English. Code comments, error messages, documentation, and file names should use English.
-- User-facing messages, labels, and interface text: Brazilian Portuguese (Brazilian audience).
-- A closer `AGENTS.md`/`AGENTS.override.md` may supplement or override these rules; read the most specific instructions first.
+- O idioma padrão de desenvolvimento é inglês (EUA). Comentários de código, mensagens de erro,nomes de arquivo devem usar inglês.
+- documentação , arquivos AGENTS e  README use o Português do Brasil.
+- Mensagens voltadas ao usuário, labels e texto de interface: português do Brasil (público brasileiro).
+- A porta de operação da API vem da variável de ambiente `APP_PORT`; consulte-a para montar URLs e validar a aplicação em execução, em vez de assumir `3000` ou qualquer valor fixo.
+- Um `AGENTS.md`/`AGENTS.override.md` mais próximo pode complementar ou substituir estas regras; leia as instruções mais específicas primeiro.
 
-## Communication and Delivery
+## Comunicação e entrega
 
-- After completing a task, suggest one to three related follow-up tasks that represent the natural next steps. Do not execute these additional tasks without my authorization.
+- Após concluir uma tarefa, sugira de uma a três tarefas de acompanhamento relacionadas que representem os próximos passos naturais. Não execute essas tarefas adicionais sem minha autorização.
