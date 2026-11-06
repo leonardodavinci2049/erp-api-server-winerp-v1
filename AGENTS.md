@@ -107,7 +107,8 @@ Proporcional ao risco: oxlint nos arquivos alterados e, conforme aplicável, `pn
 
 ## Restrições importantes
 
-- O idioma padrão de desenvolvimento é inglês (EUA). Comentários de código, mensagens de erro, documentação e nomes de arquivo devem usar inglês.
+- O idioma padrão de desenvolvimento é inglês (EUA). Comentários de código, mensagens de erro,nomes de arquivo devem usar inglês.
+- documentação , arquivos AGENTS e  README use o Português do Brasil.
 - Mensagens voltadas ao usuário, labels e texto de interface: português do Brasil (público brasileiro).
 - Um `AGENTS.md`/`AGENTS.override.md` mais próximo pode complementar ou substituir estas regras; leia as instruções mais específicas primeiro.
 
