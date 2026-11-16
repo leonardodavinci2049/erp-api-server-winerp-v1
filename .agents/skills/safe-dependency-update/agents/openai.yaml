@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Dependency Update"
+  short_description: "Atualizacao segura de dependencias"
+  default_prompt: "Use $safe-dependency-update para atualizar dependencias com verificacoes de supply chain, grupos de risco, lint e build."

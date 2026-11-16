@@ -59,12 +59,9 @@ pids
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # project generated files
-.agents
 ecosystem.config.cjs
 .well-known
-/logs
 /scripts/*
 !/scripts/fluxo-git-flow-dois-pcs.md
 /docs
-/API-documentation/
 /stored-procedures

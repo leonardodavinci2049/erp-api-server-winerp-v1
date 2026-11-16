@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Endpoint Documentation"
+  short_description: "Gera docs Markdown para endpoints POST NestJS"
+  default_prompt: "Use $generate-endpoint-documentation para gerar documentação Markdown dos métodos @Post de um controller NestJS."

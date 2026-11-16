@@ -1,0 +1,4 @@
+interface:
+  display_name: "Acessar banco de desenvolvimento"
+  short_description: "Consulta e opera o MariaDB de desenvolvimento"
+  default_prompt: "Use $access-development-database para analisar o banco MariaDB de desenvolvimento com segurança."

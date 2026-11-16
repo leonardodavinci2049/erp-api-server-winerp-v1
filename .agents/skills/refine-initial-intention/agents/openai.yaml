@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refinar texto de intenção inicial"
+  short_description: "Melhora clareza, gramática e formatação do texto de intenção em pt-BR"
+  default_prompt: "Use $refine-initial-intention para melhorar a clareza, a gramática e a formatação do meu texto de intenção inicial em Português do Brasil, sem adicionar elementos nem transformá-lo em plano de ação, e salve o resultado em docs/initial-prompt."

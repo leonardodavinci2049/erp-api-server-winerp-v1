@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Controller Endpoints"
+  short_description: "Testa endpoints POST de controller NestJS via curl"
+  default_prompt: "Use $test-controller-endpoints para testar via curl todos os endpoints POST de um controller NestJS e gerar o relatório Markdown."
