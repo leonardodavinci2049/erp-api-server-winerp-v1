@@ -1,0 +1,6 @@
+CREATE TABLE `tbl_produto_meta` (
+  `ID_PRODUTO` int(11) NOT NULL,
+  `META_TITLE` varchar(300) DEFAULT NULL,
+  `META_DESCRIPTION` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`ID_PRODUTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

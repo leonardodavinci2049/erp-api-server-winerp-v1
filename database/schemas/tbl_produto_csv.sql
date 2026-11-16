@@ -1,0 +1,7 @@
+CREATE TABLE `tbl_produto_csv` (
+  `ID_PRODUTO` int(11) NOT NULL,
+  `PRODUTO` varchar(300) DEFAULT NULL,
+  `MARCA` varchar(300) DEFAULT NULL,
+  `ID_MARCA` int(11) DEFAULT 0,
+  PRIMARY KEY (`ID_PRODUTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -1,0 +1,6 @@
+CREATE TABLE `tbl_product_slug` (
+  `ID_TBL_PRODUTO` int(11) NOT NULL,
+  `PRODUTO` varchar(300) DEFAULT NULL,
+  `SLUG` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`ID_TBL_PRODUTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
