@@ -3,6 +3,8 @@ set -euo pipefail
 
 # Creates and publishes a semantic-versioned release from develop.
 # package.json is the source of truth for the current application version.
+# Aborts when develop is behind origin/develop, so a release never starts from
+# a stale history (which causes non-fast-forward pushes).
 
 readonly EXPECTED_BRANCH="develop"
 readonly REMOTE_NAME="origin"
@@ -38,9 +40,26 @@ if ! git diff --quiet || ! git diff --cached --quiet || [[ -n "$(git status --po
   exit 1
 fi
 
+echo "🔄 Atualizando referências de ${REMOTE_NAME}..."
+if ! git fetch --prune "${REMOTE_NAME}"; then
+  echo "❌ Erro: não foi possível atualizar as referências de ${REMOTE_NAME}."
+  echo "   Verifique a conexão, as credenciais e a configuração do remoto."
+  exit 1
+fi
+
 if ! git rev-parse --verify --quiet "refs/remotes/${REMOTE_NAME}/${EXPECTED_BRANCH}" >/dev/null; then
   echo "❌ Erro: a referência ${REMOTE_NAME}/${EXPECTED_BRANCH} não existe localmente."
-  echo "   Atualize as referências remotas e tente novamente."
+  echo "   Verifique se a branch ${EXPECTED_BRANCH} existe no remoto e tente novamente."
+  exit 1
+fi
+
+COMMITTED_BEHIND=$(git rev-list --count "${EXPECTED_BRANCH}..${REMOTE_NAME}/${EXPECTED_BRANCH}")
+if [[ "$COMMITTED_BEHIND" -gt 0 ]]; then
+  echo "❌ Erro: a branch ${EXPECTED_BRANCH} local está ${COMMITTED_BEHIND} commit(s) atrás de ${REMOTE_NAME}/${EXPECTED_BRANCH}."
+  echo "   Iniciar uma release a partir de uma branch desatualizada gera non-fast-forward no push."
+  echo "   Integre o remoto e execute o script novamente:"
+  echo "     git pull --ff-only ${REMOTE_NAME} ${EXPECTED_BRANCH}   # quando a branch local não divergiu"
+  echo "     git merge ${REMOTE_NAME}/${EXPECTED_BRANCH}           # quando as histórias divergiram"
   exit 1
 fi
 
