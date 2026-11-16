@@ -35,7 +35,8 @@ Testes de erro executados:
 | Cenário | HTTP | `statusCode` | Resultado |
 | --- | --- | --- | --- |
 | Sem header de autenticação | 401 | — | `API key is required` |
-| `fornecedor-find-all` sem `PE_PASSKEY` | 400 | — | erro do `ValidationPipe` |
+| `fornecedor-find-all` com `PE_PASSKEY` no corpo | 400 | — | `property PE_PASSKEY should not exist` |
+| `fornecedor-find-all` sem `PE_ID_USUARIO` | 400 | — | erro do `ValidationPipe` |
 | `fornecedor-create` com `PE_WHATSAPP1` (campo desconhecido) | 400 | — | `property PE_WHATSAPP1 should not exist` |
 | `supplier-find-manager-id` com fornecedor inexistente | 201 | 100200 | `Supplier find manager Id not found` |
 | `fornecedor-delete` com fornecedor inexistente | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
@@ -46,11 +47,10 @@ Testes de erro executados:
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_NOME": "FORNECEDOR DOC API 001 ALFA",
   "PE_FISIJURI": "J",
   "PE_CNPJ": "12345678000190",
@@ -100,11 +100,10 @@ O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mes
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_FORNECEDOR": "DOC API"
 }
 ```
@@ -119,13 +118,12 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_DEPARTAMENTO": 0,
   "pe_app_id": 1,
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "admin",
   "pe_person_id": 29014,
@@ -199,11 +197,10 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_PRODUTO": 65109,
   "PE_ID_FORNECEDOR": 36961,
   "PE_PRODUTO_DESCRICAO": "",
@@ -254,11 +251,10 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_FORNECEDOR": 36974,
   "PE_ID_CATEGORIA": 0,
   "PE_ID_TIPO": 0,
@@ -316,11 +312,10 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_FORNECEDOR": 36975
 }
 ```
@@ -355,11 +350,25 @@ A mesma resposta foi obtida ao excluir `36974`. A consulta final confirmou `0` f
 
 ### 400 - campo obrigatório ausente
 
+Exemplo omitindo `PE_ID_USUARIO`:
+
 ```json
 {
   "message": [
-    "Passkey é obrigatória.",
-    "Passkey deve ser um texto."
+    "ID do usuário é obrigatório.",
+    "ID do usuário deve ser um número."
+  ],
+  "error": "Bad Request",
+  "statusCode": 400
+}
+```
+
+### 400 - `PE_PASSKEY` enviada no corpo
+
+```json
+{
+  "message": [
+    "property PE_PASSKEY should not exist"
   ],
   "error": "Bad Request",
   "statusCode": 400
@@ -430,5 +439,6 @@ A mesma resposta foi obtida ao excluir `36974`. A consulta final confirmou `0` f
 
 - Todos os endpoints `POST` do controller foram exercitados.
 - Nenhuma API key foi registrada neste relatório.
+- Após a remoção de `PE_PASSKEY` do `BaseRequestDto`, foram reexecutados apenas cenários sem escrita: `401` sem header, `400` com `PE_PASSKEY` no corpo (`property PE_PASSKEY should not exist`), `400` sem `PE_ID_USUARIO` e `201` na listagem. As demais evidências foram coletadas antes dessa mudança e seguem válidas para os campos remanescentes.
 - `fornecedor-product-find-id` foi validado com dados pré-existentes de desenvolvimento porque a consulta não possui coluna de tenant e não havia vínculo criado para os fornecedores de teste.
 - Os fornecedores de teste criados para a evidência (`36974`, `36975`) foram removidos ao final pela própria rota `fornecedor-delete`.

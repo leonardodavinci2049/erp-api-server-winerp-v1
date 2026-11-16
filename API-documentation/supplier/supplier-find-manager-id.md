@@ -28,15 +28,16 @@ A autenticação é **obrigatória**. Utilize um dos seguintes headers:
 
 Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
+`PE_PASSKEY` não faz parte do corpo da requisição: a autenticação é feita exclusivamente pelos headers acima e o envio desse campo no JSON retorna `400 Bad Request` (`property PE_PASSKEY should not exist`).
+
 ## Estrutura da Requisição (Body)
 
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
-| `PE_PASSKEY` | string | Sim | Passkey de autenticação do contexto | Texto não vazio |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número não vazio; usado no filtro `ID_SYSTEM_CLIENTE` |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; usado no filtro `ID_LOJA` |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | string | Sim | ID do usuário | Texto não vazio |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
 | `pe_app_id` | number | Sim | ID da aplicação | Número não vazio |
 | `pe_organization_id` | string | Sim | ID da organização | Texto não vazio |
 | `pe_user_name` | string | Sim | Nome do usuário | Texto não vazio |
@@ -56,13 +57,12 @@ Content-Type: application/json
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_DEPARTAMENTO": 0,
   "pe_app_id": 1,
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "admin",
   "pe_person_id": 29014,
@@ -197,11 +197,13 @@ Quando o fornecedor não existe para o tenant e a loja informados, a requisiçã
 
 ### 400 Bad Request (Erro de Validação)
 
+Por exemplo, ao omitir `PE_ID_USUARIO`:
+
 ```json
 {
   "message": [
-    "Passkey é obrigatória.",
-    "Passkey deve ser um texto."
+    "ID do usuário é obrigatório.",
+    "ID do usuário deve ser um texto."
   ],
   "error": "Bad Request",
   "statusCode": 400

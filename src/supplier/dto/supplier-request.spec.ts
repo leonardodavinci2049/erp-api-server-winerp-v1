@@ -12,11 +12,10 @@ import { FornecedorUpdateDto } from './fornecedor-update.dto.js';
 import { SupplierFindManagerIdV2Dto } from './supplier-find-manager-id-v2.dto.js';
 
 const context = {
-  PE_PASSKEY: 'test-passkey',
   PE_ID_SYSTEM: 7,
   PE_ID_LOJA: 3,
   PE_ID_DEPARTAMENTO: 0,
-  PE_ID_USUARIO: 'user-test',
+  PE_ID_USUARIO: 1,
 };
 const managerContext = {
   pe_app_id: 1,
@@ -47,7 +46,7 @@ describe('supplier request validation', () => {
       ).toEqual(expect.arrayContaining(Object.keys(context)));
       expect(
         validateSync(
-          Object.assign(new Dto(), context, fields, { PE_ID_USUARIO: 1 }),
+          Object.assign(new Dto(), context, fields, { PE_ID_USUARIO: 'invalid' }),
           options,
         ).map((error) => error.property),
       ).toContain('PE_ID_USUARIO');
@@ -68,6 +67,16 @@ describe('supplier request validation', () => {
     expect(validateSync(dto, options).map((error) => error.property)).toEqual(
       expect.arrayContaining(['PE_ID_SYSTEM', 'PE_NOME']),
     );
+  });
+
+  it('rejects the legacy passkey body field, which is header-only', () => {
+    const dto = Object.assign(new FornecedorDeleteDto(), context, {
+      PE_PASSKEY: 'test-passkey',
+      PE_ID_FORNECEDOR: 42,
+    });
+    expect(validateSync(dto, options).map((error) => error.property)).toEqual([
+      'PE_PASSKEY',
+    ]);
   });
 
   it('preserves manager tenant and store parameter order', () => {

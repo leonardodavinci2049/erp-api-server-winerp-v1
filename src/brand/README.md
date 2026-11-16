@@ -17,22 +17,21 @@ Todas as requisições são `POST /api/brand/v2/<rota>` com JSON e header
 | `cancelMarcaV1`    | `marca-delete`      | `PE_ID_MARCA`                                                            |
 
 O contexto obrigatório mantém `PE_ID_SYSTEM`, `PE_ID_LOJA`, `PE_ID_DEPARTAMENTO` e
-`PE_ID_USUARIO` como inteiros. A chave textual é `pePassKey` na listagem,
-criação e atualização; no combo e na exclusão, é `pePasseKey`.
-O contexto não foi renomeado para `BaseRequestDto`, pois isso alteraria a
-assinatura solicitada. Os parâmetros posicionais do Delphi são propriedades
-do corpo JSON no NestJS; os métodos que recebem `opJSONObject` recebem seu
-conteúdo diretamente no corpo, sem um wrapper com esse nome.
+`PE_ID_USUARIO` como campos do corpo, herdados de `BaseRequestDto`. A autenticação
+é feita apenas pelo header `Authorization`/`x-api-key`; `PE_PASSKEY` não faz parte
+do corpo e é rejeitada como campo desconhecido. Os parâmetros posicionais do
+Delphi são propriedades do corpo JSON no NestJS; os métodos que recebem
+`opJSONObject` recebem seu conteúdo diretamente no corpo, sem um wrapper com
+esse nome.
 
 Exemplo de listagem:
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": "1",
   "PE_ID_MARCA": 0,
   "PE_MARCA": "%marca%"
 }
@@ -79,8 +78,8 @@ faz `Get_ID_Generation_TABLE` no Delphi.
 
 Diferenças adicionais:
 
-- Autenticação é feita pelo header; as chaves legadas do corpo são recebidas
-  por compatibilidade e não autorizam a chamada.
+- Autenticação é feita pelo header; `PE_PASSKEY` não é aceita no corpo e é
+  rejeitada como campo desconhecido (`forbidNonWhitelisted`).
 - O `ValidationPipe` rejeita campos desconhecidos, campos obrigatórios
   ausentes, tenant menor que 1 e IDs de mutação menores que 1 com HTTP 400.
   A criação exige nome de pelo menos cinco caracteres.

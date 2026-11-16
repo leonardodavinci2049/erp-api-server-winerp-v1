@@ -37,13 +37,12 @@ export class BrandFindSearchV2Dto extends BaseRequestDto {
 Sample JSON for testing in body endpoint:
 
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_DEPARTAMENTO": 0,
   "pe_app_id": 1,
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "saller",
   "pe_person_id": 29014,

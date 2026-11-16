@@ -15,7 +15,7 @@ const context = {
   PE_ID_SYSTEM: 1,
   PE_ID_LOJA: 1,
   PE_ID_DEPARTAMENTO: 0,
-  PE_ID_USUARIO: 'USER001',
+  PE_ID_USUARIO: 1,
 };
 const options = { whitelist: true, forbidNonWhitelisted: true };
 
@@ -24,25 +24,21 @@ describe('Marca request contracts', () => {
     const requests = [
       plainToInstance(MarcaFindAllDto, {
         ...context,
-        PE_PASSKEY: 'example-passkey',
         PE_ID_MARCA: 0,
         PE_MARCA: '',
       }),
       plainToInstance(MarcaAddComboBoxDto, {
         ...context,
-        PE_PASSKEY: 'example-passkey',
         PE_ID_MARCA: 0,
       }),
       plainToInstance(MarcaCreateDto, {
         ...context,
-        PE_PASSKEY: 'example-passkey',
         PE_NOME: 'Marca',
         PE_PASTA_IMG: '',
         PE_ANOTACOES: '',
       }),
       plainToInstance(MarcaUpdateDto, {
         ...context,
-        PE_PASSKEY: 'example-passkey',
         PE_ID_MARCA: 1,
         PE_NOME: '',
         PE_PATH_IMAGEM: '',
@@ -51,7 +47,6 @@ describe('Marca request contracts', () => {
       }),
       plainToInstance(MarcaDeleteDto, {
         ...context,
-        PE_PASSKEY: 'example-passkey',
         PE_ID_MARCA: 1,
       }),
     ];
@@ -72,13 +67,23 @@ describe('Marca request contracts', () => {
       expect.arrayContaining([
         'pePassKey',
         'pePasseKey',
-        'PE_PASSKEY',
         'PE_ID_SYSTEM',
         'PE_ID_LOJA',
         'PE_ID_DEPARTAMENTO',
         'PE_ID_USUARIO',
       ]),
     );
+  });
+
+  it('rejects the legacy passkey body field, which is header-only', async () => {
+    const dto = plainToInstance(MarcaDeleteDto, {
+      ...context,
+      PE_PASSKEY: 'example-passkey',
+      PE_ID_MARCA: 1,
+    });
+    expect(
+      (await validate(dto, options)).map((error) => error.property),
+    ).toEqual(['PE_PASSKEY']);
   });
 
   it('inherits directly from BaseRequestDto in all seven DTOs', () => {
@@ -100,7 +105,6 @@ describe('Marca request contracts', () => {
   it('validates the additional context of existing operations', async () => {
     const base = {
       ...context,
-      PE_PASSKEY: 'example-passkey',
       pe_app_id: 1,
       pe_organization_id: 'ORG001',
       pe_user_name: 'User',
@@ -119,13 +123,12 @@ describe('Marca request contracts', () => {
       expect(await validate(dto, options)).toEqual([]);
     const invalid = plainToInstance(MarcaDeleteDto, {
       ...context,
-      PE_PASSKEY: '',
-      PE_ID_USUARIO: 1,
+      PE_ID_USUARIO: 'invalid',
       PE_ID_MARCA: 1,
     });
     expect(
       (await validate(invalid, options)).map((error) => error.property),
-    ).toEqual(expect.arrayContaining(['PE_PASSKEY', 'PE_ID_USUARIO']));
+    ).toEqual(expect.arrayContaining(['PE_ID_USUARIO']));
   });
 
   it('rejects nonpositive mutation ids and short creation names', async () => {
@@ -133,7 +136,6 @@ describe('Marca request contracts', () => {
       await validate(
         plainToInstance(MarcaDeleteDto, {
           ...context,
-          PE_PASSKEY: 'example-passkey',
           PE_ID_MARCA: 0,
         }),
         options,
@@ -143,7 +145,6 @@ describe('Marca request contracts', () => {
       await validate(
         plainToInstance(MarcaCreateDto, {
           ...context,
-          PE_PASSKEY: 'example-passkey',
           PE_NOME: 'abc',
           PE_PASTA_IMG: '',
           PE_ANOTACOES: '',
