@@ -1,0 +1,6 @@
+CREATE TABLE `tbl_produto_bkp_name` (
+  `ID_PRODUTO` int(11) NOT NULL,
+  `NAME_UPPER` varchar(500) DEFAULT NULL,
+  `NAME_LOWER` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`ID_PRODUTO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

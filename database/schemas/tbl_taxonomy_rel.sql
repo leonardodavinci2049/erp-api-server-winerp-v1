@@ -1,0 +1,16 @@
+CREATE TABLE `tbl_taxonomy_rel` (
+  `ID_TAXONOMY` int(11) NOT NULL,
+  `ID_RECORD` int(11) NOT NULL,
+  `ID_SYSTEM` int(11) DEFAULT 0,
+  `ID_SYSTEM_CLIENTE` int(11) DEFAULT 1,
+  `ID_LOJA` int(11) DEFAULT 1,
+  `ID_TIPO` int(11) DEFAULT 2,
+  `ID_DEPARTAMENTO` int(11) DEFAULT 1,
+  `ID_USUARIO` int(11) DEFAULT 1,
+  `LEVEL` smallint(4) DEFAULT 0,
+  `CREATEDAT` datetime DEFAULT NULL,
+  `UPDATEDAT` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID_TAXONOMY`,`ID_RECORD`),
+  KEY `ID_SYSTEM_CLIENTE` (`ID_SYSTEM`),
+  KEY `idx_taxonomy_rel_client_record_taxonomy` (`ID_SYSTEM_CLIENTE`,`ID_RECORD`,`ID_TAXONOMY`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
