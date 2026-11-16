@@ -17,7 +17,7 @@ const context = {
   PE_ID_SYSTEM: 7,
   PE_ID_LOJA: 3,
   PE_ID_DEPARTAMENTO: 0,
-  PE_ID_USUARIO: 'user-test',
+  PE_ID_USUARIO: 1,
 };
 const managerContext = {
   pe_app_id: 1,
@@ -57,7 +57,7 @@ describe('supplier request validation', () => {
       ).toEqual(expect.arrayContaining(Object.keys(context)));
       expect(
         validateSync(
-          Object.assign(new Dto(), context, fields, { PE_ID_USUARIO: 1 }),
+          Object.assign(new Dto(), context, fields, { PE_ID_USUARIO: 'invalid' }),
           options,
         ).map((error) => error.property),
       ).toContain('PE_ID_USUARIO');
@@ -117,7 +117,7 @@ describe('supplier request validation', () => {
       7,
       3,
       'org-test',
-      'user-test',
+      1,
       'Test User',
       'admin',
       null,

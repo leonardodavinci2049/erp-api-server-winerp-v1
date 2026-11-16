@@ -37,7 +37,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número não vazio |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; precisa coincidir com o `ID_LOJA` do fornecedor, pois a procedure bloqueia a linha por tenant + loja |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | string | Sim | ID do usuário que executa a alteração | Texto não vazio |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário que executa a alteração | Número |
 | `pe_app_id` | number | Sim | ID da aplicação | Número não vazio |
 | `pe_organization_id` | string | Sim | ID da organização | Texto não vazio |
 | `pe_user_name` | string | Sim | Nome do usuário | Texto não vazio |
@@ -68,7 +68,7 @@ Content-Type: application/json
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "admin",
   "pe_person_id": 29014,

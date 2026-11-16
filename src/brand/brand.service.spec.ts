@@ -11,7 +11,7 @@ const context = {
   PE_ID_SYSTEM: 7,
   PE_ID_LOJA: 1,
   PE_ID_DEPARTAMENTO: 0,
-  PE_ID_USUARIO: 'USER001',
+  PE_ID_USUARIO: 1,
 };
 const mutation = {
   ...context,

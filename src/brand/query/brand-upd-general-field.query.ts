@@ -7,7 +7,7 @@ interface BrandUpdGeneralFieldQueryResult {
     number,
     number,
     string,
-    string,
+    number,
     string,
     string,
     number | null,

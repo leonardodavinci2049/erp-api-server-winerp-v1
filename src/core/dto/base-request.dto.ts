@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 /**
  * Shared context inherited by every business request DTO.
@@ -18,7 +18,7 @@ export class BaseRequestDto {
   @IsNotEmpty({ message: 'ID do departamento é obrigatório.' })
   PE_ID_DEPARTAMENTO!: number;
 
-  @IsString({ message: 'ID do usuário deve ser um texto.' })
+  @IsNumber({}, { message: 'ID do usuário deve ser um número.' })
   @IsNotEmpty({ message: 'ID do usuário é obrigatório.' })
-  PE_ID_USUARIO!: string;
+  PE_ID_USUARIO!: number;
 }

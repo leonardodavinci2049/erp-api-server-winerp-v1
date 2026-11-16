@@ -37,7 +37,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); usado no filtro `ID_SYSTEM_CLIENTE` |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; aceito no contexto, mas **não** usado como filtro |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | string | Sim | ID do usuário | Texto não vazio |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
 | `PE_ID_FORNECEDOR` | number | Sim | ID do fornecedor a atualizar | Número não vazio; usado no filtro `ID_FORNECEDOR` |
 | `PE_ID_CATEGORIA` | number | Não | ID da categoria | Número; ausente grava `0` |
 | `PE_ID_TIPO` | number | Não | ID do tipo | Número; ausente grava `0` |
@@ -95,7 +95,7 @@ Content-Type: application/json
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_FORNECEDOR": 36974,
   "PE_ID_CATEGORIA": 0,
   "PE_ID_TIPO": 0,

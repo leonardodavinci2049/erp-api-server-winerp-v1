@@ -26,7 +26,7 @@ Os campos `PE_*` do fornecedor são declarados diretamente nos DTOs de create e 
 
 - Todas as rotas são `POST` com corpo JSON e autenticação por `Authorization: Bearer <API_KEY>` ou `x-api-key`.
 - `PE_ID_SYSTEM` é o identificador do tenant e corresponde a `tbl_fornecedor.ID_SYSTEM_CLIENTE` (`@Min(1)`).
-- Todos os campos de `BaseRequestDto` são obrigatórios. `PE_ID_USUARIO` é texto não vazio; os demais são números. Nas queries portadas do DataSnap, apenas `PE_ID_SYSTEM` é consumido do contexto. O header de autenticação continua obrigatório e é a única forma de autenticação: `PE_PASSKEY` não faz parte do corpo e é rejeitada como campo desconhecido.
+- Todos os campos de `BaseRequestDto` são obrigatórios. `PE_ID_USUARIO` e os demais campos são números. Nas queries portadas do DataSnap, apenas `PE_ID_SYSTEM` é consumido do contexto. O header de autenticação continua obrigatório e é a única forma de autenticação: `PE_PASSKEY` não faz parte do corpo e é rejeitada como campo desconhecido.
 - Os nomes antigos de contexto não são aceitos. Os consumidores devem migrar para os nomes da base. As operações de manager preservam adicionalmente `pe_app_id`, `pe_organization_id`, `pe_user_name`, `pe_user_role` e `pe_person_id` opcional. As queries usam `PE_ID_SYSTEM`, `PE_ID_LOJA` e, na atualização de campo, `PE_ID_USUARIO` nos parâmetros correspondentes, sem alterar a assinatura da procedure.
 - `fornecedor-product-find-id` recebe `PE_ID_PRODUTO`, `PE_ID_FORNECEDOR`, `PE_PRODUTO_DESCRICAO` e `PE_COD_PRODUTO_FORN`; ids menores ou iguais a zero e textos vazios não geram filtro.
 - `fornecedor-delete` recebe `PE_ID_FORNECEDOR` no corpo, embora o método DataSnap receba o id como parâmetro separado.

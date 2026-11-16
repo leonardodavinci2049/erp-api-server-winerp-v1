@@ -37,7 +37,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant), gravado em `ID_SYSTEM_CLIENTE` | Número maior ou igual a 1 (`@Min(1)`) |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; aceito no contexto, mas não gravado na criação (a coluna usa o default da tabela) |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | string | Sim | ID do usuário | Texto não vazio |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
 | `PE_NOME` | string | Sim | Nome do fornecedor | Texto não vazio, mínimo de 5 caracteres |
 | `PE_ID_CATEGORIA` | number | Não | ID da categoria | Número; ausente grava `0` |
 | `PE_ID_TIPO` | number | Não | ID do tipo | Número; ausente grava `0` |
@@ -92,7 +92,7 @@ Content-Type: application/json
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_NOME": "FORNECEDOR DOC API 001 ALFA",
   "PE_FISIJURI": "J",
   "PE_CNPJ": "12345678000190",

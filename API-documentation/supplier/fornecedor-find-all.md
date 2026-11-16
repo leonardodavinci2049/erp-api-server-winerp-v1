@@ -37,7 +37,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`) |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; aceito pelo DTO, mas **não** usado como filtro nesta consulta |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | string | Sim | ID do usuário | Texto não vazio |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
 | `PE_FORNECEDOR` | string | Não | Trecho do nome do fornecedor | O filtro `LIKE %valor%` só é aplicado quando o texto tem mais de 2 caracteres |
 
 ### Exemplo de Requisição
@@ -53,7 +53,7 @@ Content-Type: application/json
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_FORNECEDOR": "DOC API"
 }
 ```

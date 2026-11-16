@@ -52,7 +52,7 @@ Testes de erro executados:
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_NOME": "FORNECEDOR DOC API 001 ALFA",
   "PE_FISIJURI": "J",
   "PE_CNPJ": "12345678000190",
@@ -105,7 +105,7 @@ O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mes
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_FORNECEDOR": "DOC API"
 }
 ```
@@ -125,7 +125,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "admin",
   "pe_person_id": 29014,
@@ -202,7 +202,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_PRODUTO": 65109,
   "PE_ID_FORNECEDOR": 36961,
   "PE_PRODUTO_DESCRICAO": "",
@@ -258,7 +258,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "pe_user_name": "John Doe",
   "pe_user_role": "admin",
   "pe_person_id": 29014,
@@ -308,7 +308,7 @@ ID_FORNECEDOR  NOME                          ATIVIDADE_PRINCIPAL                
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_FORNECEDOR": 36974,
   "PE_ID_CATEGORIA": 0,
   "PE_ID_TIPO": 0,
@@ -369,7 +369,7 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
-  "PE_ID_USUARIO": "USER001",
+  "PE_ID_USUARIO": 1,
   "PE_ID_FORNECEDOR": 36975
 }
 ```

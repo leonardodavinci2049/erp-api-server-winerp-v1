@@ -7,7 +7,7 @@ interface SupplierUpdGeneralFieldQueryResult {
     number,
     number,
     string,
-    string,
+    number,
     string,
     string,
     number | null,
