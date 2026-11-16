@@ -6,6 +6,19 @@ API REST B2B multi-tenant (nome interno `erp-api-server-winerp-v1`): NestJS 12, 
 
 Arquivos de instrução aninhados complementam ou substituem este — leia o `AGENTS.md` mais próximo primeiro (por exemplo, `src/brand/AGENTS.md`, escrito em português do Brasil).
 
+## Relação com o servidor Pascal/Delphi
+
+Este projeto será uma implementação alternativa em Nest.js do servidor existente em `C:\PROJECTS\project_webservice`, desenvolvido em Pascal/Delphi e utilizado pela integração REST DataSnap. Essa é a direção de evolução do projeto; não significa que toda a funcionalidade do servidor Delphi já esteja implementada ou seja compatível nesta API.
+
+O cliente piloto está em `C:\PROJECTS\WINERP` (Delphi 10.3, VCL/Win32). Nele, `Connection/UdtmAPIWinERP.pas` mantém a conexão DataSnap, enquanto `Connection/UdtmAPIWinERPLINUX.pas` é o módulo destinado à conexão alternativa com Nest.js, ainda em adaptação. A integração DataSnap deve permanecer funcional durante essa evolução.
+
+Ao implementar operações equivalentes nesta API:
+
+- Consulte a implementação correspondente em `project_webservice` para compreender regras de negócio, filtros, campos, tipos, retornos e efeitos das operações antes de definir a alternativa Nest.js.
+- Preserve a arquitetura, autenticação, DTOs, isolamento por tenant/loja e envelope `ResultModel` deste projeto. Não presuma equivalência de URLs, payloads, identificadores ou respostas com o DataSnap.
+- Identifique e documente diferenças de comportamento e funcionalidades ainda sem equivalente. A adaptação do contrato legado para os consumidores Delphi deve ficar na camada de conexão do WINERP, conforme o escopo de cada tarefa.
+- Não trate a existência de uma rota Nest.js como prova de equivalência funcional nem de sincronização entre as bases. Valide o contrato e os efeitos em ambiente de teste antes de declarar uma operação substituível.
+
 ## Principais tecnologias e dependências
 
 `package.json` é a fonte da verdade para as versões (principais famílias listadas abaixo).
