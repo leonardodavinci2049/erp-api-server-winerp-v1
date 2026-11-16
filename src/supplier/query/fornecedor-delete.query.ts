@@ -23,7 +23,7 @@ export function FornecedorDeleteQuery(
   `;
 
   const queryParams: FornecedorDeleteQueryResult['queryParams'] = [
-    dataJsonDto.peIdSystem,
+    dataJsonDto.PE_ID_SYSTEM,
     dataJsonDto.PE_ID_FORNECEDOR,
   ];
 

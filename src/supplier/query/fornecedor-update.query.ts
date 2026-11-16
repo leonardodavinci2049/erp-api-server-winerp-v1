@@ -156,7 +156,7 @@ export function FornecedorUpdateQuery(
     dataJsonDto.PE_FACEBOOK ?? null,
     dataJsonDto.PE_TWITTER ?? null,
     dataJsonDto.PE_ANOTACOES ?? null,
-    dataJsonDto.peIdSystem,
+    dataJsonDto.PE_ID_SYSTEM,
     dataJsonDto.PE_ID_FORNECEDOR,
   ];
 

@@ -19,7 +19,7 @@ function countPlaceholders(queryString: string): number {
 describe('fornecedor query builders', () => {
   it('fornecedor-find-all filters by system client and optional name', () => {
     const withoutName = FornecedorFindAllQuery({
-      peIdSystem: 1,
+      PE_ID_SYSTEM: 1,
     } as FornecedorFindAllDto);
 
     expect(countPlaceholders(withoutName.queryString)).toBe(
@@ -39,14 +39,14 @@ describe('fornecedor query builders', () => {
     expect(withoutName.queryString).toContain("'' AS PATH_IMAGEM01");
 
     const withShortName = FornecedorFindAllQuery({
-      peIdSystem: 1,
+      PE_ID_SYSTEM: 1,
       PE_FORNECEDOR: 'AB',
     } as FornecedorFindAllDto);
 
     expect(withShortName.queryParams).toEqual([1]);
 
     const withName = FornecedorFindAllQuery({
-      peIdSystem: 1,
+      PE_ID_SYSTEM: 1,
       PE_FORNECEDOR: 'FORNEC',
     } as FornecedorFindAllDto);
 
@@ -80,7 +80,7 @@ describe('fornecedor query builders', () => {
 
   it('fornecedor-create keeps the legacy insert columns in order', () => {
     const { queryString, queryParams } = FornecedorCreateQuery({
-      peIdSystem: 7,
+      PE_ID_SYSTEM: 7,
       PE_NOME: 'FORNECEDOR API',
       PE_ID_CATEGORIA: 3,
       PE_ID_TIPO: 2,
@@ -102,7 +102,7 @@ describe('fornecedor query builders', () => {
 
   it('fornecedor-update keeps the legacy update columns and tenant filter', () => {
     const { queryString, queryParams } = FornecedorUpdateQuery({
-      peIdSystem: 7,
+      PE_ID_SYSTEM: 7,
       PE_ID_FORNECEDOR: 42,
       PE_NOME: 'FORNECEDOR API',
       PE_ID_CATEGORIA: 3,
@@ -122,7 +122,7 @@ describe('fornecedor query builders', () => {
 
   it('fornecedor-delete filters by system client and supplier id', () => {
     const { queryString, queryParams } = FornecedorDeleteQuery({
-      peIdSystem: 7,
+      PE_ID_SYSTEM: 7,
       PE_ID_FORNECEDOR: 42,
     } as FornecedorDeleteDto);
 
