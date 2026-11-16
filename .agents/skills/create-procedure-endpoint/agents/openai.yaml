@@ -1,0 +1,4 @@
+interface:
+  display_name: "Criar endpoint de procedure"
+  short_description: "Cria endpoint NestJS completo para stored procedure"
+  default_prompt: "Use $create-procedure-endpoint para expor uma stored procedure por um endpoint REST documentado e validado."

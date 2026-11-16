@@ -1,0 +1,4 @@
+interface:
+  display_name: "Criar plano de ação"
+  short_description: "Questiona antes de criar planos complexos"
+  default_prompt: "Use $create-action-plan para questionar antes do plano e incluir um gate que peça onde criar a branch baseada em develop antes de qualquer código."
