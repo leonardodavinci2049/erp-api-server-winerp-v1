@@ -62,7 +62,8 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 ecosystem.config.cjs
 .well-known
 /logs
-/scripts
+/scripts/*
+!/scripts/fluxo-git-flow-dois-pcs.md
 /docs
 /API-documentation/
 /stored-procedures
