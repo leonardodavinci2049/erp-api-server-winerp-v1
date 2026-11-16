@@ -4,7 +4,7 @@ Este diretório contém a lógica de negócio para o gerenciamento de Marcas (Br
 
 ## Visão Geral do Módulo
 
-O módulo `Brand` segue o padrão de arquitetura v2 do projeto, utilizando Stored Procedures para todas as operações de banco de dados.
+O módulo `Brand` segue o padrão de arquitetura v2 do projeto, com SQL direto e Stored Procedures. As cinco rotas `marca-*` portadas de `UsvmMarca.pas` usam SQL direto parametrizado; consulte `README.md` neste diretório para contratos e diferenças do legado.
 
 ## Estrutura de Arquivos
 
@@ -24,11 +24,11 @@ O módulo `Brand` segue o padrão de arquitetura v2 do projeto, utilizando Store
 
 ## Convenções Locais
 
-1. **Multi-tenancy:** Toda query DEVE incluir `pe_system_client_id` e `pe_store_id`.
+1. **Multi-tenancy:** Preserve o contexto e os filtros das operações existentes. Nas cinco rotas `marca-*`, o tenant é `PE_ID_SYSTEM` (`ID_SYSTEM_CLIENTE`); `PE_ID_LOJA` é obrigatório no DTO, mas não participa do SQL, como no legado. Não renomeie os campos legados para `BaseRequestDto`.
 2. **Nomenclatura de Métodos:**
    - No Service: `taskBrand[Ação]V2`.
    - No Controller: `brand[Ação]V2`.
-3. **Retornos:** Utilize sempre as funções auxiliares de `src/core/process-result/` para processar os resultados das SPs.
+3. **Retornos:** Utilize as funções auxiliares de `src/core/process-result/`: `processSqlResultQuery` e `processSqlResultMutation` para SQL direto e o processor de procedure nas operações correspondentes. Preserve os aliases de saída e o envelope `ResultModel`.
 
 ## Exemplo de Fluxo (v2)
 

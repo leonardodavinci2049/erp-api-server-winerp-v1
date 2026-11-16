@@ -78,7 +78,7 @@ export function BrandFindSearchV2Query(
   const queryParams: BrandFindSearchV2QueryResult['queryParams'] = [
     dataJsonDto.pe_search,
     dataJsonDto.pe_inactive,
-    dataJsonDto.pe_system_client_id,
+    dataJsonDto.PE_ID_SYSTEM,
     dataJsonDto.pe_limit,
   ];
 

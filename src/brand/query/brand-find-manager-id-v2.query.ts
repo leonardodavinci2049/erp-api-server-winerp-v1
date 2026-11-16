@@ -27,8 +27,8 @@ export function BrandFindManagerIdV2Query(
   `;
 
   const queryParams: BrandFindManagerIdV2QueryResult['queryParams'] = [
-    dataJsonDto.pe_system_client_id,
-    dataJsonDto.pe_store_id,
+    dataJsonDto.PE_ID_SYSTEM,
+    dataJsonDto.PE_ID_LOJA,
     dataJsonDto.pe_brand_id,
   ];
 
