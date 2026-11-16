@@ -21,7 +21,7 @@ interface FornecedorCreateQueryResult {
 export function FornecedorCreateQuery(
   dataJsonDto: FornecedorCreateDto,
 ): FornecedorCreateQueryResult {
-  const olSystemClientId = dataJsonDto.peIdSystem;
+  const olSystemClientId = dataJsonDto.PE_ID_SYSTEM;
   const olCategoryId = dataJsonDto.PE_ID_CATEGORIA ?? 0;
   const olTypeId = dataJsonDto.PE_ID_TIPO ?? 0;
   const olMunicipalityCode = dataJsonDto.PE_COD_MUNICIPIO ?? 0;

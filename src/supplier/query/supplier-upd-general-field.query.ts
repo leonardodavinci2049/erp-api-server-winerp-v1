@@ -25,10 +25,10 @@ export function SupplierUpdGeneralFieldQuery(
   dataJsonDto: SupplierUpdGeneralFieldDto,
 ): SupplierUpdGeneralFieldQueryResult {
   const olAppId = dataJsonDto.pe_app_id ?? 1;
-  const olSystemClientId = dataJsonDto.pe_system_client_id;
-  const olStoreId = dataJsonDto.pe_store_id;
+  const olSystemClientId = dataJsonDto.PE_ID_SYSTEM;
+  const olStoreId = dataJsonDto.PE_ID_LOJA;
   const olOrganizationId = dataJsonDto.pe_organization_id;
-  const olUserId = dataJsonDto.pe_user_id;
+  const olUserId = dataJsonDto.PE_ID_USUARIO;
   const olUserName = dataJsonDto.pe_user_name;
   const olUserRole = dataJsonDto.pe_user_role;
   const olPersonId = dataJsonDto.pe_person_id ?? null;

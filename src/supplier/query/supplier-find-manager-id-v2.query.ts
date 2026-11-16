@@ -67,8 +67,8 @@ export function SupplierFindManagerIdV2Query(
   `;
 
   const queryParams: SupplierFindManagerIdV2QueryResult['queryParams'] = [
-    dataJsonDto.pe_system_client_id,
-    dataJsonDto.pe_store_id,
+    dataJsonDto.PE_ID_SYSTEM,
+    dataJsonDto.PE_ID_LOJA,
     dataJsonDto.pe_supplier_id,
   ];
 

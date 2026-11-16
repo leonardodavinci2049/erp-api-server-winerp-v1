@@ -12,7 +12,7 @@ interface FornecedorFindAllQueryResult {
  *
  * The optional name filter only applies when the legacy value has more than
  * two characters, mirroring the original rule. The method only receives
- * `peIdSystem`, so `peIdLoja` is accepted by the DTO but not used as a filter,
+ * `PE_ID_SYSTEM`, so `PE_ID_LOJA` is accepted by the DTO but not used as a filter,
  * as in the DataSnap implementation.
  *
  * Every column is aliased with the exact legacy response name so the output
@@ -21,7 +21,7 @@ interface FornecedorFindAllQueryResult {
 export function FornecedorFindAllQuery(
   dataJsonDto: FornecedorFindAllDto,
 ): FornecedorFindAllQueryResult {
-  const queryParams: QueryParam[] = [dataJsonDto.peIdSystem];
+  const queryParams: QueryParam[] = [dataJsonDto.PE_ID_SYSTEM];
   const filters: string[] = ['tbl_fornecedor.ID_SYSTEM_CLIENTE = ?'];
 
   const olFornecedor = dataJsonDto.PE_FORNECEDOR ?? '';
