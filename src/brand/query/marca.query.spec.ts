@@ -6,7 +6,6 @@ import { MarcaUpdateQuery } from './marca-update.query.js';
 import { MarcaDeleteQuery } from './marca-delete.query.js';
 
 const context = {
-  PE_PASSKEY: 'example-passkey',
   PE_ID_SYSTEM: 7,
   PE_ID_LOJA: 2,
   PE_ID_DEPARTAMENTO: 0,

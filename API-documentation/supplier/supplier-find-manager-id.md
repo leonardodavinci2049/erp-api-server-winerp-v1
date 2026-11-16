@@ -28,11 +28,12 @@ A autenticação é **obrigatória**. Utilize um dos seguintes headers:
 
 Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
+`PE_PASSKEY` não faz parte do corpo da requisição: a autenticação é feita exclusivamente pelos headers acima e o envio desse campo no JSON retorna `400 Bad Request` (`property PE_PASSKEY should not exist`).
+
 ## Estrutura da Requisição (Body)
 
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
-| `PE_PASSKEY` | string | Sim | Passkey de autenticação do contexto | Texto não vazio |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número não vazio; usado no filtro `ID_SYSTEM_CLIENTE` |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; usado no filtro `ID_LOJA` |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
@@ -56,7 +57,6 @@ Content-Type: application/json
 
 ```json
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_DEPARTAMENTO": 0,
   "pe_app_id": 1,
   "PE_ID_SYSTEM": 1,
@@ -197,11 +197,13 @@ Quando o fornecedor não existe para o tenant e a loja informados, a requisiçã
 
 ### 400 Bad Request (Erro de Validação)
 
+Por exemplo, ao omitir `PE_ID_USUARIO`:
+
 ```json
 {
   "message": [
-    "Passkey é obrigatória.",
-    "Passkey deve ser um texto."
+    "ID do usuário é obrigatório.",
+    "ID do usuário deve ser um texto."
   ],
   "error": "Bad Request",
   "statusCode": 400

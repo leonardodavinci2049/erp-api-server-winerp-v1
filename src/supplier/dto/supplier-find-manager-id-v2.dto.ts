@@ -31,7 +31,6 @@ export class SupplierFindManagerIdV2Dto extends BaseRequestDto {
 Sample JSON for testing in body endpoint:
 
 {
-  "PE_PASSKEY": "example-passkey",
   "PE_ID_DEPARTAMENTO": 0,
   "pe_app_id": 1,
   "PE_ID_SYSTEM": 1,

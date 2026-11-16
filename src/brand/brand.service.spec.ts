@@ -8,7 +8,6 @@ vi.mock('../core/utils/functions/log_service_error.js', () => ({
 }));
 
 const context = {
-  PE_PASSKEY: 'example-passkey',
   PE_ID_SYSTEM: 7,
   PE_ID_LOJA: 1,
   PE_ID_DEPARTAMENTO: 0,
