@@ -1,7 +1,7 @@
-import { SupplierUpdGeneralFieldDto } from '../dto/supplier-upd-general-field.dto';
+import { SupplierUpdGeneralFieldDto } from '../dto/supplier-upd-general-field.dto.js';
 
 interface SupplierUpdGeneralFieldQueryResult {
-  queryString: string;
+  procedureName: string;
   queryParams: [
     number,
     number,
@@ -40,23 +40,7 @@ export function SupplierUpdGeneralFieldQuery(
   const olValueNumeric = dataJsonDto.pe_value_numeric ?? null;
   const olValueDate = dataJsonDto.pe_value_date ?? null;
 
-  const queryString = `call sp_supplier_upd_general_field_v2(
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?
-      )`;
+  const procedureName = 'sp_supplier_upd_general_field_v2';
 
   const queryParams: SupplierUpdGeneralFieldQueryResult['queryParams'] = [
     olAppId,
@@ -76,5 +60,5 @@ export function SupplierUpdGeneralFieldQuery(
     olValueDate,
   ];
 
-  return { queryString, queryParams };
+  return { procedureName, queryParams };
 }

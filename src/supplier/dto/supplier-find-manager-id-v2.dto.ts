@@ -1,10 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 
-import { EndpointContextDto } from 'src/core/dto/endpoint-context.dto';
+import { EndpointContextDto } from '../../core/dto/endpoint-context.dto.js';
 
 export class SupplierFindManagerIdV2Dto extends EndpointContextDto {
-  @ApiProperty({ description: 'Supplier ID' })
   @IsNumber()
   pe_supplier_id!: number;
 }

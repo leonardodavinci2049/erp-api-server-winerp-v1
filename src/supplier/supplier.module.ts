@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DbOperationModule } from 'src/db-operation/db-operation.module';
-import { SupplierController } from './supplier.controller';
-import { SupplierService } from './supplier.service';
+import { DbOperationModule } from '../db-operation/db-operation.module.js';
+import { SupplierController } from './supplier.controller.js';
+import { SupplierService } from './supplier.service.js';
 
 @Module({
   imports: [DbOperationModule],

@@ -1,4 +1,4 @@
-import { SupplierFindManagerIdV2Dto } from '../dto/supplier-find-manager-id-v2.dto';
+import { SupplierFindManagerIdV2Dto } from '../dto/supplier-find-manager-id-v2.dto.js';
 
 interface SupplierFindManagerIdV2QueryResult {
   queryString: string;

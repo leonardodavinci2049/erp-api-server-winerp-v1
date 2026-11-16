@@ -1,4 +1,3 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsIn,
@@ -9,32 +8,17 @@ import {
   Matches,
 } from 'class-validator';
 
-import { EndpointContextDto } from 'src/core/dto/endpoint-context.dto';
+import { EndpointContextDto } from '../../core/dto/endpoint-context.dto.js';
 
 export class SupplierUpdGeneralFieldDto extends EndpointContextDto {
-  @ApiProperty({
-    description: 'Supplier ID (tbl_fornecedor.ID_FORNECEDOR)',
-    example: 1,
-  })
   @IsNumber()
   @IsNotEmpty()
   @Type(() => Number)
   pe_register_id!: number;
 
-  @ApiProperty({
-    description: 'Field type: 1=string, 2=bigint, 3=decimal, 4=date',
-    enum: [1, 2, 3, 4],
-    example: 1,
-  })
   @IsIn([1, 2, 3, 4])
   pe_field_type!: number;
 
-  @ApiProperty({
-    description:
-      'Column name of tbl_fornecedor (letters, numbers and underscore only)',
-    maxLength: 200,
-    example: 'NOME',
-  })
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-zA-Z0-9_]+$/, {
@@ -42,26 +26,20 @@ export class SupplierUpdGeneralFieldDto extends EndpointContextDto {
   })
   pe_field!: string;
 
-  @ApiPropertyOptional({ description: 'Value for pe_field_type = 1' })
   @IsString()
   @IsOptional()
   pe_value_str?: string | null;
 
-  @ApiPropertyOptional({ description: 'Value for pe_field_type = 2' })
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
   pe_value_int?: number | null;
 
-  @ApiPropertyOptional({ description: 'Value for pe_field_type = 3' })
   @IsNumber()
   @IsOptional()
   @Type(() => Number)
   pe_value_numeric?: number | null;
 
-  @ApiPropertyOptional({
-    description: 'Value for pe_field_type = 4 (YYYY-MM-DD)',
-  })
   @IsString()
   @IsOptional()
   pe_value_date?: string | null;

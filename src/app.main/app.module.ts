@@ -1,3 +1,4 @@
+import { SupplierModule } from '../supplier/supplier.module.js';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -28,6 +29,7 @@ import { AppService } from './app.service.js';
     ]),
     DbOperationModule,
     BrandModule,
+    SupplierModule,
   ],
   controllers: [AppController],
   providers: [
