@@ -10,7 +10,6 @@ import { MarcaDeleteDto } from './marca-delete.dto.js';
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
 import { BrandFindManagerIdV2Dto } from './brand-find-manager-id_v2.dto.js';
 import { BrandFindSearchV2Dto } from './brand-find-search-v2.dto.js';
-import { BrandUpdGeneralFieldDto } from './brand-upd-general-field.dto.js';
 
 const context = {
   PE_ID_SYSTEM: 1,
@@ -82,7 +81,7 @@ describe('Marca request contracts', () => {
     );
   });
 
-  it('inherits directly from BaseRequestDto in all eight DTOs', () => {
+  it('inherits directly from BaseRequestDto in all seven DTOs', () => {
     for (const dto of [
       MarcaFindAllDto,
       MarcaAddComboBoxDto,
@@ -91,7 +90,6 @@ describe('Marca request contracts', () => {
       MarcaDeleteDto,
       BrandFindManagerIdV2Dto,
       BrandFindSearchV2Dto,
-      BrandUpdGeneralFieldDto,
     ]) {
       expect(Object.getPrototypeOf(dto.prototype)).toBe(
         BaseRequestDto.prototype,
@@ -115,13 +113,6 @@ describe('Marca request contracts', () => {
         pe_search: '',
         pe_inactive: 0,
         pe_limit: 10,
-      }),
-      plainToInstance(BrandUpdGeneralFieldDto, {
-        ...base,
-        pe_register_id: 1,
-        pe_field_type: 1,
-        pe_field: 'NOME',
-        pe_value_str: 'Marca',
       }),
     ];
     for (const dto of requests)

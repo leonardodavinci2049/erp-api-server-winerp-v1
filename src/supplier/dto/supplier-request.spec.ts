@@ -4,14 +4,12 @@ import { describe, expect, it } from 'vitest';
 
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
 import { SupplierFindManagerIdV2Query } from '../query/supplier-find-manager-id-v2.query.js';
-import { SupplierUpdGeneralFieldQuery } from '../query/supplier-upd-general-field.query.js';
 import { FornecedorCreateDto } from './fornecedor-create.dto.js';
 import { FornecedorDeleteDto } from './fornecedor-delete.dto.js';
 import { FornecedorFindAllDto } from './fornecedor-find-all.dto.js';
 import { FornecedorProductFindIdDto } from './fornecedor-product-find-id.dto.js';
 import { FornecedorUpdateDto } from './fornecedor-update.dto.js';
 import { SupplierFindManagerIdV2Dto } from './supplier-find-manager-id-v2.dto.js';
-import { SupplierUpdGeneralFieldDto } from './supplier-upd-general-field.dto.js';
 
 const context = {
   PE_PASSKEY: 'test-passkey',
@@ -33,15 +31,6 @@ const cases = [
   [FornecedorFindAllDto, { PE_FORNECEDOR: 'Supplier' }],
   [FornecedorProductFindIdDto, { PE_ID_PRODUTO: 10 }],
   [SupplierFindManagerIdV2Dto, { ...managerContext, pe_supplier_id: 42 }],
-  [
-    SupplierUpdGeneralFieldDto,
-    {
-      ...managerContext,
-      pe_register_id: 42,
-      pe_field_type: 1,
-      pe_field: 'NOME',
-    },
-  ],
 ] as const;
 const options = { whitelist: true, forbidNonWhitelisted: true };
 
@@ -89,36 +78,5 @@ describe('supplier request validation', () => {
       { pe_supplier_id: 42 },
     );
     expect(SupplierFindManagerIdV2Query(dto).queryParams).toEqual([7, 3, 42]);
-  });
-
-  it('maps base context to the existing procedure signature', () => {
-    const dto = Object.assign(
-      new SupplierUpdGeneralFieldDto(),
-      context,
-      managerContext,
-      {
-        pe_register_id: 42,
-        pe_field_type: 1,
-        pe_field: 'NOME',
-        pe_value_str: 'Supplier',
-      },
-    );
-    expect(SupplierUpdGeneralFieldQuery(dto).queryParams).toEqual([
-      1,
-      7,
-      3,
-      'org-test',
-      'user-test',
-      'Test User',
-      'admin',
-      null,
-      42,
-      1,
-      'NOME',
-      'Supplier',
-      null,
-      null,
-      null,
-    ]);
   });
 });

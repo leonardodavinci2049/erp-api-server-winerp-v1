@@ -173,7 +173,6 @@ O módulo de marcas é, atualmente, o único módulo de negócio no repositório
 | `POST` | `/api/brand/v2/brand-find-manager-id`     | Busca uma marca pelo identificador para uso do gerenciador |
 | `POST` | `/api/brand/v2/brand-update`              | Atualiza uma marca                                         |
 | `POST` | `/api/brand/v2/brand-delete`              | Exclui ou inativa uma marca, conforme a stored procedure   |
-| `POST` | `/api/brand/v2/brand-upd-general-field`   | Atualiza um campo geral da marca                           |
 | `POST` | `/api/brand/v2/brand-upd-inl-flag-active` | Atualiza o indicador de marca ativa                        |
 | `POST` | `/api/brand/v2/brand-upd-inl-name`        | Atualiza o nome da marca                                   |
 | `POST` | `/api/brand/v2/brand-upd-inl-notes`       | Atualiza as observações da marca                           |

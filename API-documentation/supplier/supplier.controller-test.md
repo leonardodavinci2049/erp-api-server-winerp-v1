@@ -26,10 +26,9 @@ Registrar as evidências reais utilizadas na documentação dos endpoints `POST`
 | 3 | `/supplier/v2/fornecedor-find-all` | 201 | 100200 | 0 | 2 registros |
 | 4 | `/supplier/v2/supplier-find-manager-id` | 201 | 100200 | 0 | 1 registro |
 | 5 | `/supplier/v2/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
-| 6 | `/supplier/v2/supplier-upd-general-field` | 201 | 100200 | 0 | campo atualizado |
-| 7 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada |
-| 8 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36975) |
-| 9 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36974) |
+| 6 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada |
+| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36975) |
+| 8 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36974) |
 
 Testes de erro executados:
 
@@ -38,7 +37,6 @@ Testes de erro executados:
 | Sem header de autenticação | 401 | — | `API key is required` |
 | `fornecedor-find-all` sem `PE_PASSKEY` | 400 | — | erro do `ValidationPipe` |
 | `fornecedor-create` com `PE_WHATSAPP1` (campo desconhecido) | 400 | — | `property PE_WHATSAPP1 should not exist` |
-| `supplier-upd-general-field` com campo inexistente | 201 | 100422 | `Erro! Campo "CAMPO_INEXISTENTE" não existe na tabela tbl_fornecedor` |
 | `supplier-find-manager-id` com fornecedor inexistente | 201 | 100200 | `Supplier find manager Id not found` |
 | `fornecedor-delete` com fornecedor inexistente | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
 
@@ -250,60 +248,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 
 > O fornecedor `36961` é um registro pré-existente de desenvolvimento. O filtro por `PE_ID_PRODUTO` foi escolhido para limitar a evidência a dois registros.
 
-## 5. `POST /supplier/v2/supplier-upd-general-field`
-
-### Requisição
-
-```json
-{
-  "PE_PASSKEY": "example-passkey",
-  "PE_ID_DEPARTAMENTO": 0,
-  "pe_app_id": 1,
-  "PE_ID_SYSTEM": 1,
-  "PE_ID_LOJA": 1,
-  "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": "USER001",
-  "pe_user_name": "John Doe",
-  "pe_user_role": "admin",
-  "pe_person_id": 29014,
-  "pe_register_id": 36974,
-  "pe_field_type": 1,
-  "pe_field": "ATIVIDADE_PRINCIPAL",
-  "pe_value_str": "Comercio atacadista de materiais de construcao e ferragens",
-  "pe_value_int": null,
-  "pe_value_numeric": null,
-  "pe_value_date": null
-}
-```
-
-### Resposta
-
-```json
-{
-  "statusCode": 100200,
-  "message": "Cadastro atualizado com sucesso.",
-  "recordId": 36974,
-  "data": [
-    {
-      "sp_return_id": 36974,
-      "sp_message": "Cadastro atualizado com sucesso.",
-      "sp_error_id": 0
-    }
-  ],
-  "quantity": 1,
-  "errorId": 0,
-  "info1": ""
-}
-```
-
-Verificação em `tbl_fornecedor` após a chamada:
-
-```text
-ID_FORNECEDOR  NOME                          ATIVIDADE_PRINCIPAL                                                 DT_UPDATE
-36974          FORNECEDOR DOC API 001 ALFA   Comercio atacadista de materiais de construcao e ferragens          2026-11-16
-```
-
-## 6. `POST /supplier/v2/fornecedor-update`
+## 5. `POST /supplier/v2/fornecedor-update`
 
 ### Requisição
 
@@ -365,7 +310,7 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
 36974          FORNECEDOR DOC API 001 ALFA   ALFA DISTRIBUIDORA ATUALIZADA   Fornecedor atualizado para documentacao do endpoint.   2026-11-16
 ```
 
-## 7. `POST /supplier/v2/fornecedor-delete`
+## 6. `POST /supplier/v2/fornecedor-delete`
 
 ### Requisição
 

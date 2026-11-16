@@ -4,7 +4,7 @@ Este diretório contém a lógica de negócio de fornecedores (`Supplier`). Part
 
 ## Visão geral do módulo
 
-- `dto/`: os sete DTOs de operação herdam diretamente de `BaseRequestDto`. O contexto usa `PE_PASSKEY`, `PE_ID_SYSTEM`, `PE_ID_LOJA`, `PE_ID_DEPARTAMENTO` e `PE_ID_USUARIO`; os campos específicos das operações mantêm seus nomes.
+- `dto/`: os seis DTOs de operação herdam diretamente de `BaseRequestDto`. O contexto usa `PE_PASSKEY`, `PE_ID_SYSTEM`, `PE_ID_LOJA`, `PE_ID_DEPARTAMENTO` e `PE_ID_USUARIO`; os campos específicos das operações mantêm seus nomes.
 - `query/`: funções puras que retornam `{ queryString, queryParams }` com placeholders `?`. Nenhum valor de DTO é interpolado na string SQL.
 - `types/`: interfaces que estendem `RowDataPacket` para os result sets do MySQL.
 - `supplier.service.ts`: orquestração, chamada ao `DbOperationService` e montagem do `ResultModel`.

@@ -64,7 +64,6 @@ export interface TblSupplierFindManagerId extends RowDataPacket {
 }
 
 export type SpResultRecordCreateType = [SpDefaultFeedback[], SpOperationResult];
-export type SpResultRecordUpdateType = [SpDefaultFeedback[], SpOperationResult];
 export type SpResultRecordDeleteType = [SpDefaultFeedback[], SpOperationResult];
 
 export type SpResultSupplierFindManagerIdData = [

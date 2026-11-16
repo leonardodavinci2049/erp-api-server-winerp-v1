@@ -7,7 +7,6 @@ import { FornecedorFindAllDto } from './dto/fornecedor-find-all.dto.js';
 import { FornecedorProductFindIdDto } from './dto/fornecedor-product-find-id.dto.js';
 import { FornecedorUpdateDto } from './dto/fornecedor-update.dto.js';
 import { SupplierFindManagerIdV2Dto } from './dto/supplier-find-manager-id-v2.dto.js';
-import { SupplierUpdGeneralFieldDto } from './dto/supplier-upd-general-field.dto.js';
 
 import { SupplierService } from './supplier.service.js';
 
@@ -34,12 +33,6 @@ export class SupplierController {
   @Post('v2/supplier-find-manager-id')
   supplierFindManagerIdV2(@Body() dataJsonDto: SupplierFindManagerIdV2Dto) {
     return this.supplierService.taskSupplierFindManagerIdV2(dataJsonDto);
-  }
-
-  @UseGuards(AuthGuard)
-  @Post('v2/supplier-upd-general-field')
-  supplierUpdGeneralFieldV2(@Body() dataJsonDto: SupplierUpdGeneralFieldDto) {
-    return this.supplierService.taskSupplierUpdGeneralFieldV2(dataJsonDto);
   }
 
   @UseGuards(AuthGuard)
