@@ -9,7 +9,7 @@ Endpoint para consultar os fornecedores cadastrados para o cliente do sistema (`
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/supplier/v2/fornecedor-find-all` |
+| Path | `/supplier/v1/fornecedor-find-all` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -43,7 +43,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /supplier/v2/fornecedor-find-all
+POST /supplier/v1/fornecedor-find-all
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

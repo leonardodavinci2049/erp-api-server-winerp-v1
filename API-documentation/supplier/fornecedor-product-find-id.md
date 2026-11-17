@@ -9,7 +9,7 @@ Endpoint para consultar os vínculos entre produtos e fornecedores existentes em
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/supplier/v2/fornecedor-product-find-id` |
+| Path | `/supplier/v1/fornecedor-product-find-id` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -46,7 +46,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /supplier/v2/fornecedor-product-find-id
+POST /supplier/v1/fornecedor-product-find-id
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```
@@ -89,34 +89,34 @@ Campos de cada registro em `data["Supplier product find id"]`:
 
 ```json
 {
-  "statusCode": 100200,
-  "message": "Dados carregados com sucesso.",
-  "recordId": "1",
-  "data": {
-    "Supplier product find id": [
-      {
-        "PS_ID_TBL_PRODUTO_FORN": 113034,
-        "PS_ID_PRODUTO": 67390,
-        "PS_ID_FORNECEDOR": 36971,
-        "PS_COD_PRODUTO_FORN": "36634",
-        "PS_PRODUTO": "CREME FACIAL AGUA MICELAR IBSA DERMA NAHYCO PROFHILO PURA 400ML",
-        "PS_INATIVO": 2,
-        "PS_PATH_IMAGEM_VENDA": null
-      },
-      {
-        "PS_ID_TBL_PRODUTO_FORN": 113035,
-        "PS_ID_PRODUTO": 67396,
-        "PS_ID_FORNECEDOR": 36971,
-        "PS_COD_PRODUTO_FORN": "37730",
-        "PS_PRODUTO": "CREME FACIAL PEPTIDE SCIENCES GHK-CU COPPER PEPTIDE FACE CREAM 50ML COREANO",
-        "PS_INATIVO": 2,
-        "PS_PATH_IMAGEM_VENDA": "https://assents01.comsuporte.com.br/uploads/images/2026/09/24/e3807009-7b67-4c16-83f7-bbfc67ad3aa2/creme-facial-ghk-cu-copper-peptide-face-cream-mundial-megastore-original.jpg"
-      }
-    ]
-  },
-  "quantity": 2,
-  "errorId": 0,
-  "info1": ""
+    "statusCode": 100200,
+    "message": "Dados carregados com sucesso.",
+    "recordId": "1",
+    "data": {
+        "Supplier product find id": [
+            {
+                "PS_ID_TBL_PRODUTO_FORN": 113034,
+                "PS_ID_PRODUTO": 67390,
+                "PS_ID_FORNECEDOR": 36971,
+                "PS_COD_PRODUTO_FORN": "36634",
+                "PS_PRODUTO": "CREME FACIAL AGUA MICELAR IBSA DERMA NAHYCO PROFHILO PURA 400ML",
+                "PS_INATIVO": 2,
+                "PS_PATH_IMAGEM_VENDA": null
+            },
+            {
+                "PS_ID_TBL_PRODUTO_FORN": 113035,
+                "PS_ID_PRODUTO": 67396,
+                "PS_ID_FORNECEDOR": 36971,
+                "PS_COD_PRODUTO_FORN": "37730",
+                "PS_PRODUTO": "CREME FACIAL PEPTIDE SCIENCES GHK-CU COPPER PEPTIDE FACE CREAM 50ML COREANO",
+                "PS_INATIVO": 2,
+                "PS_PATH_IMAGEM_VENDA": "https://assents01.comsuporte.com.br/uploads/images/2026/09/24/e3807009-7b67-4c16-83f7-bbfc67ad3aa2/creme-facial-ghk-cu-copper-peptide-face-cream-mundial-megastore-original.jpg"
+            }
+        ]
+    },
+    "quantity": 2,
+    "errorId": 0,
+    "info1": ""
 }
 ```
 

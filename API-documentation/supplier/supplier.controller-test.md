@@ -23,13 +23,13 @@ Registrar as evidências reais utilizadas na documentação dos endpoints `POST`
 
 | # | Endpoint | HTTP | `statusCode` | `errorId` | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36976"` |
-| 2 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36977"` |
-| 3 | `/supplier/v2/fornecedor-find-all` | 201 | 100200 | 0 | 2 registros |
-| 4 | `/supplier/v2/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
-| 5 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada (36976) |
-| 6 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36978"` |
-| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36978) |
+| 1 | `/supplier/v1/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36976"` |
+| 2 | `/supplier/v1/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36977"` |
+| 3 | `/supplier/v1/fornecedor-find-all` | 201 | 100200 | 0 | 2 registros |
+| 4 | `/supplier/v1/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
+| 5 | `/supplier/v1/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada (36976) |
+| 6 | `/supplier/v1/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36978"` |
+| 7 | `/supplier/v1/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36978) |
 
 Testes de erro executados:
 
@@ -42,7 +42,7 @@ Testes de erro executados:
 | `fornecedor-delete` com fornecedor inexistente (`999999`) | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
 | `fornecedor-update` com fornecedor inexistente (`999999`) | 201 | 100422 | `Nenhum fornecedor foi atualizado.` (`errorId` 206) |
 
-## 1. `POST /supplier/v2/fornecedor-create`
+## 1. `POST /supplier/v1/fornecedor-create`
 
 ### Requisição (`36976`)
 
@@ -95,7 +95,7 @@ Testes de erro executados:
 
 O fornecedor `36977` (`FORNECEDOR DOC API 002 BETA`) foi criado com o mesmo fluxo e retornou `recordId` `"36977"`.
 
-## 2. `POST /supplier/v2/fornecedor-find-all`
+## 2. `POST /supplier/v1/fornecedor-find-all`
 
 ### Requisição
 
@@ -115,7 +115,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36976`) e `FORNECEDOR
 
 Consulta sem resultado (`PE_FORNECEDOR` `"FORNECEDOR QUE NAO EXISTE"`) retornou HTTP 201, `statusCode` 100200, `message` `"Nenhum fornecedor encontrado."`, `recordId` `"0"`, `data` `{"Supplier find all":[]}` e `quantity` 0.
 
-## 3. `POST /supplier/v2/fornecedor-product-find-id`
+## 3. `POST /supplier/v1/fornecedor-product-find-id`
 
 ### Requisição
 
@@ -135,7 +135,7 @@ Retornou `quantity` 2 com os vínculos `113034` e `113035` do fornecedor `NOVA M
 
 Consulta sem resultado (`PE_ID_FORNECEDOR` `999999`) retornou `statusCode` 100200, `message` `"Nenhum produto de fornecedor encontrado."`, `recordId` `"0"`, `data` `{"Supplier product find id":[]}` e `quantity` 0.
 
-## 4. `POST /supplier/v2/fornecedor-update`
+## 4. `POST /supplier/v1/fornecedor-update`
 
 ### Requisição
 
@@ -189,7 +189,7 @@ Consulta sem resultado (`PE_ID_FORNECEDOR` `999999`) retornou `statusCode` 10020
 
 A atualização sobrescreve todas as colunas previstas no `UPDATE`; os campos não enviados foram gravados como `NULL`, como no legado. O registro completo com os valores remanescentes está em `API-documentation/supplier/fornecedor-update.md`.
 
-## 5. `POST /supplier/v2/fornecedor-delete`
+## 5. `POST /supplier/v1/fornecedor-delete`
 
 ### Requisição
 

@@ -9,7 +9,7 @@ Endpoint para consultar as marcas ativas (`INATIVO = 0`) do cliente do sistema (
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/brand/v2/marca-find-all` |
+| Path | `/brand/v1/marca-find-all` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -42,7 +42,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /brand/v2/marca-find-all
+POST /brand/v1/marca-find-all
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```
@@ -89,40 +89,52 @@ Campos de cada registro em `data["Marca FindAll"]`:
 
 ```json
 {
-  "statusCode": 100200,
-  "message": "Dados carregados com sucesso.",
-  "recordId": "1",
-  "data": {
-    "Marca FindAll": [
-      {
-        "PS_REGISTROS_COUNT": 0,
-        "PS_ID_MARCA": 523,
-        "PS_ID_PESSOA": 523,
-        "PS_ID_IMAGEM": 0,
-        "PS_NOME": "MARCA DOC API 001 ALFA",
-        "PS_MARCA": "MARCA DOC API 001 ALFA",
-        "PS_PATH_IMAGEM": "/imagens/doc-api/marca-alfa-v2.png",
-        "PS_INATIVO": 0,
-        "PS_DATADOCADASTRO": "2026-11-17 08:42:16",
-        "PS_ANOTACOES": ""
-      },
-      {
-        "PS_REGISTROS_COUNT": 0,
-        "PS_ID_MARCA": 524,
-        "PS_ID_PESSOA": 524,
-        "PS_ID_IMAGEM": 0,
-        "PS_NOME": "MARCA DOC API 002 BETA",
-        "PS_MARCA": "MARCA DOC API 002 BETA",
-        "PS_PATH_IMAGEM": "/imagens/doc-api/marca-beta.png",
-        "PS_INATIVO": 0,
-        "PS_DATADOCADASTRO": "2026-11-17 08:42:16",
-        "PS_ANOTACOES": ""
-      }
-    ]
-  },
-  "quantity": 2,
-  "errorId": 0,
-  "info1": ""
+    "statusCode": 100200,
+    "message": "Dados carregados com sucesso.",
+    "recordId": "1",
+    "data": {
+        "Marca FindAll": [
+            {
+                "PS_REGISTROS_COUNT": 0,
+                "PS_ID_MARCA": 523,
+                "PS_ID_PESSOA": 523,
+                "PS_ID_IMAGEM": 0,
+                "PS_NOME": "MARCA DOC API 001 ALFA",
+                "PS_MARCA": "MARCA DOC API 001 ALFA",
+                "PS_PATH_IMAGEM": "/imagens/doc-api/marca-alfa-v2.png",
+                "PS_INATIVO": 0,
+                "PS_DATADOCADASTRO": "2026-11-17 08:42:16",
+                "PS_ANOTACOES": ""
+            },
+            {
+                "PS_REGISTROS_COUNT": 0,
+                "PS_ID_MARCA": 526,
+                "PS_ID_PESSOA": 526,
+                "PS_ID_IMAGEM": 0,
+                "PS_NOME": "MARCA DOC API 001 ALFA",
+                "PS_MARCA": "MARCA DOC API 001 ALFA",
+                "PS_PATH_IMAGEM": "/imagens/doc-api/marca-alfa.png",
+                "PS_INATIVO": 0,
+                "PS_DATADOCADASTRO": "2026-11-17 08:56:53",
+                "PS_ANOTACOES": ""
+            },
+            {
+                "PS_REGISTROS_COUNT": 0,
+                "PS_ID_MARCA": 524,
+                "PS_ID_PESSOA": 524,
+                "PS_ID_IMAGEM": 0,
+                "PS_NOME": "MARCA DOC API 002 BETA",
+                "PS_MARCA": "MARCA DOC API 002 BETA",
+                "PS_PATH_IMAGEM": "/imagens/doc-api/marca-beta.png",
+                "PS_INATIVO": 0,
+                "PS_DATADOCADASTRO": "2026-11-17 08:42:16",
+                "PS_ANOTACOES": ""
+            }
+        ]
+    },
+    "quantity": 3,
+    "errorId": 0,
+    "info1": ""
 }
 ```
 

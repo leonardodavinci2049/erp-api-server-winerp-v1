@@ -9,7 +9,7 @@ Endpoint para atualizar os dados de uma marca existente do cliente do sistema (`
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/brand/v2/marca-update` |
+| Path | `/brand/v1/marca-update` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -45,7 +45,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /brand/v2/marca-update
+POST /brand/v1/marca-update
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```
