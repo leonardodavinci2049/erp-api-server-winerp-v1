@@ -9,7 +9,7 @@ Endpoint para cadastrar um novo fornecedor para o cliente do sistema (`PE_ID_SYS
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/supplier/v2/fornecedor-create` |
+| Path | `/supplier/v1/fornecedor-create` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -100,7 +100,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /supplier/v2/fornecedor-create
+POST /supplier/v1/fornecedor-create
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

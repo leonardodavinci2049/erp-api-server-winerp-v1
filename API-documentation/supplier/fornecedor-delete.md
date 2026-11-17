@@ -9,7 +9,7 @@ Endpoint para excluir fisicamente um fornecedor do cliente do sistema (`PE_ID_SY
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/supplier/v2/fornecedor-delete` |
+| Path | `/supplier/v1/fornecedor-delete` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -41,7 +41,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /supplier/v2/fornecedor-delete
+POST /supplier/v1/fornecedor-delete
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

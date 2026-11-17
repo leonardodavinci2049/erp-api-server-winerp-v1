@@ -9,7 +9,7 @@ Endpoint para carregar a lista de marcas ativas (`INATIVO = 0`) do cliente do si
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/brand/v2/marca-AddComboBox` |
+| Path | `/brand/v1/marca-add-combobox` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -38,12 +38,12 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado na consulta |
 | `PE_ID_MARCA` | number | Sim | ID da marca | Inteiro; aceito pelo DTO, mas **não** é usado como filtro. A consulta sempre retorna todas as marcas ativas do tenant |
 
-> O path preserva a grafia original `marca-AddComboBox`, com `A` e `C` maiúsculos.
+> O path preserva a grafia original `marca-add-combobox`, com `A` e `C` maiúsculos.
 
 ### Exemplo de Requisição
 
 ```http
-POST /brand/v2/marca-AddComboBox
+POST /brand/v1/marca-add-combobox
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

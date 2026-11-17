@@ -22,13 +22,13 @@ Registrar as evidências reais utilizadas na documentação dos endpoints `POST`
 
 | # | Endpoint | HTTP | `statusCode` | `errorId` | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `/brand/v2/marca-create` | 201 | 100200 | 0 | `recordId` `"523"` |
-| 2 | `/brand/v2/marca-create` | 201 | 100200 | 0 | `recordId` `"524"` |
-| 3 | `/brand/v2/marca-find-all` | 201 | 100200 | 0 | 2 registros |
-| 4 | `/brand/v2/marca-AddComboBox` | 201 | 100200 | 0 | 12 registros |
-| 5 | `/brand/v2/marca-update` | 201 | 100200 | 0 | 1 linha afetada (523) |
-| 6 | `/brand/v2/marca-create` | 201 | 100200 | 0 | `recordId` `"525"` |
-| 7 | `/brand/v2/marca-delete` | 201 | 100200 | 0 | 1 linha afetada (525) |
+| 1 | `/brand/v1/marca-create` | 201 | 100200 | 0 | `recordId` `"523"` |
+| 2 | `/brand/v1/marca-create` | 201 | 100200 | 0 | `recordId` `"524"` |
+| 3 | `/brand/v1/marca-find-all` | 201 | 100200 | 0 | 2 registros |
+| 4 | `/brand/v1/marca-add-combobox` | 201 | 100200 | 0 | 12 registros |
+| 5 | `/brand/v1/marca-update` | 201 | 100200 | 0 | 1 linha afetada (523) |
+| 6 | `/brand/v1/marca-create` | 201 | 100200 | 0 | `recordId` `"525"` |
+| 7 | `/brand/v1/marca-delete` | 201 | 100200 | 0 | 1 linha afetada (525) |
 
 Testes de erro executados:
 
@@ -41,7 +41,7 @@ Testes de erro executados:
 | `marca-delete` com marca inexistente (`999999`) | 201 | 100422 | `Nenhuma marca foi alterada.` (`errorId` 206) |
 | `marca-update` com marca inexistente (`999999`) | 201 | 100422 | `Nenhuma marca foi alterada.` (`errorId` 206) |
 
-## 1. `POST /brand/v2/marca-create`
+## 1. `POST /brand/v1/marca-create`
 
 ### Requisição (`523`)
 
@@ -73,7 +73,7 @@ Testes de erro executados:
 
 A marca `524` (`MARCA DOC API 002 BETA`) foi criada com o mesmo fluxo e retornou `recordId` `"524"`.
 
-## 2. `POST /brand/v2/marca-find-all`
+## 2. `POST /brand/v1/marca-find-all`
 
 ### Requisição
 
@@ -96,7 +96,7 @@ O filtro por nome é aplicado com `LIKE` sem wildcards automáticos: para busca 
 
 Consulta sem resultado (`PE_MARCA` `"MARCA QUE NAO EXISTE"`) retornou HTTP 201, `statusCode` 100200, `message` `"Nenhuma marca encontrada."`, `recordId` `"0"`, `data` `{"Marca FindAll":[]}` e `quantity` 0.
 
-## 3. `POST /brand/v2/marca-AddComboBox`
+## 3. `POST /brand/v1/marca-add-combobox`
 
 ### Requisição
 
@@ -114,7 +114,7 @@ Consulta sem resultado (`PE_MARCA` `"MARCA QUE NAO EXISTE"`) retornou HTTP 201, 
 
 Retornou `quantity` 12, com todas as marcas ativas do tenant `1` em ordem alfabética, incluindo as marcas de teste `523` e `524`. O JSON com dois registros de exemplo está em `API-documentation/brand/marca-add-combo-box.md`.
 
-## 4. `POST /brand/v2/marca-update`
+## 4. `POST /brand/v1/marca-update`
 
 ### Requisição
 
@@ -146,7 +146,7 @@ Retornou `quantity` 12, com todas as marcas ativas do tenant `1` em ordem alfab�
 }
 ```
 
-## 5. `POST /brand/v2/marca-delete`
+## 5. `POST /brand/v1/marca-delete`
 
 ### Requisição
 

@@ -9,7 +9,7 @@ Endpoint para atualizar um fornecedor existente do cliente do sistema (`PE_ID_SY
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/supplier/v2/fornecedor-update` |
+| Path | `/supplier/v1/fornecedor-update` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -72,7 +72,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /supplier/v2/fornecedor-update
+POST /supplier/v1/fornecedor-update
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

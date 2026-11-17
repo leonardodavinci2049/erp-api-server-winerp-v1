@@ -9,7 +9,7 @@ Endpoint para excluir fisicamente uma marca do cliente do sistema (`PE_ID_SYSTEM
 | Item | Valor |
 | --- | --- |
 | Método | `POST` |
-| Path | `/brand/v2/marca-delete` |
+| Path | `/brand/v1/marca-delete` |
 | Auth | `Authorization: Bearer {API_KEY}` ou `x-api-key: {API_KEY}` |
 | Content-Type | `application/json` |
 | Rate Limit | `50000 requisições por minuto` |
@@ -41,7 +41,7 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 ### Exemplo de Requisição
 
 ```http
-POST /brand/v2/marca-delete
+POST /brand/v1/marca-delete
 Authorization: Bearer YOUR_API_KEY
 Content-Type: application/json
 ```

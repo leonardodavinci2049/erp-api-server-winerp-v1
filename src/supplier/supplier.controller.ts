@@ -29,31 +29,31 @@ export class SupplierController {
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/fornecedor-find-all')
+  @Post('v1/fornecedor-find-all')
   fornecedorFindAll(@Body() dataJsonDto: FornecedorFindAllDto) {
     return this.supplierService.taskFornecedorFindAll(dataJsonDto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/fornecedor-product-find-id')
+  @Post('v1/fornecedor-product-find-id')
   fornecedorProductFindId(@Body() dataJsonDto: FornecedorProductFindIdDto) {
     return this.supplierService.taskFornecedorProductFindId(dataJsonDto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/fornecedor-create')
+  @Post('v1/fornecedor-create')
   fornecedorCreate(@Body() dataJsonDto: FornecedorCreateDto) {
     return this.supplierService.taskFornecedorCreate(dataJsonDto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/fornecedor-update')
+  @Post('v1/fornecedor-update')
   fornecedorUpdate(@Body() dataJsonDto: FornecedorUpdateDto) {
     return this.supplierService.taskFornecedorUpdate(dataJsonDto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/fornecedor-delete')
+  @Post('v1/fornecedor-delete')
   fornecedorDelete(@Body() dataJsonDto: FornecedorDeleteDto) {
     return this.supplierService.taskFornecedorDelete(dataJsonDto);
   }

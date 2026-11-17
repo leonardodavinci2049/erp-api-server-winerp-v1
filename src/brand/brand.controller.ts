@@ -12,31 +12,31 @@ export class BrandController {
   constructor(private readonly brandService: BrandService) {}
 
   @UseGuards(AuthGuard)
-  @Post('v2/marca-find-all')
+  @Post('v1/marca-find-all')
   brandMarcaFindAllV2(@Body() dto: MarcaFindAllDto) {
     return this.brandService.taskBrandMarcaFindAllV2(dto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/marca-AddComboBox')
+  @Post('v1/marca-add-combobox')
   brandMarcaAddComboBoxV2(@Body() dto: MarcaAddComboBoxDto) {
     return this.brandService.taskBrandMarcaAddComboBoxV2(dto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/marca-create')
+  @Post('v1/marca-create')
   brandMarcaCreateV2(@Body() dto: MarcaCreateDto) {
     return this.brandService.taskBrandMarcaCreateV2(dto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/marca-update')
+  @Post('v1/marca-update')
   brandMarcaUpdateV2(@Body() dto: MarcaUpdateDto) {
     return this.brandService.taskBrandMarcaUpdateV2(dto);
   }
 
   @UseGuards(AuthGuard)
-  @Post('v2/marca-delete')
+  @Post('v1/marca-delete')
   brandMarcaDeleteV2(@Body() dto: MarcaDeleteDto) {
     return this.brandService.taskBrandMarcaDeleteV2(dto);
   }
