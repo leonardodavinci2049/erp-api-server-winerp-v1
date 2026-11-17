@@ -2,7 +2,7 @@
 
 ### Descrição
 
-Endpoint para consultar os fornecedores cadastrados para o cliente do sistema (`PE_ID_SYSTEM`) informado, com filtro opcional por parte do nome. A resposta traz os registros no result set `Supplier find all`, mantendo os nomes de coluna originais do contrato DataSnap.
+Endpoint para consultar os fornecedores cadastrados para o cliente do sistema (`PE_ID_SYSTEM`), com filtro opcional por parte do nome. A resposta é entregue no result set `Supplier find all`, mantendo os nomes de coluna originais do contrato DataSnap.
 
 ## Informações do Endpoint
 
@@ -34,11 +34,11 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
-| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`) |
-| `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; aceito pelo DTO, mas **não** usado como filtro nesta consulta |
-| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
-| `PE_FORNECEDOR` | string | Não | Trecho do nome do fornecedor | O filtro `LIKE %valor%` só é aplicado quando o texto tem mais de 2 caracteres |
+| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); filtro `ID_SYSTEM_CLIENTE` |
+| `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** usado como filtro nesta consulta |
+| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado na consulta |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado na consulta |
+| `PE_FORNECEDOR` | string | Não | Trecho do nome do fornecedor | O filtro `NOME LIKE %valor%` só é aplicado quando o texto tem mais de 2 caracteres |
 
 ### Exemplo de Requisição
 
@@ -52,7 +52,7 @@ Content-Type: application/json
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
   "PE_FORNECEDOR": "DOC API"
 }
@@ -63,14 +63,14 @@ Content-Type: application/json
 | Campo | Tipo | Descrição |
 | --- | --- | --- |
 | `statusCode` | number | Código interno de resposta (`100200` em caso de sucesso) |
-| `message` | string | Mensagem de feedback |
+| `message` | string | `"Dados carregados com sucesso."` quando há registros ou `"Nenhum fornecedor encontrado."` quando a consulta retorna vazio |
 | `recordId` | string | `"1"` quando há registros e `"0"` quando a consulta retorna vazio |
 | `data` | object | Objeto com a chave `Supplier find all`, contendo o array de fornecedores |
 | `quantity` | number | Quantidade de registros retornados |
 | `errorId` | number | `0` em caso de sucesso |
 | `info1` | string | Informação complementar (vazia nesta operação) |
 
-Campos principais de cada registro em `data["Supplier find all"]`:
+Campos de cada registro em `data["Supplier find all"]`:
 
 | Campo | Tipo | Descrição |
 | --- | --- | --- |
@@ -79,9 +79,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
 | `ID_USUARIO` | number | ID do usuário |
 | `ID_DEPARTAMENTO` | number | ID do departamento |
 | `ID_SYSTEM_CLIENTE` | number | ID do cliente do sistema (tenant) |
-| `ID_CATEGORIA` | number | ID da categoria |
-| `ID_TIPO` | number | ID do tipo |
-| `ID_IMAGEM` | number | ID da imagem |
+| `ID_CATEGORIA`, `ID_TIPO`, `ID_IMAGEM` | number | Identificadores auxiliares |
 | `NOME` | string | Nome do fornecedor |
 | `FISIJURI` | string | Tipo de pessoa (`J`/`F`) |
 | `FONE1`, `FONE2` | string | Telefones |
@@ -123,7 +121,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
   "data": {
     "Supplier find all": [
       {
-        "ID_FORNECEDOR": 36974,
+        "ID_FORNECEDOR": 36976,
         "ID_LOJA": 1,
         "ID_USUARIO": 1,
         "ID_DEPARTAMENTO": 1,
@@ -133,7 +131,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "ID_IMAGEM": 0,
         "NOME": "FORNECEDOR DOC API 001 ALFA",
         "FISIJURI": "J",
-        "FONE1": "11999990001",
+        "FONE1": "1133334444",
         "FONE2": null,
         "WHATAPP1": "11999990001",
         "WHATAPP2": null,
@@ -141,13 +139,13 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "CONTATO2": null,
         "SETOR1": "Compras",
         "SETOR2": null,
-        "EMAIL1": "alfa@example.com",
+        "EMAIL1": "alfa.docapi@example.com",
         "EMAIL2": null,
         "RAZAO_SOCIAL": "FORNECEDOR DOC API 001 ALFA LTDA",
         "CNPJ": "12345678000190",
         "INSC_ESTADUAL": null,
         "INSC_MUNICIPAL": null,
-        "NOME_FANTASIA": "ALFA DISTRIBUIDORA",
+        "NOME_FANTASIA": "ALFA DISTRIBUIDORA ATUALIZADA",
         "DATA_CNPJ": "2020-01-31T03:00:00.000Z",
         "NOME_RESPONSAVEL": null,
         "CARGO_RESPOSNAVEL": null,
@@ -195,7 +193,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "FLAG_ENDERECO": 0,
         "COD_MUNICIPIO": 3550308,
         "COD_UF": 35,
-        "WEBSITE": "https://alfa.example.com",
+        "WEBSITE": "https://alfa.docapi.example.com",
         "SKYPE": null,
         "MSN": "",
         "FACEBOOK": null,
@@ -203,12 +201,12 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "FRETADOR": null,
         "FLAG_FABRICANTE": 0,
         "DT_ULTIMA_COMPRA": null,
-        "DT_UPDATE": "2026-11-16T03:00:00.000Z",
-        "DATADOCADASTRO": "2026-11-16T17:42:28.000Z",
-        "ANOTACOES": "Fornecedor criado para documentacao do endpoint."
+        "DT_UPDATE": "2026-11-17T03:00:00.000Z",
+        "DATADOCADASTRO": "2026-11-17T11:42:44.000Z",
+        "ANOTACOES": "Fornecedor atualizado para documentacao do endpoint."
       },
       {
-        "ID_FORNECEDOR": 36975,
+        "ID_FORNECEDOR": 36977,
         "ID_LOJA": 1,
         "ID_USUARIO": 1,
         "ID_DEPARTAMENTO": 1,
@@ -226,7 +224,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "CONTATO2": null,
         "SETOR1": "Comercial",
         "SETOR2": null,
-        "EMAIL1": "beta@example.com",
+        "EMAIL1": "beta.docapi@example.com",
         "EMAIL2": null,
         "RAZAO_SOCIAL": "FORNECEDOR DOC API 002 BETA LTDA",
         "CNPJ": "98765432000110",
@@ -288,8 +286,8 @@ Campos principais de cada registro em `data["Supplier find all"]`:
         "FRETADOR": null,
         "FLAG_FABRICANTE": 0,
         "DT_ULTIMA_COMPRA": null,
-        "DT_UPDATE": "2026-11-16T03:00:00.000Z",
-        "DATADOCADASTRO": "2026-11-16T17:42:34.000Z",
+        "DT_UPDATE": "2026-11-17T03:00:00.000Z",
+        "DATADOCADASTRO": "2026-11-17T11:42:44.000Z",
         "ANOTACOES": "Segundo fornecedor de teste da documentacao."
       }
     ]
@@ -300,7 +298,7 @@ Campos principais de cada registro em `data["Supplier find all"]`:
 }
 ```
 
-Quando não há fornecedores para o filtro, o retorno mantém `statusCode` `100200`, `message` `"Nenhum fornecedor encontrado."`, `recordId` `"0"`, `data` com o array vazio e `quantity` `0`.
+Quando nenhum fornecedor atende ao filtro, o retorno mantém `statusCode` `100200`, `message` `"Nenhum fornecedor encontrado."`, `recordId` `"0"`, `data` com o array vazio e `quantity` `0`.
 
 ## Respostas de Erro
 
@@ -312,7 +310,7 @@ Ocorre quando um campo obrigatório do contexto está ausente ou um campo descon
 {
   "message": [
     "ID do usuário é obrigatório.",
-    "ID do usuário deve ser um texto."
+    "ID do usuário deve ser um número."
   ],
   "error": "Bad Request",
   "statusCode": 400
@@ -329,9 +327,9 @@ Ocorre quando um campo obrigatório do contexto está ausente ou um campo descon
 }
 ```
 
-### 422 Erro de Negócio (Exemplo)
+### 404 Erro de Negócio (Exemplo)
 
-Ocorre quando a consulta falha no banco de dados.
+Ocorre quando a consulta falha no banco de dados. O HTTP permanece `201`, com o erro representado no envelope:
 
 ```json
 {

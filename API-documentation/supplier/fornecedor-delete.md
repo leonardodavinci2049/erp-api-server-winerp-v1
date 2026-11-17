@@ -2,7 +2,7 @@
 
 ### Descrição
 
-Endpoint para excluir fisicamente um fornecedor de `tbl_fornecedor`, filtrando por `PE_ID_SYSTEM` (tenant) e `PE_ID_FORNECEDOR`. A operação remove apenas uma linha e não faz exclusão em massa.
+Endpoint para excluir fisicamente um fornecedor do cliente do sistema (`PE_ID_SYSTEM`). A operação é uma porta de `cancelFornecedorV1` (`UsvmFornecedor.pas`); no DataSnap o id é recebido como parâmetro separado e, nesta API, é enviado no corpo JSON.
 
 ## Informações do Endpoint
 
@@ -28,17 +28,15 @@ A autenticação é **obrigatória**. Utilize um dos seguintes headers:
 
 Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
-`PE_PASSKEY` não faz parte do corpo da requisição: a autenticação é feita exclusivamente pelos headers acima e o envio desse campo no JSON retorna `400 Bad Request` (`property PE_PASSKEY should not exist`).
-
 ## Estrutura da Requisição (Body)
 
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
-| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); usado no filtro `ID_SYSTEM_CLIENTE` |
-| `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; aceito no contexto, mas **não** usado como filtro |
-| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
-| `PE_ID_FORNECEDOR` | number | Sim | ID do fornecedor a excluir | Número não vazio; usado no filtro `ID_FORNECEDOR` |
+| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); compõe o `WHERE` junto com `PE_ID_FORNECEDOR` |
+| `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** usado no `DELETE` |
+| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado no `DELETE` |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado no `DELETE` |
+| `PE_ID_FORNECEDOR` | number | Sim | ID do fornecedor a excluir | `@IsNumber`; compõe o `WHERE` com `PE_ID_SYSTEM` |
 
 ### Exemplo de Requisição
 
@@ -52,9 +50,9 @@ Content-Type: application/json
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_FORNECEDOR": 36974
+  "PE_ID_FORNECEDOR": 36978
 }
 ```
 
@@ -63,12 +61,12 @@ Content-Type: application/json
 | Campo | Tipo | Descrição |
 | --- | --- | --- |
 | `statusCode` | number | Código interno de resposta (`100200` em caso de sucesso) |
-| `message` | string | Mensagem de feedback |
-| `recordId` | string | `"0"` nesta operação (o `insertId` do `DELETE` é `0`, o que prevalece sobre `affectedRows`) |
-| `data` | array | Vazio nesta operação |
+| `message` | string | `"Fornecedor excluído com sucesso."` ou `"Nenhum fornecedor foi excluído."` |
+| `recordId` | string | Sempre `"0"` nesta operação (o id excluído não é devolvido no envelope) |
+| `data` | array | Sempre vazio nesta operação |
 | `quantity` | number | Quantidade de linhas afetadas |
-| `errorId` | number | `0` em caso de sucesso; `206` quando nenhuma linha é afetada |
-| `info1` | string | Informação complementar (vazia nesta operação) |
+| `errorId` | number | `0` em caso de sucesso; `206` quando nenhuma linha foi afetada |
+| `info1` | string | Informação complementar (presente apenas em caso de sucesso) |
 
 ### Exemplo de Sucesso (201)
 
@@ -88,20 +86,18 @@ Content-Type: application/json
 
 ### 400 Bad Request (Erro de Validação)
 
-Por exemplo, ao omitir `PE_ID_USUARIO`:
+Ocorre quando um campo obrigatório está ausente, um campo desconhecido é enviado ou `PE_ID_SYSTEM` é menor que 1:
 
 ```json
 {
   "message": [
     "ID do usuário é obrigatório.",
-    "ID do usuário deve ser um texto."
+    "ID do usuário deve ser um número."
   ],
   "error": "Bad Request",
   "statusCode": 400
 }
 ```
-
-Também ocorre quando `PE_ID_FORNECEDOR` não é enviado ou não é numérico.
 
 ### 401 Unauthorized
 
@@ -113,9 +109,9 @@ Também ocorre quando `PE_ID_FORNECEDOR` não é enviado ou não é numérico.
 }
 ```
 
-### 422 Erro de Negócio (Exemplo)
+### 422 Erro de Negócio (Registro Inexistente)
 
-Quando nenhum fornecedor é encontrado para o tenant e o ID informado:
+Retornado quando nenhuma linha corresponde a `PE_ID_SYSTEM` + `PE_ID_FORNECEDOR`:
 
 ```json
 {
@@ -128,7 +124,9 @@ Quando nenhum fornecedor é encontrado para o tenant e o ID informado:
 }
 ```
 
-Em falha de banco de dados:
+### 404 Erro de Negócio (Exemplo)
+
+Ocorre quando o `DELETE` falha no banco de dados. O HTTP permanece `201`, com o erro representado no envelope:
 
 ```json
 {

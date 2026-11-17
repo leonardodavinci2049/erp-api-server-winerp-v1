@@ -2,7 +2,7 @@
 
 ### Descrição
 
-Endpoint para consultar os vínculos entre produtos e fornecedores na tabela `tbl_produto_fornecedor`, com filtros opcionais por produto, fornecedor, descrição do produto e código do produto no fornecedor. A resposta usa o prefixo `PS_` em todas as colunas, conforme o contrato herdado do DataSnap.
+Endpoint para consultar os vínculos entre produtos e fornecedores existentes em `tbl_produto_fornecedor`, cruzados com `tbl_produto`. Todos os filtros são opcionais e a resposta é entregue no result set `Supplier product find id`, com os aliases `PS_*` preservados do contrato legado.
 
 ## Informações do Endpoint
 
@@ -28,20 +28,20 @@ A autenticação é **obrigatória**. Utilize um dos seguintes headers:
 
 Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
-`PE_PASSKEY` não faz parte do corpo da requisição: a autenticação é feita exclusivamente pelos headers acima e o envio desse campo no JSON retorna `400 Bad Request` (`property PE_PASSKEY should not exist`).
-
 ## Estrutura da Requisição (Body)
 
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
-| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); não é usado como filtro nesta consulta, que não possui coluna de tenant |
-| `PE_ID_LOJA` | number | Sim | ID da loja | Número não vazio; não é usado como filtro |
-| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número não vazio |
-| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número |
-| `PE_ID_PRODUTO` | number | Não | ID do produto (`tbl_produto_fornecedor.id_tbl_produto`) | Aplicado somente quando maior que `0` |
-| `PE_ID_FORNECEDOR` | number | Não | ID do fornecedor (`tbl_produto_fornecedor.ID_TBL_FORNECEDOR`) | Aplicado somente quando maior que `0` |
-| `PE_PRODUTO_DESCRICAO` | string | Não | Trecho da descrição do produto | Comparação `LIKE` case-insensitive **sem** wildcards automáticos; envie os curingas (por exemplo `%Adaptador%`) quando necessário |
-| `PE_COD_PRODUTO_FORN` | string | Não | Código do produto no fornecedor | Comparação `LIKE` case-insensitive sem wildcards automáticos |
+| `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); aceito pelo DTO, mas **não** usado na consulta, como no legado |
+| `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** usado na consulta |
+| `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado na consulta |
+| `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado na consulta |
+| `PE_ID_PRODUTO` | number | Não | ID do produto | O filtro `id_tbl_produto = ?` só é aplicado quando o valor é maior que `0` |
+| `PE_ID_FORNECEDOR` | number | Não | ID do fornecedor | O filtro `ID_TBL_FORNECEDOR = ?` só é aplicado quando o valor é maior que `0` |
+| `PE_PRODUTO_DESCRICAO` | string | Não | Descrição do produto | `LOWER(tbl_produto.produto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
+| `PE_COD_PRODUTO_FORN` | string | Não | Código do produto no fornecedor | `LOWER(codigodoproduto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
+
+> A consulta não possui filtro de tenant, porque `tbl_produto_fornecedor` não tem coluna de cliente no contrato legado.
 
 ### Exemplo de Requisição
 
@@ -55,12 +55,9 @@ Content-Type: application/json
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_PRODUTO": 65109,
-  "PE_ID_FORNECEDOR": 36961,
-  "PE_PRODUTO_DESCRICAO": "",
-  "PE_COD_PRODUTO_FORN": ""
+  "PE_ID_FORNECEDOR": 36971
 }
 ```
 
@@ -69,7 +66,7 @@ Content-Type: application/json
 | Campo | Tipo | Descrição |
 | --- | --- | --- |
 | `statusCode` | number | Código interno de resposta (`100200` em caso de sucesso) |
-| `message` | string | Mensagem de feedback |
+| `message` | string | `"Dados carregados com sucesso."` quando há registros ou `"Nenhum produto de fornecedor encontrado."` quando a consulta retorna vazio |
 | `recordId` | string | `"1"` quando há registros e `"0"` quando a consulta retorna vazio |
 | `data` | object | Objeto com a chave `Supplier product find id`, contendo o array de vínculos |
 | `quantity` | number | Quantidade de registros retornados |
@@ -81,12 +78,12 @@ Campos de cada registro em `data["Supplier product find id"]`:
 | Campo | Tipo | Descrição |
 | --- | --- | --- |
 | `PS_ID_TBL_PRODUTO_FORN` | number | ID do vínculo em `tbl_produto_fornecedor` |
-| `PS_ID_PRODUTO` | number | ID do produto |
+| `PS_ID_PRODUTO` | number | ID do produto em `tbl_produto` |
 | `PS_ID_FORNECEDOR` | number | ID do fornecedor |
 | `PS_COD_PRODUTO_FORN` | string | Código do produto no fornecedor |
 | `PS_PRODUTO` | string | Descrição do produto |
 | `PS_INATIVO` | number | Indicador de inatividade do produto |
-| `PS_PATH_IMAGEM_VENDA` | string | Caminho da imagem de venda |
+| `PS_PATH_IMAGEM_VENDA` | string | Caminho da imagem de venda do produto |
 
 ### Exemplo de Sucesso (201)
 
@@ -98,22 +95,22 @@ Campos de cada registro em `data["Supplier product find id"]`:
   "data": {
     "Supplier product find id": [
       {
-        "PS_ID_TBL_PRODUTO_FORN": 109644,
-        "PS_ID_PRODUTO": 65109,
-        "PS_ID_FORNECEDOR": 36961,
-        "PS_COD_PRODUTO_FORN": "",
-        "PS_PRODUTO": "Adaptador Fone Tipo-C Samsung Jack*",
+        "PS_ID_TBL_PRODUTO_FORN": 113034,
+        "PS_ID_PRODUTO": 67390,
+        "PS_ID_FORNECEDOR": 36971,
+        "PS_COD_PRODUTO_FORN": "36634",
+        "PS_PRODUTO": "CREME FACIAL AGUA MICELAR IBSA DERMA NAHYCO PROFHILO PURA 400ML",
         "PS_INATIVO": 2,
         "PS_PATH_IMAGEM_VENDA": null
       },
       {
-        "PS_ID_TBL_PRODUTO_FORN": 111916,
-        "PS_ID_PRODUTO": 65109,
-        "PS_ID_FORNECEDOR": 36961,
-        "PS_COD_PRODUTO_FORN": "65453",
-        "PS_PRODUTO": "Adaptador Fone Tipo-C Samsung Jack*",
+        "PS_ID_TBL_PRODUTO_FORN": 113035,
+        "PS_ID_PRODUTO": 67396,
+        "PS_ID_FORNECEDOR": 36971,
+        "PS_COD_PRODUTO_FORN": "37730",
+        "PS_PRODUTO": "CREME FACIAL PEPTIDE SCIENCES GHK-CU COPPER PEPTIDE FACE CREAM 50ML COREANO",
         "PS_INATIVO": 2,
-        "PS_PATH_IMAGEM_VENDA": null
+        "PS_PATH_IMAGEM_VENDA": "https://assents01.comsuporte.com.br/uploads/images/2026/09/24/e3807009-7b67-4c16-83f7-bbfc67ad3aa2/creme-facial-ghk-cu-copper-peptide-face-cream-mundial-megastore-original.jpg"
       }
     ]
   },
@@ -123,19 +120,19 @@ Campos de cada registro em `data["Supplier product find id"]`:
 }
 ```
 
-Quando nenhum vínculo é encontrado, o retorno mantém `statusCode` `100200`, `message` `"Nenhum produto de fornecedor encontrado."`, `recordId` `"0"`, `data` com o array vazio e `quantity` `0`.
+Quando nenhum vínculo atende aos filtros, o retorno mantém `statusCode` `100200`, `message` `"Nenhum produto de fornecedor encontrado."`, `recordId` `"0"`, `data` com o array vazio e `quantity` `0`.
 
 ## Respostas de Erro
 
 ### 400 Bad Request (Erro de Validação)
 
-Por exemplo, ao omitir `PE_ID_USUARIO`:
+Ocorre quando um campo obrigatório do contexto está ausente ou um campo desconhecido é enviado:
 
 ```json
 {
   "message": [
     "ID do usuário é obrigatório.",
-    "ID do usuário deve ser um texto."
+    "ID do usuário deve ser um número."
   ],
   "error": "Bad Request",
   "statusCode": 400
@@ -152,7 +149,9 @@ Por exemplo, ao omitir `PE_ID_USUARIO`:
 }
 ```
 
-### 422 Erro de Negócio (Exemplo)
+### 404 Erro de Negócio (Exemplo)
+
+Ocorre quando a consulta falha no banco de dados. O HTTP permanece `201`, com o erro representado no envelope:
 
 ```json
 {

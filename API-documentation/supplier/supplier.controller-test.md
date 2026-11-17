@@ -8,46 +8,49 @@ Registrar as evidências reais utilizadas na documentação dos endpoints `POST`
 
 | Item | Valor |
 | --- | --- |
-| Data da execução | 2026-11-16 |
+| Data da execução | 2026-11-17 |
 | Ambiente | desenvolvimento (`APP_ENVIRONMENT` de desenvolvimento) |
 | Banco | MariaDB 11.4.13, schema de desenvolvimento (`database01`) |
 | API | `http://localhost:5577/api` (`APP_PORT`) |
 | Autenticação | `Authorization: Bearer {API_KEY}` lida do `.env` (valor não registrado) |
-| Fornecedor pré-existente usado | `36973` (cliente `1`, loja `1`) |
-| Fornecedores de teste criados | `36974` e `36975` (cliente `1`, loja `1`) |
-| Limpeza | os dois fornecedores de teste foram excluídos via `fornecedor-delete` ao final |
+| Tenant usado | `PE_ID_SYSTEM` = `1`, `PE_ID_LOJA` = `1` |
+| Fornecedores de teste criados | `36976` (`FORNECEDOR DOC API 001 ALFA`) e `36977` (`FORNECEDOR DOC API 002 BETA`) |
+| Fornecedor criado e excluído no teste | `36978` (`FORNECEDOR DOC API 003 GAMA`) |
+| Massa remanescente | os fornecedores `36976` e `36977` permanecem cadastrados no banco de desenvolvimento |
+| Fornecedor usado em `fornecedor-product-find-id` | `36971` (`NOVA MED`), com 2 vínculos de produto já existentes em `tbl_produto_fornecedor` |
 
 ## Resumo
 
 | # | Endpoint | HTTP | `statusCode` | `errorId` | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| 1 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36974"` |
-| 2 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36975"` |
+| 1 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36976"` |
+| 2 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36977"` |
 | 3 | `/supplier/v2/fornecedor-find-all` | 201 | 100200 | 0 | 2 registros |
 | 4 | `/supplier/v2/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
-| 5 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada |
-| 6 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36975) |
-| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36974) |
+| 5 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada (36976) |
+| 6 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36978"` |
+| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36978) |
 
 Testes de erro executados:
 
 | Cenário | HTTP | `statusCode` | Resultado |
 | --- | --- | --- | --- |
 | Sem header de autenticação | 401 | — | `API key is required` |
-| `fornecedor-find-all` com `PE_PASSKEY` no corpo | 400 | — | `property PE_PASSKEY should not exist` |
 | `fornecedor-find-all` sem `PE_ID_USUARIO` | 400 | — | erro do `ValidationPipe` |
 | `fornecedor-create` com `PE_WHATSAPP1` (campo desconhecido) | 400 | — | `property PE_WHATSAPP1 should not exist` |
-| `fornecedor-delete` com fornecedor inexistente | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
+| `fornecedor-create` com `PE_NOME` de 3 caracteres | 400 | — | `PE_NOME deve ter no mínimo 5 caracteres.` |
+| `fornecedor-delete` com fornecedor inexistente (`999999`) | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
+| `fornecedor-update` com fornecedor inexistente (`999999`) | 201 | 100422 | `Nenhum fornecedor foi atualizado.` (`errorId` 206) |
 
 ## 1. `POST /supplier/v2/fornecedor-create`
 
-### Requisição
+### Requisição (`36976`)
 
 ```json
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
   "PE_NOME": "FORNECEDOR DOC API 001 ALFA",
   "PE_FISIJURI": "J",
@@ -55,7 +58,7 @@ Testes de erro executados:
   "PE_RAZAO_SOCIAL": "FORNECEDOR DOC API 001 ALFA LTDA",
   "PE_NOME_FANTASIA": "ALFA DISTRIBUIDORA",
   "PE_DATA_CNPJ": "2020-01-31",
-  "PE_EMAIL1": "alfa@example.com",
+  "PE_EMAIL1": "alfa.docapi@example.com",
   "PE_FONE1": "11999990001",
   "PE_WHATAPP1": "11999990001",
   "PE_CONTATO1": "Carlos Almeida",
@@ -71,7 +74,7 @@ Testes de erro executados:
   "PE_PAIS": "Brasil",
   "PE_COD_MUNICIPIO": 3550308,
   "PE_COD_UF": 35,
-  "PE_WEBSITE": "https://alfa.example.com",
+  "PE_WEBSITE": "https://alfa.docapi.example.com",
   "PE_ANOTACOES": "Fornecedor criado para documentacao do endpoint."
 }
 ```
@@ -82,7 +85,7 @@ Testes de erro executados:
 {
   "statusCode": 100200,
   "message": "Fornecedor criado com sucesso.",
-  "recordId": "36974",
+  "recordId": "36976",
   "data": [],
   "quantity": 1,
   "errorId": 0,
@@ -90,7 +93,7 @@ Testes de erro executados:
 }
 ```
 
-O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mesmo fluxo e retornou `recordId` `"36975"`.
+O fornecedor `36977` (`FORNECEDOR DOC API 002 BETA`) foi criado com o mesmo fluxo e retornou `recordId` `"36977"`.
 
 ## 2. `POST /supplier/v2/fornecedor-find-all`
 
@@ -100,7 +103,7 @@ O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mes
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
   "PE_FORNECEDOR": "DOC API"
 }
@@ -108,7 +111,9 @@ O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mes
 
 ### Resposta
 
-Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR DOC API 002 BETA` (`36975`). O JSON completo está em `API-documentation/supplier/fornecedor-find-all.md`.
+Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36976`) e `FORNECEDOR DOC API 002 BETA` (`36977`). O JSON completo está em `API-documentation/supplier/fornecedor-find-all.md`.
+
+Consulta sem resultado (`PE_FORNECEDOR` `"FORNECEDOR QUE NAO EXISTE"`) retornou HTTP 201, `statusCode` 100200, `message` `"Nenhum fornecedor encontrado."`, `recordId` `"0"`, `data` `{"Supplier find all":[]}` e `quantity` 0.
 
 ## 3. `POST /supplier/v2/fornecedor-product-find-id`
 
@@ -118,51 +123,17 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_PRODUTO": 65109,
-  "PE_ID_FORNECEDOR": 36961,
-  "PE_PRODUTO_DESCRICAO": "",
-  "PE_COD_PRODUTO_FORN": ""
+  "PE_ID_FORNECEDOR": 36971
 }
 ```
 
 ### Resposta
 
-```json
-{
-  "statusCode": 100200,
-  "message": "Dados carregados com sucesso.",
-  "recordId": "1",
-  "data": {
-    "Supplier product find id": [
-      {
-        "PS_ID_TBL_PRODUTO_FORN": 109644,
-        "PS_ID_PRODUTO": 65109,
-        "PS_ID_FORNECEDOR": 36961,
-        "PS_COD_PRODUTO_FORN": "",
-        "PS_PRODUTO": "Adaptador Fone Tipo-C Samsung Jack*",
-        "PS_INATIVO": 2,
-        "PS_PATH_IMAGEM_VENDA": null
-      },
-      {
-        "PS_ID_TBL_PRODUTO_FORN": 111916,
-        "PS_ID_PRODUTO": 65109,
-        "PS_ID_FORNECEDOR": 36961,
-        "PS_COD_PRODUTO_FORN": "65453",
-        "PS_PRODUTO": "Adaptador Fone Tipo-C Samsung Jack*",
-        "PS_INATIVO": 2,
-        "PS_PATH_IMAGEM_VENDA": null
-      }
-    ]
-  },
-  "quantity": 2,
-  "errorId": 0,
-  "info1": ""
-}
-```
+Retornou `quantity` 2 com os vínculos `113034` e `113035` do fornecedor `NOVA MED`. O JSON completo está em `API-documentation/supplier/fornecedor-product-find-id.md`.
 
-> O fornecedor `36961` é um registro pré-existente de desenvolvimento. O filtro por `PE_ID_PRODUTO` foi escolhido para limitar a evidência a dois registros.
+Consulta sem resultado (`PE_ID_FORNECEDOR` `999999`) retornou `statusCode` 100200, `message` `"Nenhum produto de fornecedor encontrado."`, `recordId` `"0"`, `data` `{"Supplier product find id":[]}` e `quantity` 0.
 
 ## 4. `POST /supplier/v2/fornecedor-update`
 
@@ -172,23 +143,21 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_FORNECEDOR": 36974,
-  "PE_ID_CATEGORIA": 0,
-  "PE_ID_TIPO": 0,
+  "PE_ID_FORNECEDOR": 36976,
   "PE_NOME": "FORNECEDOR DOC API 001 ALFA",
   "PE_FISIJURI": "J",
-  "PE_FONE1": "11999990001",
+  "PE_CNPJ": "12345678000190",
+  "PE_RAZAO_SOCIAL": "FORNECEDOR DOC API 001 ALFA LTDA",
+  "PE_NOME_FANTASIA": "ALFA DISTRIBUIDORA ATUALIZADA",
+  "PE_DATA_CNPJ": "2020-01-31",
+  "PE_EMAIL1": "alfa.docapi@example.com",
+  "PE_FONE1": "1133334444",
   "PE_WHATAPP1": "11999990001",
   "PE_CONTATO1": "Carlos Almeida",
   "PE_SETOR1": "Compras",
-  "PE_EMAIL1": "alfa@example.com",
-  "PE_RAZAO_SOCIAL": "FORNECEDOR DOC API 001 ALFA LTDA",
-  "PE_CNPJ": "12345678000190",
-  "PE_NOME_FANTASIA": "ALFA DISTRIBUIDORA ATUALIZADA",
-  "PE_DATA_CNPJ": "2020-01-31",
-  "PE_ATIVIDADE_PRINCIPAL": "Comercio atacadista de materiais de construcao e ferragens",
+  "PE_ATIVIDADE_PRINCIPAL": "Comercio atacadista de materiais de construcao",
   "PE_CEP": "01001000",
   "PE_ENDERECO": "Rua das Industrias",
   "PE_ENDERECO_NUMERO": "100",
@@ -199,7 +168,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
   "PE_PAIS": "Brasil",
   "PE_COD_MUNICIPIO": 3550308,
   "PE_COD_UF": 35,
-  "PE_WEBSITE": "https://alfa.example.com",
+  "PE_WEBSITE": "https://alfa.docapi.example.com",
   "PE_ANOTACOES": "Fornecedor atualizado para documentacao do endpoint."
 }
 ```
@@ -210,7 +179,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 {
   "statusCode": 100200,
   "message": "Fornecedor atualizado com sucesso.",
-  "recordId": "36974",
+  "recordId": "36976",
   "data": [],
   "quantity": 1,
   "errorId": 0,
@@ -218,12 +187,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 }
 ```
 
-Verificação em `tbl_fornecedor` após a chamada:
-
-```text
-ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANOTACOES                                              DT_UPDATE
-36974          FORNECEDOR DOC API 001 ALFA   ALFA DISTRIBUIDORA ATUALIZADA   Fornecedor atualizado para documentacao do endpoint.   2026-11-16
-```
+A atualização sobrescreve todas as colunas previstas no `UPDATE`; os campos não enviados foram gravados como `NULL`, como no legado. O registro completo com os valores remanescentes está em `API-documentation/supplier/fornecedor-update.md`.
 
 ## 5. `POST /supplier/v2/fornecedor-delete`
 
@@ -233,9 +197,9 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
 {
   "PE_ID_SYSTEM": 1,
   "PE_ID_LOJA": 1,
-  "PE_ID_DEPARTAMENTO": 0,
+  "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_FORNECEDOR": 36975
+  "PE_ID_FORNECEDOR": 36978
 }
 ```
 
@@ -253,11 +217,9 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
 }
 ```
 
-A mesma resposta foi obtida ao excluir `36974`. A consulta final confirmou `0` fornecedores restantes com esses IDs.
+A exclusão é física (`DELETE`) e limitada ao tenant `PE_ID_SYSTEM` e ao `PE_ID_FORNECEDOR` informado.
 
-## Evidências de erro
-
-### 401 sem autenticação
+## 6. Erros observados
 
 ```json
 {
@@ -266,10 +228,6 @@ A mesma resposta foi obtida ao excluir `36974`. A consulta final confirmou `0` f
   "statusCode": 401
 }
 ```
-
-### 400 - campo obrigatório ausente
-
-Exemplo omitindo `PE_ID_USUARIO`:
 
 ```json
 {
@@ -282,67 +240,6 @@ Exemplo omitindo `PE_ID_USUARIO`:
 }
 ```
 
-### 400 - `PE_PASSKEY` enviada no corpo
-
-```json
-{
-  "message": [
-    "property PE_PASSKEY should not exist"
-  ],
-  "error": "Bad Request",
-  "statusCode": 400
-}
-```
-
-### 400 - campo desconhecido
-
-```json
-{
-  "message": [
-    "property PE_WHATSAPP1 should not exist"
-  ],
-  "error": "Bad Request",
-  "statusCode": 400
-}
-```
-
-### 100422 - campo inexistente na atualização de campo
-
-```json
-{
-  "statusCode": 100422,
-  "message": "Erro! Campo \"CAMPO_INEXISTENTE\" não existe na tabela tbl_fornecedor",
-  "recordId": 0,
-  "data": [
-    {
-      "sp_return_id": 0,
-      "sp_message": "Erro! Campo \"CAMPO_INEXISTENTE\" não existe na tabela tbl_fornecedor",
-      "sp_error_id": 1
-    }
-  ],
-  "quantity": 1,
-  "errorId": 1
-}
-```
-
-### Consulta sem registro
-
-```json
-{
-  "statusCode": 100200,
-  "message": "Supplier find manager Id not found",
-  "recordId": "0",
-  "data": {
-    "Supplier find manager Id": []
-  },
-  "quantity": 0,
-  "errorId": 0,
-  "info1": ""
-}
-```
-
-### Exclusão sem registro afetado
-
 ```json
 {
   "statusCode": 100422,
@@ -353,11 +250,3 @@ Exemplo omitindo `PE_ID_USUARIO`:
   "errorId": 206
 }
 ```
-
-## Observações
-
-- Todos os endpoints `POST` do controller foram exercitados.
-- Nenhuma API key foi registrada neste relatório.
-- Após a remoção de `PE_PASSKEY` do `BaseRequestDto`, foram reexecutados apenas cenários sem escrita: `401` sem header, `400` com `PE_PASSKEY` no corpo (`property PE_PASSKEY should not exist`), `400` sem `PE_ID_USUARIO` e `201` na listagem. As demais evidências foram coletadas antes dessa mudança e seguem válidas para os campos remanescentes.
-- `fornecedor-product-find-id` foi validado com dados pré-existentes de desenvolvimento porque a consulta não possui coluna de tenant e não havia vínculo criado para os fornecedores de teste.
-- Os fornecedores de teste criados para a evidência (`36974`, `36975`) foram removidos ao final pela própria rota `fornecedor-delete`.
