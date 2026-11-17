@@ -167,10 +167,8 @@ O módulo de marcas é, atualmente, o único módulo de negócio no repositório
 | `GET`  | `/api/brand`                              | Retorna informações básicas de status da API e das rotas   |
 | `POST` | `/api/brand/v2/brand-create`              | Cria uma marca                                             |
 | `POST` | `/api/brand/v2/brand-find-all`            | Lista marcas                                               |
-| `POST` | `/api/brand/v2/brand-search-all`          | Pesquisa marcas                                            |
 | `POST` | `/api/brand/v2/brand-find-manager-all`    | Lista marcas para uso do gerenciador                       |
 | `POST` | `/api/brand/v2/brand-find-id`             | Busca uma marca pelo identificador                         |
-| `POST` | `/api/brand/v2/brand-find-manager-id`     | Busca uma marca pelo identificador para uso do gerenciador |
 | `POST` | `/api/brand/v2/brand-update`              | Atualiza uma marca                                         |
 | `POST` | `/api/brand/v2/brand-delete`              | Exclui ou inativa uma marca, conforme a stored procedure   |
 | `POST` | `/api/brand/v2/brand-upd-inl-flag-active` | Atualiza o indicador de marca ativa                        |

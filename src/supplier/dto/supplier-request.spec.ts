@@ -3,13 +3,11 @@ import { validateSync } from 'class-validator';
 import { describe, expect, it } from 'vitest';
 
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
-import { SupplierFindManagerIdV2Query } from '../query/supplier-find-manager-id-v2.query.js';
 import { FornecedorCreateDto } from './fornecedor-create.dto.js';
 import { FornecedorDeleteDto } from './fornecedor-delete.dto.js';
 import { FornecedorFindAllDto } from './fornecedor-find-all.dto.js';
 import { FornecedorProductFindIdDto } from './fornecedor-product-find-id.dto.js';
 import { FornecedorUpdateDto } from './fornecedor-update.dto.js';
-import { SupplierFindManagerIdV2Dto } from './supplier-find-manager-id-v2.dto.js';
 
 const context = {
   PE_ID_SYSTEM: 7,
@@ -17,19 +15,12 @@ const context = {
   PE_ID_DEPARTAMENTO: 0,
   PE_ID_USUARIO: 1,
 };
-const managerContext = {
-  pe_app_id: 1,
-  pe_organization_id: 'org-test',
-  pe_user_name: 'Test User',
-  pe_user_role: 'admin',
-};
 const cases = [
   [FornecedorCreateDto, { PE_NOME: 'Supplier', PE_EMAIL1: 'test@example.com' }],
   [FornecedorUpdateDto, { PE_ID_FORNECEDOR: 42, PE_CNPJ: null }],
   [FornecedorDeleteDto, { PE_ID_FORNECEDOR: 42 }],
   [FornecedorFindAllDto, { PE_FORNECEDOR: 'Supplier' }],
   [FornecedorProductFindIdDto, { PE_ID_PRODUTO: 10 }],
-  [SupplierFindManagerIdV2Dto, { ...managerContext, pe_supplier_id: 42 }],
 ] as const;
 const options = { whitelist: true, forbidNonWhitelisted: true };
 
@@ -77,15 +68,5 @@ describe('supplier request validation', () => {
     expect(validateSync(dto, options).map((error) => error.property)).toEqual([
       'PE_PASSKEY',
     ]);
-  });
-
-  it('preserves manager tenant and store parameter order', () => {
-    const dto = Object.assign(
-      new SupplierFindManagerIdV2Dto(),
-      context,
-      managerContext,
-      { pe_supplier_id: 42 },
-    );
-    expect(SupplierFindManagerIdV2Query(dto).queryParams).toEqual([7, 3, 42]);
   });
 });
