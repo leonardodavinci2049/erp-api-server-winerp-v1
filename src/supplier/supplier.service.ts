@@ -11,17 +11,14 @@ import { FornecedorDeleteDto } from './dto/fornecedor-delete.dto.js';
 import { FornecedorFindAllDto } from './dto/fornecedor-find-all.dto.js';
 import { FornecedorProductFindIdDto } from './dto/fornecedor-product-find-id.dto.js';
 import { FornecedorUpdateDto } from './dto/fornecedor-update.dto.js';
-import { SupplierFindManagerIdV2Dto } from './dto/supplier-find-manager-id-v2.dto.js';
 
 import { FornecedorCreateQuery } from './query/fornecedor-create.query.js';
 import { FornecedorDeleteQuery } from './query/fornecedor-delete.query.js';
 import { FornecedorFindAllQuery } from './query/fornecedor-find-all.query.js';
 import { FornecedorProductFindIdQuery } from './query/fornecedor-product-find-id.query.js';
 import { FornecedorUpdateQuery } from './query/fornecedor-update.query.js';
-import { SupplierFindManagerIdV2Query } from './query/supplier-find-manager-id-v2.query.js';
 
 import {
-  TblSupplierFindManagerId,
   TblSupplierFornecedorFindAll,
   TblSupplierFornecedorProduct,
 } from './types/supplier.type.js';
@@ -29,34 +26,6 @@ import {
 @Injectable()
 export class SupplierService {
   constructor(private readonly dbOperationService: DbOperationService) {}
-
-  async taskSupplierFindManagerIdV2(dataJsonDto: SupplierFindManagerIdV2Dto) {
-    try {
-      const { queryString, queryParams } =
-        SupplierFindManagerIdV2Query(dataJsonDto);
-
-      const resultData =
-        await this.dbOperationService.selectQuery<TblSupplierFindManagerId>(
-          queryString,
-          queryParams,
-        );
-
-      return processSqlResultQuery(
-        resultData,
-        'Supplier find manager Id',
-        'Supplier find manager Id not found',
-        'Dados carregados com sucesso.',
-      );
-    } catch (err) {
-      await logServiceError('supplier', 'taskSupplierFindManagerIdV2', err);
-      return new ResultModel(
-        RESPONSE_CODES.NOT_FOUND,
-        'Não foi possível concluir a operação de fornecedor.',
-        '',
-        [],
-      );
-    }
-  }
 
   async taskFornecedorFindAll(dataJsonDto: FornecedorFindAllDto) {
     try {

@@ -24,11 +24,10 @@ Registrar as evidências reais utilizadas na documentação dos endpoints `POST`
 | 1 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36974"` |
 | 2 | `/supplier/v2/fornecedor-create` | 201 | 100200 | 0 | `recordId` `"36975"` |
 | 3 | `/supplier/v2/fornecedor-find-all` | 201 | 100200 | 0 | 2 registros |
-| 4 | `/supplier/v2/supplier-find-manager-id` | 201 | 100200 | 0 | 1 registro |
-| 5 | `/supplier/v2/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
-| 6 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada |
-| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36975) |
-| 8 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36974) |
+| 4 | `/supplier/v2/fornecedor-product-find-id` | 201 | 100200 | 0 | 2 registros |
+| 5 | `/supplier/v2/fornecedor-update` | 201 | 100200 | 0 | 1 linha afetada |
+| 6 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36975) |
+| 7 | `/supplier/v2/fornecedor-delete` | 201 | 100200 | 0 | 1 linha afetada (36974) |
 
 Testes de erro executados:
 
@@ -38,7 +37,6 @@ Testes de erro executados:
 | `fornecedor-find-all` com `PE_PASSKEY` no corpo | 400 | — | `property PE_PASSKEY should not exist` |
 | `fornecedor-find-all` sem `PE_ID_USUARIO` | 400 | — | erro do `ValidationPipe` |
 | `fornecedor-create` com `PE_WHATSAPP1` (campo desconhecido) | 400 | — | `property PE_WHATSAPP1 should not exist` |
-| `supplier-find-manager-id` com fornecedor inexistente | 201 | 100200 | `Supplier find manager Id not found` |
 | `fornecedor-delete` com fornecedor inexistente | 201 | 100422 | `Nenhum fornecedor foi excluído.` (`errorId` 206) |
 
 ## 1. `POST /supplier/v2/fornecedor-create`
@@ -112,86 +110,7 @@ O segundo registro (`36975`, `FORNECEDOR DOC API 002 BETA`) foi criado com o mes
 
 Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR DOC API 002 BETA` (`36975`). O JSON completo está em `API-documentation/supplier/fornecedor-find-all.md`.
 
-## 3. `POST /supplier/v2/supplier-find-manager-id`
-
-### Requisição
-
-```json
-{
-  "PE_ID_DEPARTAMENTO": 0,
-  "pe_app_id": 1,
-  "PE_ID_SYSTEM": 1,
-  "PE_ID_LOJA": 1,
-  "pe_organization_id": "ORG001",
-  "PE_ID_USUARIO": 1,
-  "pe_user_name": "John Doe",
-  "pe_user_role": "admin",
-  "pe_person_id": 29014,
-  "pe_supplier_id": 36974
-}
-```
-
-### Resposta
-
-```json
-{
-  "statusCode": 100200,
-  "message": "Dados carregados com sucesso.",
-  "recordId": "1",
-  "data": {
-    "Supplier find manager Id": [
-      {
-        "ID_FORNECEDOR": 36974,
-        "NOME": "FORNECEDOR DOC API 001 ALFA",
-        "FISIJURI": "J",
-        "PATH_IMAGEM": null,
-        "FONE1": "11999990001",
-        "WHATAPP1": "11999990001",
-        "CONTATO1": "Carlos Almeida",
-        "SETOR1": "Compras",
-        "EMAIL1": "alfa@example.com",
-        "ID_PESSOA_TIPO": 1,
-        "TIPO_PESSOA": "PESSOA FÍSICA",
-        "RAZAO_SOCIAL": "FORNECEDOR DOC API 001 ALFA LTDA",
-        "CNPJ": "12345678000190",
-        "INSC_ESTADUAL": null,
-        "INSC_MUNICIPAL": null,
-        "NOME_FANTASIA": "ALFA DISTRIBUIDORA",
-        "DATA_CNPJ": "2020-01-31T03:00:00.000Z",
-        "NOME_RESPONSAVEL": null,
-        "CARGO": null,
-        "CPF": null,
-        "RG": null,
-        "CEP": "01001000",
-        "ENDERECO": "Rua das Industrias",
-        "ENDERECO_NUMERO": "100",
-        "COMPLEMENTO": "Galpao 2",
-        "BAIRRO": "Centro",
-        "CIDADE": "Sao Paulo",
-        "UF": "SP",
-        "REGIAO_PAIS": null,
-        "PAIS": "Brasil",
-        "COD_MUNICIPIO": 3550308,
-        "COD_UF": 35,
-        "WEBSITE": "https://alfa.example.com",
-        "FACEBOOK": null,
-        "TWITTER": null,
-        "FRETADOR": null,
-        "INATIVO": 0,
-        "DT_ULTIMA_COMPRA": null,
-        "DATADOCADASTRO": "2026-11-16T17:42:28.000Z",
-        "DT_UPDATE": "2026-11-16T03:00:00.000Z",
-        "ANOTACOES": "Fornecedor criado para documentacao do endpoint."
-      }
-    ]
-  },
-  "quantity": 1,
-  "errorId": 0,
-  "info1": ""
-}
-```
-
-## 4. `POST /supplier/v2/fornecedor-product-find-id`
+## 3. `POST /supplier/v2/fornecedor-product-find-id`
 
 ### Requisição
 
@@ -245,7 +164,7 @@ Retornou `quantity` 2, com `FORNECEDOR DOC API 001 ALFA` (`36974`) e `FORNECEDOR
 
 > O fornecedor `36961` é um registro pré-existente de desenvolvimento. O filtro por `PE_ID_PRODUTO` foi escolhido para limitar a evidência a dois registros.
 
-## 5. `POST /supplier/v2/fornecedor-update`
+## 4. `POST /supplier/v2/fornecedor-update`
 
 ### Requisição
 
@@ -306,7 +225,7 @@ ID_FORNECEDOR  NOME                          NOME_FANTASIA                   ANO
 36974          FORNECEDOR DOC API 001 ALFA   ALFA DISTRIBUIDORA ATUALIZADA   Fornecedor atualizado para documentacao do endpoint.   2026-11-16
 ```
 
-## 6. `POST /supplier/v2/fornecedor-delete`
+## 5. `POST /supplier/v2/fornecedor-delete`
 
 ### Requisição
 

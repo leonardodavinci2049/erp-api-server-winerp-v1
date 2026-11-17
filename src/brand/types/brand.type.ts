@@ -27,23 +27,3 @@ export interface TblMarcaAddComboBox extends RowDataPacket {
 export type MarcaCreateResult = ResultSetHeader;
 export type MarcaUpdateResult = ResultSetHeader;
 export type MarcaDeleteResult = ResultSetHeader;
-
-export interface TblBrandFindSearch extends RowDataPacket {
-  ID_MARCA: number;
-  MARCA: string;
-  SLUG: string;
-  PATH_IMAGEM: string;
-  INATIVO: number;
-  DATADOCADASTRO: Date;
-}
-
-export interface TblBrandFindManagerId extends RowDataPacket {
-  ID_MARCA: number;
-  MARCA: string;
-  SLUG: string;
-  PATH_IMAGEM: string;
-  ANOTACOES: string;
-  INATIVO: number;
-  DT_UPDATE: Date;
-  DATADOCADASTRO: Date;
-}

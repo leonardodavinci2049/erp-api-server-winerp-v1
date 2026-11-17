@@ -8,8 +8,6 @@ import { MarcaCreateDto } from './marca-create.dto.js';
 import { MarcaUpdateDto } from './marca-update.dto.js';
 import { MarcaDeleteDto } from './marca-delete.dto.js';
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
-import { BrandFindManagerIdV2Dto } from './brand-find-manager-id_v2.dto.js';
-import { BrandFindSearchV2Dto } from './brand-find-search-v2.dto.js';
 
 const context = {
   PE_ID_SYSTEM: 1,
@@ -86,15 +84,13 @@ describe('Marca request contracts', () => {
     ).toEqual(['PE_PASSKEY']);
   });
 
-  it('inherits directly from BaseRequestDto in all seven DTOs', () => {
+  it('inherits directly from BaseRequestDto in all five DTOs', () => {
     for (const dto of [
       MarcaFindAllDto,
       MarcaAddComboBoxDto,
       MarcaCreateDto,
       MarcaUpdateDto,
       MarcaDeleteDto,
-      BrandFindManagerIdV2Dto,
-      BrandFindSearchV2Dto,
     ]) {
       expect(Object.getPrototypeOf(dto.prototype)).toBe(
         BaseRequestDto.prototype,
@@ -102,25 +98,7 @@ describe('Marca request contracts', () => {
     }
   });
 
-  it('validates the additional context of existing operations', async () => {
-    const base = {
-      ...context,
-      pe_app_id: 1,
-      pe_organization_id: 'ORG001',
-      pe_user_name: 'User',
-      pe_user_role: 'admin',
-    };
-    const requests = [
-      plainToInstance(BrandFindManagerIdV2Dto, { ...base, pe_brand_id: 1 }),
-      plainToInstance(BrandFindSearchV2Dto, {
-        ...base,
-        pe_search: '',
-        pe_inactive: 0,
-        pe_limit: 10,
-      }),
-    ];
-    for (const dto of requests)
-      expect(await validate(dto, options)).toEqual([]);
+  it('validates numeric context for existing operations', async () => {
     const invalid = plainToInstance(MarcaDeleteDto, {
       ...context,
       PE_ID_USUARIO: 'invalid',

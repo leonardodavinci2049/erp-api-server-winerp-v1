@@ -22,14 +22,6 @@ import { ResultModel } from '../core/process-result/result.model.js';
 import { RESPONSE_CODES } from '../core/utils/constants/globalConstants.js';
 import { logServiceError } from '../core/utils/functions/log_service_error.js';
 import { DbOperationService } from '../db-operation/db-operation.service.js';
-import { BrandFindManagerIdV2Dto } from './dto/brand-find-manager-id_v2.dto.js';
-import { BrandFindSearchV2Dto } from './dto/brand-find-search-v2.dto.js';
-import { BrandFindManagerIdV2Query } from './query/brand-find-manager-id-v2.query.js';
-import { BrandFindSearchV2Query } from './query/brand-find-search-v2.query.js';
-import type {
-  TblBrandFindManagerId,
-  TblBrandFindSearch,
-} from './types/brand.type.js';
 
 @Injectable()
 export class BrandService {
@@ -148,58 +140,6 @@ export class BrandService {
       return new ResultModel(
         RESPONSE_CODES.NOT_FOUND,
         'Não foi possível excluir a marca.',
-        '',
-        [],
-      );
-    }
-  }
-
-  async taskBrandSearchAllV2(dataJsonDto: BrandFindSearchV2Dto) {
-    try {
-      const { queryString, queryParams } = BrandFindSearchV2Query(dataJsonDto);
-      const resultData = await this.dbService.selectQuery<TblBrandFindSearch>(
-        queryString,
-        queryParams,
-      );
-
-      return processSqlResultQuery(
-        resultData,
-        'Brand find All',
-        'Brand find All not found',
-        'Dados carregados com sucesso.',
-      );
-    } catch (err) {
-      await logServiceError('brand', 'taskBrandSearchAllV2', err);
-      return new ResultModel(
-        RESPONSE_CODES.NOT_FOUND,
-        'Não foi possível pesquisar as marcas.',
-        '',
-        [],
-      );
-    }
-  }
-
-  async taskBrandFindManagerIdV2(dataJsonDto: BrandFindManagerIdV2Dto) {
-    try {
-      const { queryString, queryParams } =
-        BrandFindManagerIdV2Query(dataJsonDto);
-      const resultData =
-        await this.dbService.selectQuery<TblBrandFindManagerId>(
-          queryString,
-          queryParams,
-        );
-
-      return processSqlResultQuery(
-        resultData,
-        'Brand find manager Id',
-        'Brand find manager Id not found',
-        'Dados carregados com sucesso.',
-      );
-    } catch (err) {
-      await logServiceError('brand', 'taskBrandFindManagerIdV2', err);
-      return new ResultModel(
-        RESPONSE_CODES.NOT_FOUND,
-        'Não foi possível consultar a marca.',
         '',
         [],
       );
