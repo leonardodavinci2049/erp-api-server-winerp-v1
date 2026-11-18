@@ -7,7 +7,7 @@ CREATE TABLE `tbl_produto_marca` (
   `ID_LOJA` int(11) DEFAULT 1,
   `ID_USUARIO` int(11) DEFAULT 1,
   `ID_DEPARTAMENTO` int(11) DEFAULT 1,
-  `MARCA` varchar(100) DEFAULT NULL,
+  `MARCA` varchar(300) DEFAULT NULL,
   `NOME` varchar(300) DEFAULT NULL,
   `SLUG` varchar(300) DEFAULT NULL,
   `PATH_IMAGEM` varchar(300) DEFAULT NULL,

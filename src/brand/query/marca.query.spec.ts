@@ -46,15 +46,22 @@ describe('Marca legacy queries', () => {
     expect(result.queryString).toContain("'' AS PATH_IMAGEM02");
   });
 
-  it('creates with the legacy image field and lets the database generate the id', () => {
+  it('creates with the same normalized value for NOME and MARCA', () => {
     const result = MarcaCreateQuery({
       ...context,
-      PE_NOME: 'Marca teste',
+      PE_NOME: 'Marca NULLteste',
       PE_PASTA_IMG: '/img',
       PE_ANOTACOES: 'NULL',
     });
-    expect(result.queryParams).toEqual([7, 'Marca teste', '/img', '']);
-    expect(result.queryString.match(/\?/g)).toHaveLength(4);
+    expect(result.queryParams).toEqual([
+      7,
+      'Marca teste',
+      'Marca teste',
+      '/img',
+      '',
+    ]);
+    expect(result.queryString).toContain('ID_SYSTEM_CLIENTE, NOME, MARCA,');
+    expect(result.queryString.match(/\?/g)).toHaveLength(5);
     expect(result.queryString).not.toContain('ID_MARCA');
     expect(result.queryString).toContain('CURRENT_TIMESTAMP');
   });
