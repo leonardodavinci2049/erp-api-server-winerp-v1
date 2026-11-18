@@ -3,7 +3,6 @@ CREATE TABLE `tbl_produto_marca` (
   `RECORD_ID_REV` int(11) DEFAULT 0,
   `UUID` varchar(100) DEFAULT NULL,
   `ID_SYSTEM_CLIENTE` int(11) DEFAULT 0,
-  `UUIDtbl_produto_fornecedor` varchar(100) DEFAULT '0',
   `ID_LOJA` int(11) DEFAULT 1,
   `ID_USUARIO` int(11) DEFAULT 1,
   `ID_DEPARTAMENTO` int(11) DEFAULT 1,
@@ -18,4 +17,4 @@ CREATE TABLE `tbl_produto_marca` (
   `DT_EXPORTE` date DEFAULT NULL,
   `DT_UPDATE` date DEFAULT NULL,
   PRIMARY KEY (`ID_MARCA`)
-) ENGINE=InnoDB AUTO_INCREMENT=523 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=538 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -24,4 +24,4 @@ CREATE TABLE `tbl_hist_prod_estoque` (
   KEY `tbl_hist_prod_estoque_ID_USUARIO_IDX` (`ID_USUARIO`) USING BTREE,
   KEY `tbl_hist_prod_estoque_ID_PRODUTO_IDX` (`ID_PRODUTO`) USING BTREE,
   KEY `tbl_hist_prod_estoque_DT_CADASTRO_IDX` (`DT_CADASTRO`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=341837 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=355274 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

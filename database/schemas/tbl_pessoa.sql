@@ -155,6 +155,7 @@ CREATE TABLE `tbl_pessoa` (
   `DT_UPDATE` datetime DEFAULT NULL,
   `ID_PARENT` int(11) DEFAULT 0,
   `DISTANCIA_ENTREGA` decimal(10,3) DEFAULT NULL COMMENT 'Distância rodoviária em quilômetros entre a distribuição e a entrega',
+  `ZONA` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ID_TBL_PESSOA`),
   KEY `ID_SYSTEM_CLIENTE` (`ID_SYSTEM_CLIENTE`),
   KEY `ID_LOJA` (`ID_LOJA`),
@@ -167,4 +168,4 @@ CREATE TABLE `tbl_pessoa` (
   KEY `CNPJ` (`CNPJ`),
   KEY `EMAIL_DE_LOGIN` (`EMAIL_DE_LOGIN`),
   FULLTEXT KEY `ft_pessoa_nome_razao` (`NOME`,`RAZAO_SOCIAL`)
-) ENGINE=InnoDB AUTO_INCREMENT=50693 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50950 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

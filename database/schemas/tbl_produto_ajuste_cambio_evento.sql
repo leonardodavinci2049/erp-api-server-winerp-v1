@@ -1,0 +1,13 @@
+CREATE TABLE `tbl_produto_ajuste_cambio_evento` (
+  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `ID_EVENTO` char(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `ID_OPERACAO` char(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  `SITUACAO` varchar(40) NOT NULL,
+  `OBSERVADO_JSON` longtext DEFAULT NULL,
+  `MENSAGEM` varchar(1000) NOT NULL,
+  `DATA_SERVIDOR` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID`),
+  UNIQUE KEY `UK_CAMBIO_EVENTO` (`ID_EVENTO`),
+  KEY `IX_CAMBIO_EVENTOS` (`ID_OPERACAO`,`ID`),
+  CONSTRAINT `FK_CAMBIO_EVENTO_LOG` FOREIGN KEY (`ID_OPERACAO`) REFERENCES `tbl_produto_ajuste_cambio_log` (`ID_OPERACAO`)
+) ENGINE=InnoDB AUTO_INCREMENT=2061 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

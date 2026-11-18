@@ -6,4 +6,8 @@ bash scripts2/git-flow-release-from-develop.sh
 
 bash scripts2/git-flow-release.sh 2.5.0
 
+chmod +x scripts2/generate-schema.mjs
+bash node scripts2/generate-schema.mjs
+
+
 ```

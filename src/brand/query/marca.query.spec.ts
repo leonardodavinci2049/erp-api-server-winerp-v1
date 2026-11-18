@@ -46,37 +46,51 @@ describe('Marca legacy queries', () => {
     expect(result.queryString).toContain("'' AS PATH_IMAGEM02");
   });
 
-  it('creates with the same normalized value for NOME and MARCA', () => {
+  it('creates with a shared normalized name, UUID v4, and slug', () => {
     const result = MarcaCreateQuery({
       ...context,
-      PE_NOME: 'Marca NULLteste',
+      PE_NOME: 'Marca NULLBásica',
       PE_PASTA_IMG: '/img',
       PE_ANOTACOES: 'NULL',
     });
     expect(result.queryParams).toEqual([
       7,
-      'Marca teste',
-      'Marca teste',
+      'Marca Básica',
+      'Marca Básica',
       '/img',
       '',
+      expect.stringMatching(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,
+      ),
+      'marca-basica',
     ]);
     expect(result.queryString).toContain('ID_SYSTEM_CLIENTE, NOME, MARCA,');
-    expect(result.queryString.match(/\?/g)).toHaveLength(5);
+    expect(result.queryString).toContain('DATADOCADASTRO, UUID, SLUG');
+    expect(result.queryString.match(/\?/g)).toHaveLength(7);
     expect(result.queryString).not.toContain('ID_MARCA');
     expect(result.queryString).toContain('CURRENT_TIMESTAMP');
   });
 
-  it('scopes update and physical deletion by tenant and id', () => {
+  it('updates NOME and MARCA with the same normalized value and scopes mutations by tenant and id', () => {
     const update = MarcaUpdateQuery({
       ...context,
       PE_ID_MARCA: 42,
-      PE_NOME: 'New',
+      PE_NOME: 'NewNULL',
       PE_PATH_IMAGEM: '/new',
       PE_INATIVO: 1,
       PE_ANOTACOES: 'Note',
     });
-    expect(update.queryParams).toEqual(['New', '/new', 'Note', 1, 7, 42]);
-    expect(update.queryString.match(/\?/g)).toHaveLength(6);
+    expect(update.queryParams).toEqual([
+      'New',
+      'New',
+      '/new',
+      'Note',
+      1,
+      7,
+      42,
+    ]);
+    expect(update.queryString).toContain('SET NOME = ?, MARCA = ?,');
+    expect(update.queryString.match(/\?/g)).toHaveLength(7);
     const deletion = MarcaDeleteQuery({ ...context, PE_ID_MARCA: 42 });
     expect(deletion.queryParams).toEqual([7, 42]);
     for (const result of [update, deletion]) {
