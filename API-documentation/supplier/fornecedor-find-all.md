@@ -32,13 +32,15 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
 ## Estrutura da Requisição (Body)
 
+Todos os campos da tabela são obrigatórios e rejeitam `null`. Textos vazios (`""`) são aceitos. Para consultar sem filtro de nome, envie `PE_FORNECEDOR: ""`.
+
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); filtro `ID_SYSTEM_CLIENTE` |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** usado como filtro nesta consulta |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado na consulta |
 | `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado na consulta |
-| `PE_FORNECEDOR` | string | Não | Trecho do nome do fornecedor | O filtro `NOME LIKE %valor%` só é aplicado quando o texto tem mais de 2 caracteres |
+| `PE_FORNECEDOR` | string | Sim | Trecho do nome do fornecedor | O filtro `NOME LIKE %valor%` só é aplicado quando o texto tem mais de 2 caracteres |
 
 ### Exemplo de Requisição
 
@@ -304,7 +306,7 @@ Quando nenhum fornecedor atende ao filtro, o retorno mantém `statusCode` `10020
 
 ### 400 Bad Request (Erro de Validação)
 
-Ocorre quando um campo obrigatório do contexto está ausente ou um campo desconhecido é enviado. O exemplo abaixo omite `PE_ID_USUARIO`:
+Ocorre quando qualquer campo está ausente ou é enviado como `null` ou um campo desconhecido é enviado. O exemplo abaixo omite `PE_ID_USUARIO`:
 
 ```json
 {

@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsNumber, IsDefined, IsString, Min } from 'class-validator';
 
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
 
@@ -11,255 +11,255 @@ export class FornecedorUpdateDto extends BaseRequestDto {
   declare PE_ID_SYSTEM: number;
 
   @IsNumber()
-  @IsOptional()
-  PE_ID_CATEGORIA?: number | null;
+  @IsDefined()
+  PE_ID_CATEGORIA!: number;
 
   @IsNumber()
-  @IsOptional()
-  PE_ID_TIPO?: number | null;
+  @IsDefined()
+  PE_ID_TIPO!: number;
 
   @IsString()
-  @IsOptional()
-  PE_FISIJURI?: string | null;
+  @IsDefined()
+  PE_FISIJURI!: string;
 
   @IsString()
-  @IsOptional()
-  PE_FONE1?: string | null;
+  @IsDefined()
+  PE_FONE1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_FONE2?: string | null;
+  @IsDefined()
+  PE_FONE2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_WHATAPP1?: string | null;
+  @IsDefined()
+  PE_WHATAPP1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_WHATAPP2?: string | null;
+  @IsDefined()
+  PE_WHATAPP2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CONTATO1?: string | null;
+  @IsDefined()
+  PE_CONTATO1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CONTATO2?: string | null;
+  @IsDefined()
+  PE_CONTATO2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_SETOR1?: string | null;
+  @IsDefined()
+  PE_SETOR1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_SETOR2?: string | null;
+  @IsDefined()
+  PE_SETOR2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_EMAIL1?: string | null;
+  @IsDefined()
+  PE_EMAIL1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_EMAIL2?: string | null;
+  @IsDefined()
+  PE_EMAIL2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_RAZAO_SOCIAL?: string | null;
+  @IsDefined()
+  PE_RAZAO_SOCIAL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CNPJ?: string | null;
+  @IsDefined()
+  PE_CNPJ!: string;
 
   @IsString()
-  @IsOptional()
-  PE_INSC_ESTADUAL?: string | null;
+  @IsDefined()
+  PE_INSC_ESTADUAL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_INSC_MUNICIPAL?: string | null;
+  @IsDefined()
+  PE_INSC_MUNICIPAL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_NOME_FANTASIA?: string | null;
+  @IsDefined()
+  PE_NOME_FANTASIA!: string;
 
   @IsString()
-  @IsOptional()
-  PE_DATA_CNPJ?: string | null;
+  @IsDefined()
+  PE_DATA_CNPJ!: string;
 
   @IsString()
-  @IsOptional()
-  PE_NOME_RESPONSAVEL?: string | null;
+  @IsDefined()
+  PE_NOME_RESPONSAVEL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CARGO_RESPOSNAVEL?: string | null;
+  @IsDefined()
+  PE_CARGO_RESPOSNAVEL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADE_PRINCIPAL?: string | null;
+  @IsDefined()
+  PE_ATIVIDADE_PRINCIPAL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADES_SECUNDARIA1?: string | null;
+  @IsDefined()
+  PE_ATIVIDADES_SECUNDARIA1!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADES_SECUNDARIA2?: string | null;
+  @IsDefined()
+  PE_ATIVIDADES_SECUNDARIA2!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADES_SECUNDARIA3?: string | null;
+  @IsDefined()
+  PE_ATIVIDADES_SECUNDARIA3!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADES_SECUNDARIA4?: string | null;
+  @IsDefined()
+  PE_ATIVIDADES_SECUNDARIA4!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ATIVIDADES_SECUNDARIA5?: string | null;
+  @IsDefined()
+  PE_ATIVIDADES_SECUNDARIA5!: string;
 
   @IsString()
-  @IsOptional()
-  PE_NATUREZA_JURIDICA?: string | null;
+  @IsDefined()
+  PE_NATUREZA_JURIDICA!: string;
 
   @IsString()
-  @IsOptional()
-  PE_OBJETIVO_MISSAO?: string | null;
+  @IsDefined()
+  PE_OBJETIVO_MISSAO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_MISSAO_VISAO?: string | null;
+  @IsDefined()
+  PE_MISSAO_VISAO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_PRIMEIRO_NOME?: string | null;
+  @IsDefined()
+  PE_PRIMEIRO_NOME!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CARGO?: string | null;
+  @IsDefined()
+  PE_CARGO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CPF?: string | null;
+  @IsDefined()
+  PE_CPF!: string;
 
   @IsString()
-  @IsOptional()
-  PE_RG?: string | null;
+  @IsDefined()
+  PE_RG!: string;
 
   @IsString()
-  @IsOptional()
-  PE_GENERO?: string | null;
+  @IsDefined()
+  PE_GENERO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_SOBRENOME?: string | null;
+  @IsDefined()
+  PE_SOBRENOME!: string;
 
   @IsString()
-  @IsOptional()
-  PE_NOME_DO_MEIO?: string | null;
+  @IsDefined()
+  PE_NOME_DO_MEIO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_TRATAMENTO?: string | null;
+  @IsDefined()
+  PE_TRATAMENTO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_TRABALHANAEMPRESA?: string | null;
+  @IsDefined()
+  PE_TRABALHANAEMPRESA!: string;
 
   @IsString()
-  @IsOptional()
-  PE_FORMACAOACADEMICA?: string | null;
+  @IsDefined()
+  PE_FORMACAOACADEMICA!: string;
 
   @IsString()
-  @IsOptional()
-  PE_FORMACAOATUAL?: string | null;
+  @IsDefined()
+  PE_FORMACAOATUAL!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ESPECIALIZACAO?: string | null;
+  @IsDefined()
+  PE_ESPECIALIZACAO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_INSTITUICAODEENSINO?: string | null;
+  @IsDefined()
+  PE_INSTITUICAODEENSINO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CONJUGUE?: string | null;
+  @IsDefined()
+  PE_CONJUGUE!: string;
 
   @IsString()
-  @IsOptional()
-  PE_DATADONASCIMENTO?: string | null;
+  @IsDefined()
+  PE_DATADONASCIMENTO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CEP?: string | null;
+  @IsDefined()
+  PE_CEP!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ENDERECO?: string | null;
+  @IsDefined()
+  PE_ENDERECO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ENDERECO_NUMERO?: string | null;
+  @IsDefined()
+  PE_ENDERECO_NUMERO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_COMPLEMENTO?: string | null;
+  @IsDefined()
+  PE_COMPLEMENTO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_BAIRRO?: string | null;
+  @IsDefined()
+  PE_BAIRRO!: string;
 
   @IsString()
-  @IsOptional()
-  PE_CIDADE?: string | null;
+  @IsDefined()
+  PE_CIDADE!: string;
 
   @IsString()
-  @IsOptional()
-  PE_UF?: string | null;
+  @IsDefined()
+  PE_UF!: string;
 
   @IsString()
-  @IsOptional()
-  PE_REGIAO_PAIS?: string | null;
+  @IsDefined()
+  PE_REGIAO_PAIS!: string;
 
   @IsString()
-  @IsOptional()
-  PE_PAIS?: string | null;
+  @IsDefined()
+  PE_PAIS!: string;
 
   @IsNumber()
-  @IsOptional()
-  PE_COD_MUNICIPIO?: number | null;
+  @IsDefined()
+  PE_COD_MUNICIPIO!: number;
 
   @IsNumber()
-  @IsOptional()
-  PE_COD_UF?: number | null;
+  @IsDefined()
+  PE_COD_UF!: number;
 
   @IsString()
-  @IsOptional()
-  PE_WEBSITE?: string | null;
+  @IsDefined()
+  PE_WEBSITE!: string;
 
   @IsString()
-  @IsOptional()
-  PE_SKYPE?: string | null;
+  @IsDefined()
+  PE_SKYPE!: string;
 
   @IsString()
-  @IsOptional()
-  PE_FACEBOOK?: string | null;
+  @IsDefined()
+  PE_FACEBOOK!: string;
 
   @IsString()
-  @IsOptional()
-  PE_TWITTER?: string | null;
+  @IsDefined()
+  PE_TWITTER!: string;
 
   @IsString()
-  @IsOptional()
-  PE_ANOTACOES?: string | null;
+  @IsDefined()
+  PE_ANOTACOES!: string;
 
   @IsNumber()
   PE_ID_FORNECEDOR!: number;
 
   @IsString()
-  @IsOptional()
-  PE_NOME?: string | null;
+  @IsDefined()
+  PE_NOME!: string;
 }
 
 /*
@@ -270,12 +270,69 @@ Sample JSON for testing in body endpoint:
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 0,
   "PE_ID_USUARIO": 1,
-  "PE_ID_FORNECEDOR": 1,
-  "PE_NOME": "FORNECEDOR PADRAO API",
+  "PE_ID_CATEGORIA": 0,
+  "PE_ID_TIPO": 0,
   "PE_FISIJURI": "J",
-  "PE_CNPJ": "00000000000100",
+  "PE_FONE1": "",
+  "PE_FONE2": "",
+  "PE_WHATAPP1": "",
+  "PE_WHATAPP2": "",
+  "PE_CONTATO1": "",
+  "PE_CONTATO2": "",
+  "PE_SETOR1": "",
+  "PE_SETOR2": "",
+  "PE_EMAIL1": "",
+  "PE_EMAIL2": "",
   "PE_RAZAO_SOCIAL": "FORNECEDOR PADRAO API LTDA",
-  "PE_UF": "SP"
+  "PE_CNPJ": "00000000000100",
+  "PE_INSC_ESTADUAL": "",
+  "PE_INSC_MUNICIPAL": "",
+  "PE_NOME_FANTASIA": "",
+  "PE_DATA_CNPJ": "",
+  "PE_NOME_RESPONSAVEL": "",
+  "PE_CARGO_RESPOSNAVEL": "",
+  "PE_ATIVIDADE_PRINCIPAL": "",
+  "PE_ATIVIDADES_SECUNDARIA1": "",
+  "PE_ATIVIDADES_SECUNDARIA2": "",
+  "PE_ATIVIDADES_SECUNDARIA3": "",
+  "PE_ATIVIDADES_SECUNDARIA4": "",
+  "PE_ATIVIDADES_SECUNDARIA5": "",
+  "PE_NATUREZA_JURIDICA": "",
+  "PE_OBJETIVO_MISSAO": "",
+  "PE_MISSAO_VISAO": "",
+  "PE_PRIMEIRO_NOME": "",
+  "PE_CARGO": "",
+  "PE_CPF": "",
+  "PE_RG": "",
+  "PE_GENERO": "",
+  "PE_SOBRENOME": "",
+  "PE_NOME_DO_MEIO": "",
+  "PE_TRATAMENTO": "",
+  "PE_TRABALHANAEMPRESA": "",
+  "PE_FORMACAOACADEMICA": "",
+  "PE_FORMACAOATUAL": "",
+  "PE_ESPECIALIZACAO": "",
+  "PE_INSTITUICAODEENSINO": "",
+  "PE_CONJUGUE": "",
+  "PE_DATADONASCIMENTO": "",
+  "PE_CEP": "",
+  "PE_ENDERECO": "",
+  "PE_ENDERECO_NUMERO": "",
+  "PE_COMPLEMENTO": "",
+  "PE_BAIRRO": "",
+  "PE_CIDADE": "",
+  "PE_UF": "SP",
+  "PE_REGIAO_PAIS": "",
+  "PE_PAIS": "",
+  "PE_COD_MUNICIPIO": 0,
+  "PE_COD_UF": 0,
+  "PE_WEBSITE": "",
+  "PE_SKYPE": "",
+  "PE_FACEBOOK": "",
+  "PE_TWITTER": "",
+  "PE_ANOTACOES": "",
+  "PE_ID_FORNECEDOR": 1,
+  "PE_NOME": "FORNECEDOR PADRAO API"
 }
 
 */

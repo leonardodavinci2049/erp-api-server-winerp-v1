@@ -30,6 +30,8 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
 ## Estrutura da Requisição (Body)
 
+Todos os campos da tabela são obrigatórios e rejeitam `null`. Textos vazios (`""`) são aceitos.
+
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); compõe o `WHERE` junto com `PE_ID_FORNECEDOR` |
@@ -37,39 +39,41 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado no `UPDATE` |
 | `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado no `UPDATE` |
 | `PE_ID_FORNECEDOR` | number | Sim | ID do fornecedor a atualizar | `@IsNumber`; compõe o `WHERE` com `PE_ID_SYSTEM` |
-| `PE_ID_CATEGORIA` | number | Não | ID da categoria | `@IsNumber`; quando ausente grava `0` |
-| `PE_ID_TIPO` | number | Não | ID do tipo | `@IsNumber`; quando ausente grava `0` |
-| `PE_NOME` | string | Não | Nome do fornecedor | `@IsString`; ao contrário da criação, não exige mínimo de 5 caracteres |
-| `PE_FISIJURI` | string | Não | Tipo de pessoa (`J`/`F`) | `@IsString` |
-| `PE_FONE1`, `PE_FONE2` | string | Não | Telefones | `@IsString` |
-| `PE_WHATAPP1`, `PE_WHATAPP2` | string | Não | WhatsApp | `@IsString`; grafia do contrato legado |
-| `PE_CONTATO1`, `PE_CONTATO2` | string | Não | Contatos | `@IsString` |
-| `PE_SETOR1`, `PE_SETOR2` | string | Não | Setores | `@IsString` |
-| `PE_EMAIL1`, `PE_EMAIL2` | string | Não | E-mails | `@IsString` |
-| `PE_RAZAO_SOCIAL` | string | Não | Razão social | `@IsString` |
-| `PE_CNPJ` | string | Não | CNPJ | `@IsString` |
-| `PE_INSC_ESTADUAL`, `PE_INSC_MUNICIPAL` | string | Não | Inscrições | `@IsString` |
-| `PE_NOME_FANTASIA` | string | Não | Nome fantasia | `@IsString` |
-| `PE_DATA_CNPJ` | string | Não | Data do CNPJ | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
-| `PE_NOME_RESPONSAVEL` | string | Não | Nome do responsável | `@IsString` |
-| `PE_CARGO_RESPOSNAVEL` | string | Não | Cargo do responsável | `@IsString`; grafia histórica |
-| `PE_ATIVIDADE_PRINCIPAL` | string | Não | Atividade principal | `@IsString` |
-| `PE_ATIVIDADES_SECUNDARIA1..5` | string | Não | Atividades secundárias | `@IsString` em cada campo |
-| `PE_NATUREZA_JURIDICA` | string | Não | Natureza jurídica | `@IsString` |
-| `PE_OBJETIVO_MISSAO` | string | Não | Objetivo/missão | `@IsString` |
-| `PE_MISSAO_VISAO` | string | Não | Missão/visão | `@IsString` |
-| `PE_PRIMEIRO_NOME`, `PE_CARGO` | string | Não | Dados da pessoa | `@IsString` |
-| `PE_CPF`, `PE_RG`, `PE_GENERO`, `PE_SOBRENOME`, `PE_NOME_DO_MEIO` | string | Não | Documentos e dados pessoais | `@IsString` |
-| `PE_TRATAMENTO`, `PE_TRABALHANAEMPRESA`, `PE_FORMACAOACADEMICA`, `PE_FORMACAOATUAL`, `PE_ESPECIALIZACAO`, `PE_INSTITUICAODEENSINO`, `PE_CONJUGUE` | string | Não | Dados complementares | `@IsString` |
-| `PE_DATADONASCIMENTO` | string | Não | Data de nascimento | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`, mas **não faz parte do `UPDATE`**, como no legado |
-| `PE_CEP`, `PE_ENDERECO`, `PE_ENDERECO_NUMERO`, `PE_COMPLEMENTO`, `PE_BAIRRO`, `PE_CIDADE`, `PE_UF`, `PE_REGIAO_PAIS`, `PE_PAIS` | string | Não | Endereço | `@IsString` |
-| `PE_COD_MUNICIPIO`, `PE_COD_UF` | number | Não | Códigos IBGE | `@IsNumber`; quando ausentes gravam `0` |
-| `PE_WEBSITE`, `PE_SKYPE`, `PE_FACEBOOK`, `PE_TWITTER` | string | Não | Contatos digitais | `@IsString` |
-| `PE_ANOTACOES` | string | Não | Observações | `@IsString` |
+| `PE_ID_CATEGORIA` | number | Sim | ID da categoria | `@IsNumber`; aceita `0` |
+| `PE_ID_TIPO` | number | Sim | ID do tipo | `@IsNumber`; aceita `0` |
+| `PE_NOME` | string | Sim | Nome do fornecedor | `@IsString`; ao contrário da criação, não exige mínimo de 5 caracteres |
+| `PE_FISIJURI` | string | Sim | Tipo de pessoa (`J`/`F`) | `@IsString` |
+| `PE_FONE1`, `PE_FONE2` | string | Sim | Telefones | `@IsString` |
+| `PE_WHATAPP1`, `PE_WHATAPP2` | string | Sim | WhatsApp | `@IsString`; grafia do contrato legado |
+| `PE_CONTATO1`, `PE_CONTATO2` | string | Sim | Contatos | `@IsString` |
+| `PE_SETOR1`, `PE_SETOR2` | string | Sim | Setores | `@IsString` |
+| `PE_EMAIL1`, `PE_EMAIL2` | string | Sim | E-mails | `@IsString` |
+| `PE_RAZAO_SOCIAL` | string | Sim | Razão social | `@IsString` |
+| `PE_CNPJ` | string | Sim | CNPJ | `@IsString` |
+| `PE_INSC_ESTADUAL`, `PE_INSC_MUNICIPAL` | string | Sim | Inscrições | `@IsString` |
+| `PE_NOME_FANTASIA` | string | Sim | Nome fantasia | `@IsString` |
+| `PE_DATA_CNPJ` | string | Sim | Data do CNPJ | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
+| `PE_NOME_RESPONSAVEL` | string | Sim | Nome do responsável | `@IsString` |
+| `PE_CARGO_RESPOSNAVEL` | string | Sim | Cargo do responsável | `@IsString`; grafia histórica |
+| `PE_ATIVIDADE_PRINCIPAL` | string | Sim | Atividade principal | `@IsString` |
+| `PE_ATIVIDADES_SECUNDARIA1..5` | string | Sim | Atividades secundárias | `@IsString` em cada campo |
+| `PE_NATUREZA_JURIDICA` | string | Sim | Natureza jurídica | `@IsString` |
+| `PE_OBJETIVO_MISSAO` | string | Sim | Objetivo/missão | `@IsString` |
+| `PE_MISSAO_VISAO` | string | Sim | Missão/visão | `@IsString` |
+| `PE_PRIMEIRO_NOME`, `PE_CARGO` | string | Sim | Dados da pessoa | `@IsString` |
+| `PE_CPF`, `PE_RG`, `PE_GENERO`, `PE_SOBRENOME`, `PE_NOME_DO_MEIO` | string | Sim | Documentos e dados pessoais | `@IsString` |
+| `PE_TRATAMENTO`, `PE_TRABALHANAEMPRESA`, `PE_FORMACAOACADEMICA`, `PE_FORMACAOATUAL`, `PE_ESPECIALIZACAO`, `PE_INSTITUICAODEENSINO`, `PE_CONJUGUE` | string | Sim | Dados complementares | `@IsString` |
+| `PE_DATADONASCIMENTO` | string | Sim | Data de nascimento | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`, mas **não faz parte do `UPDATE`**, como no legado |
+| `PE_CEP`, `PE_ENDERECO`, `PE_ENDERECO_NUMERO`, `PE_COMPLEMENTO`, `PE_BAIRRO`, `PE_CIDADE`, `PE_UF`, `PE_REGIAO_PAIS`, `PE_PAIS` | string | Sim | Endereço | `@IsString` |
+| `PE_COD_MUNICIPIO`, `PE_COD_UF` | number | Sim | Códigos IBGE | `@IsNumber`; aceitam `0` |
+| `PE_WEBSITE`, `PE_SKYPE`, `PE_FACEBOOK`, `PE_TWITTER` | string | Sim | Contatos digitais | `@IsString` |
+| `PE_ANOTACOES` | string | Sim | Observações | `@IsString` |
 
-> Campos de texto não enviados são gravados como `NULL` e os campos numéricos de categoria, tipo e códigos IBGE como `0`. `DT_UPDATE` recebe `CURRENT_TIMESTAMP` e `DATADOCADASTRO` é preservada.
+> Todos os campos devem ser enviados e não podem ser `null`. Textos vazios e valores numéricos `0` são aceitos conforme as restrições de cada campo. `DT_UPDATE` recebe `CURRENT_TIMESTAMP` e `DATADOCADASTRO` é preservada.
 
 ### Exemplo de Requisição
+
+Exemplo adaptado do [relatório HTTP histórico](supplier.controller-test.md) para incluir todos os campos exigidos pelos DTOs atuais. Este corpo completo ainda não foi retestado via HTTP; as respostas abaixo preservam as evidências da execução anterior.
 
 ```http
 POST /supplier/v1/fornecedor-update
@@ -107,7 +111,45 @@ Content-Type: application/json
   "PE_COD_MUNICIPIO": 3550308,
   "PE_COD_UF": 35,
   "PE_WEBSITE": "https://alfa.docapi.example.com",
-  "PE_ANOTACOES": "Fornecedor atualizado para documentacao do endpoint."
+  "PE_ANOTACOES": "Fornecedor atualizado para documentacao do endpoint.",
+  "PE_ID_CATEGORIA": 0,
+  "PE_ID_TIPO": 0,
+  "PE_FONE2": "",
+  "PE_WHATAPP2": "",
+  "PE_CONTATO2": "",
+  "PE_SETOR2": "",
+  "PE_EMAIL2": "",
+  "PE_INSC_ESTADUAL": "",
+  "PE_INSC_MUNICIPAL": "",
+  "PE_NOME_RESPONSAVEL": "",
+  "PE_CARGO_RESPOSNAVEL": "",
+  "PE_ATIVIDADES_SECUNDARIA1": "",
+  "PE_ATIVIDADES_SECUNDARIA2": "",
+  "PE_ATIVIDADES_SECUNDARIA3": "",
+  "PE_ATIVIDADES_SECUNDARIA4": "",
+  "PE_ATIVIDADES_SECUNDARIA5": "",
+  "PE_NATUREZA_JURIDICA": "",
+  "PE_OBJETIVO_MISSAO": "",
+  "PE_MISSAO_VISAO": "",
+  "PE_PRIMEIRO_NOME": "",
+  "PE_CARGO": "",
+  "PE_CPF": "",
+  "PE_RG": "",
+  "PE_GENERO": "",
+  "PE_SOBRENOME": "",
+  "PE_NOME_DO_MEIO": "",
+  "PE_TRATAMENTO": "",
+  "PE_TRABALHANAEMPRESA": "",
+  "PE_FORMACAOACADEMICA": "",
+  "PE_FORMACAOATUAL": "",
+  "PE_ESPECIALIZACAO": "",
+  "PE_INSTITUICAODEENSINO": "",
+  "PE_CONJUGUE": "",
+  "PE_DATADONASCIMENTO": "",
+  "PE_REGIAO_PAIS": "",
+  "PE_SKYPE": "",
+  "PE_FACEBOOK": "",
+  "PE_TWITTER": ""
 }
 ```
 
@@ -141,7 +183,7 @@ Content-Type: application/json
 
 ### 400 Bad Request (Erro de Validação)
 
-Ocorre quando um campo obrigatório do contexto está ausente, um valor possui tipo inválido ou um campo desconhecido é enviado:
+Ocorre quando qualquer campo está ausente ou é enviado como `null`, um valor possui tipo inválido ou um campo desconhecido é enviado:
 
 ```json
 {

@@ -30,74 +30,78 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
 ## Estrutura da Requisição (Body)
 
+Todos os campos da tabela são obrigatórios e rejeitam `null`. Textos vazios (`""`) são aceitos, exceto `PE_NOME`, que exige pelo menos 5 caracteres.
+
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); gravado em `ID_SYSTEM_CLIENTE` |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** é gravado (a coluna usa o default da tabela) |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** é gravado |
 | `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** é gravado |
-| `PE_ID_CATEGORIA` | number | Não | ID da categoria | `@IsNumber`; quando ausente grava `0` |
-| `PE_ID_TIPO` | number | Não | ID do tipo | `@IsNumber`; quando ausente grava `0` |
-| `PE_FISIJURI` | string | Não | Tipo de pessoa (`J`/`F`) | `@IsString` |
-| `PE_FONE1` | string | Não | Telefone principal | `@IsString` |
-| `PE_FONE2` | string | Não | Telefone secundário | `@IsString` |
-| `PE_WHATAPP1` | string | Não | WhatsApp principal | `@IsString`; a grafia `WHATAPP` é a do contrato legado |
-| `PE_WHATAPP2` | string | Não | WhatsApp secundário | `@IsString` |
-| `PE_CONTATO1` | string | Não | Contato principal | `@IsString` |
-| `PE_CONTATO2` | string | Não | Contato secundário | `@IsString` |
-| `PE_SETOR1` | string | Não | Setor principal | `@IsString` |
-| `PE_SETOR2` | string | Não | Setor secundário | `@IsString` |
-| `PE_EMAIL1` | string | Não | E-mail principal | `@IsString` |
-| `PE_EMAIL2` | string | Não | E-mail secundário | `@IsString` |
-| `PE_RAZAO_SOCIAL` | string | Não | Razão social | `@IsString` |
-| `PE_CNPJ` | string | Não | CNPJ | `@IsString` |
-| `PE_INSC_ESTADUAL` | string | Não | Inscrição estadual | `@IsString` |
-| `PE_INSC_MUNICIPAL` | string | Não | Inscrição municipal | `@IsString` |
-| `PE_NOME_FANTASIA` | string | Não | Nome fantasia | `@IsString` |
-| `PE_DATA_CNPJ` | string | Não | Data do CNPJ | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
-| `PE_NOME_RESPONSAVEL` | string | Não | Nome do responsável | `@IsString` |
-| `PE_CARGO_RESPOSNAVEL` | string | Não | Cargo do responsável | `@IsString`; grafia histórica `RESPOSNAVEL` |
-| `PE_ATIVIDADE_PRINCIPAL` | string | Não | Atividade principal | `@IsString` |
-| `PE_ATIVIDADES_SECUNDARIA1..5` | string | Não | Atividades secundárias | `@IsString` em cada campo |
-| `PE_NATUREZA_JURIDICA` | string | Não | Natureza jurídica | `@IsString` |
-| `PE_OBJETIVO_MISSAO` | string | Não | Objetivo/missão | `@IsString` |
-| `PE_MISSAO_VISAO` | string | Não | Missão/visão | `@IsString` |
-| `PE_PRIMEIRO_NOME` | string | Não | Primeiro nome da pessoa | `@IsString` |
-| `PE_CARGO` | string | Não | Cargo da pessoa | `@IsString` |
-| `PE_CPF` | string | Não | CPF | `@IsString` |
-| `PE_RG` | string | Não | RG | `@IsString` |
-| `PE_GENERO` | string | Não | Gênero | `@IsString` |
-| `PE_SOBRENOME` | string | Não | Sobrenome | `@IsString` |
-| `PE_NOME_DO_MEIO` | string | Não | Nome do meio | `@IsString` |
-| `PE_TRATAMENTO` | string | Não | Tratamento | `@IsString` |
-| `PE_TRABALHANAEMPRESA` | string | Não | Empresa onde trabalha | `@IsString` |
-| `PE_FORMACAOACADEMICA` | string | Não | Formação acadêmica | `@IsString` |
-| `PE_FORMACAOATUAL` | string | Não | Formação atual | `@IsString` |
-| `PE_ESPECIALIZACAO` | string | Não | Especialização | `@IsString` |
-| `PE_INSTITUICAODEENSINO` | string | Não | Instituição de ensino | `@IsString` |
-| `PE_CONJUGUE` | string | Não | Cônjuge | `@IsString` |
-| `PE_DATADONASCIMENTO` | string | Não | Data de nascimento | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
-| `PE_CEP` | string | Não | CEP | `@IsString` |
-| `PE_ENDERECO` | string | Não | Endereço | `@IsString` |
-| `PE_ENDERECO_NUMERO` | string | Não | Número do endereço | `@IsString` |
-| `PE_COMPLEMENTO` | string | Não | Complemento | `@IsString` |
-| `PE_BAIRRO` | string | Não | Bairro | `@IsString` |
-| `PE_CIDADE` | string | Não | Cidade | `@IsString` |
-| `PE_UF` | string | Não | UF | `@IsString` |
-| `PE_REGIAO_PAIS` | string | Não | Região/país | `@IsString` |
-| `PE_PAIS` | string | Não | País | `@IsString` |
-| `PE_COD_MUNICIPIO` | number | Não | Código IBGE do município | `@IsNumber`; quando ausente grava `0` |
-| `PE_COD_UF` | number | Não | Código IBGE da UF | `@IsNumber`; quando ausente grava `0` |
-| `PE_WEBSITE` | string | Não | Website | `@IsString` |
-| `PE_SKYPE` | string | Não | Skype | `@IsString` |
-| `PE_FACEBOOK` | string | Não | Facebook | `@IsString` |
-| `PE_TWITTER` | string | Não | Twitter | `@IsString` |
-| `PE_ANOTACOES` | string | Não | Observações | `@IsString` |
+| `PE_ID_CATEGORIA` | number | Sim | ID da categoria | `@IsNumber`; aceita `0` |
+| `PE_ID_TIPO` | number | Sim | ID do tipo | `@IsNumber`; aceita `0` |
+| `PE_FISIJURI` | string | Sim | Tipo de pessoa (`J`/`F`) | `@IsString` |
+| `PE_FONE1` | string | Sim | Telefone principal | `@IsString` |
+| `PE_FONE2` | string | Sim | Telefone secundário | `@IsString` |
+| `PE_WHATAPP1` | string | Sim | WhatsApp principal | `@IsString`; a grafia `WHATAPP` é a do contrato legado |
+| `PE_WHATAPP2` | string | Sim | WhatsApp secundário | `@IsString` |
+| `PE_CONTATO1` | string | Sim | Contato principal | `@IsString` |
+| `PE_CONTATO2` | string | Sim | Contato secundário | `@IsString` |
+| `PE_SETOR1` | string | Sim | Setor principal | `@IsString` |
+| `PE_SETOR2` | string | Sim | Setor secundário | `@IsString` |
+| `PE_EMAIL1` | string | Sim | E-mail principal | `@IsString` |
+| `PE_EMAIL2` | string | Sim | E-mail secundário | `@IsString` |
+| `PE_RAZAO_SOCIAL` | string | Sim | Razão social | `@IsString` |
+| `PE_CNPJ` | string | Sim | CNPJ | `@IsString` |
+| `PE_INSC_ESTADUAL` | string | Sim | Inscrição estadual | `@IsString` |
+| `PE_INSC_MUNICIPAL` | string | Sim | Inscrição municipal | `@IsString` |
+| `PE_NOME_FANTASIA` | string | Sim | Nome fantasia | `@IsString` |
+| `PE_DATA_CNPJ` | string | Sim | Data do CNPJ | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
+| `PE_NOME_RESPONSAVEL` | string | Sim | Nome do responsável | `@IsString` |
+| `PE_CARGO_RESPOSNAVEL` | string | Sim | Cargo do responsável | `@IsString`; grafia histórica `RESPOSNAVEL` |
+| `PE_ATIVIDADE_PRINCIPAL` | string | Sim | Atividade principal | `@IsString` |
+| `PE_ATIVIDADES_SECUNDARIA1..5` | string | Sim | Atividades secundárias | `@IsString` em cada campo |
+| `PE_NATUREZA_JURIDICA` | string | Sim | Natureza jurídica | `@IsString` |
+| `PE_OBJETIVO_MISSAO` | string | Sim | Objetivo/missão | `@IsString` |
+| `PE_MISSAO_VISAO` | string | Sim | Missão/visão | `@IsString` |
+| `PE_PRIMEIRO_NOME` | string | Sim | Primeiro nome da pessoa | `@IsString` |
+| `PE_CARGO` | string | Sim | Cargo da pessoa | `@IsString` |
+| `PE_CPF` | string | Sim | CPF | `@IsString` |
+| `PE_RG` | string | Sim | RG | `@IsString` |
+| `PE_GENERO` | string | Sim | Gênero | `@IsString` |
+| `PE_SOBRENOME` | string | Sim | Sobrenome | `@IsString` |
+| `PE_NOME_DO_MEIO` | string | Sim | Nome do meio | `@IsString` |
+| `PE_TRATAMENTO` | string | Sim | Tratamento | `@IsString` |
+| `PE_TRABALHANAEMPRESA` | string | Sim | Empresa onde trabalha | `@IsString` |
+| `PE_FORMACAOACADEMICA` | string | Sim | Formação acadêmica | `@IsString` |
+| `PE_FORMACAOATUAL` | string | Sim | Formação atual | `@IsString` |
+| `PE_ESPECIALIZACAO` | string | Sim | Especialização | `@IsString` |
+| `PE_INSTITUICAODEENSINO` | string | Sim | Instituição de ensino | `@IsString` |
+| `PE_CONJUGUE` | string | Sim | Cônjuge | `@IsString` |
+| `PE_DATADONASCIMENTO` | string | Sim | Data de nascimento | Aceita `YYYY-MM-DD` ou `DD/MM/YYYY`; valor vazio grava `NULL` |
+| `PE_CEP` | string | Sim | CEP | `@IsString` |
+| `PE_ENDERECO` | string | Sim | Endereço | `@IsString` |
+| `PE_ENDERECO_NUMERO` | string | Sim | Número do endereço | `@IsString` |
+| `PE_COMPLEMENTO` | string | Sim | Complemento | `@IsString` |
+| `PE_BAIRRO` | string | Sim | Bairro | `@IsString` |
+| `PE_CIDADE` | string | Sim | Cidade | `@IsString` |
+| `PE_UF` | string | Sim | UF | `@IsString` |
+| `PE_REGIAO_PAIS` | string | Sim | Região/país | `@IsString` |
+| `PE_PAIS` | string | Sim | País | `@IsString` |
+| `PE_COD_MUNICIPIO` | number | Sim | Código IBGE do município | `@IsNumber`; aceita `0` |
+| `PE_COD_UF` | number | Sim | Código IBGE da UF | `@IsNumber`; aceita `0` |
+| `PE_WEBSITE` | string | Sim | Website | `@IsString` |
+| `PE_SKYPE` | string | Sim | Skype | `@IsString` |
+| `PE_FACEBOOK` | string | Sim | Facebook | `@IsString` |
+| `PE_TWITTER` | string | Sim | Twitter | `@IsString` |
+| `PE_ANOTACOES` | string | Sim | Observações | `@IsString` |
 | `PE_NOME` | string | Sim | Nome do fornecedor | `@IsNotEmpty` e `@MinLength(5)` |
 
-> `DATADOCADASTRO` e `DT_UPDATE` são preenchidas pelo banco. Campos de texto ausentes são gravados como `NULL`, e não com a string `"null"` produzida pelo cliente legado.
+> `DATADOCADASTRO` e `DT_UPDATE` são preenchidas pelo banco. Campos ausentes ou enviados como `null` são rejeitados na validação da requisição.
 
 ### Exemplo de Requisição
+
+Exemplo adaptado do [relatório HTTP histórico](supplier.controller-test.md) para incluir todos os campos exigidos pelos DTOs atuais. Este corpo completo ainda não foi retestado via HTTP; as respostas abaixo preservam as evidências da execução anterior.
 
 ```http
 POST /supplier/v1/fornecedor-create
@@ -134,7 +138,45 @@ Content-Type: application/json
   "PE_COD_MUNICIPIO": 3550308,
   "PE_COD_UF": 35,
   "PE_WEBSITE": "https://alfa.docapi.example.com",
-  "PE_ANOTACOES": "Fornecedor criado para documentacao do endpoint."
+  "PE_ANOTACOES": "Fornecedor criado para documentacao do endpoint.",
+  "PE_ID_CATEGORIA": 0,
+  "PE_ID_TIPO": 0,
+  "PE_FONE2": "",
+  "PE_WHATAPP2": "",
+  "PE_CONTATO2": "",
+  "PE_SETOR2": "",
+  "PE_EMAIL2": "",
+  "PE_INSC_ESTADUAL": "",
+  "PE_INSC_MUNICIPAL": "",
+  "PE_NOME_RESPONSAVEL": "",
+  "PE_CARGO_RESPOSNAVEL": "",
+  "PE_ATIVIDADES_SECUNDARIA1": "",
+  "PE_ATIVIDADES_SECUNDARIA2": "",
+  "PE_ATIVIDADES_SECUNDARIA3": "",
+  "PE_ATIVIDADES_SECUNDARIA4": "",
+  "PE_ATIVIDADES_SECUNDARIA5": "",
+  "PE_NATUREZA_JURIDICA": "",
+  "PE_OBJETIVO_MISSAO": "",
+  "PE_MISSAO_VISAO": "",
+  "PE_PRIMEIRO_NOME": "",
+  "PE_CARGO": "",
+  "PE_CPF": "",
+  "PE_RG": "",
+  "PE_GENERO": "",
+  "PE_SOBRENOME": "",
+  "PE_NOME_DO_MEIO": "",
+  "PE_TRATAMENTO": "",
+  "PE_TRABALHANAEMPRESA": "",
+  "PE_FORMACAOACADEMICA": "",
+  "PE_FORMACAOATUAL": "",
+  "PE_ESPECIALIZACAO": "",
+  "PE_INSTITUICAODEENSINO": "",
+  "PE_CONJUGUE": "",
+  "PE_DATADONASCIMENTO": "",
+  "PE_REGIAO_PAIS": "",
+  "PE_SKYPE": "",
+  "PE_FACEBOOK": "",
+  "PE_TWITTER": ""
 }
 ```
 
@@ -168,7 +210,7 @@ Content-Type: application/json
 
 ### 400 Bad Request (Erro de Validação)
 
-Ocorre quando `PE_NOME` tem menos de 5 caracteres, um campo obrigatório está ausente ou um campo desconhecido é enviado:
+Ocorre quando `PE_NOME` tem menos de 5 caracteres, qualquer campo está ausente ou é enviado como `null` ou um campo desconhecido é enviado:
 
 ```json
 {
