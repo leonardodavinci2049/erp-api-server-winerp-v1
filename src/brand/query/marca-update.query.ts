@@ -2,6 +2,7 @@ import type { MarcaUpdateDto } from '../dto/marca-update.dto.js';
 import { normalizeMarcaText } from './marca-text.util.js';
 
 export function MarcaUpdateQuery(dto: MarcaUpdateDto) {
+    const name = normalizeMarcaText(dto.PE_NOME);
   return {
     queryString: `
       UPDATE tbl_produto_marca
