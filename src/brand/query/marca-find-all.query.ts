@@ -11,7 +11,7 @@ export function MarcaFindAllQuery(dto: MarcaFindAllDto) {
       COALESCE(PATH_IMAGEM, '') AS PS_PATH_IMAGEM,
       COALESCE(INATIVO, 0) AS PS_INATIVO,
       COALESCE(CAST(DATADOCADASTRO AS CHAR), '') AS PS_DATADOCADASTRO,
-      '' AS PS_ANOTACOES
+      tbl_produto_marca.ANOTACOES  AS PS_ANOTACOES
     FROM tbl_produto_marca
     WHERE ID_SYSTEM_CLIENTE = ? AND INATIVO = 0
   `;
