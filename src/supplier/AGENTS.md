@@ -49,7 +49,7 @@ O envelope é diferente do DataSnap (`arrayTable`, `psCodeErro`, `psFeedback`, `
 3. **Chave primária:** a criação usa o `AUTO_INCREMENT` de `tbl_fornecedor` e devolve `insertId`, em vez de consultar `information_schema.TABLES` antes do `INSERT`.
 4. **Valores nulos:** textos ausentes são gravados como `NULL`, e não com a string `"null"` produzida por `TJSONValue.Value` no legado.
 5. **Datas ausentes:** são gravadas como `NULL`, e não com a data de fallback (70 anos atrás) do legado.
-6. **Atualização completa:** `fornecedor-update` sobrescreve todas as colunas atualizadas pelo legado. O cliente deve enviar o registro completo, como no DataSnap. `DATADONASCIMENTO` não faz parte do `UPDATE`, assim como no original.
+6. **Atualização completa:** `fornecedor-update` sobrescreve todas as colunas atualizadas pelo legado. O cliente deve enviar o registro completo, como no DataSnap. A atualização também grava `PE_DATADONASCIMENTO` em `DATADONASCIMENTO`.
 7. **Validação:** requisições inválidas retornam erro do `ValidationPipe` (400) em vez de `psCodeErro` 500. Campos desconhecidos são rejeitados (`forbidNonWhitelisted`). `PE_ID_SYSTEM` deve ser maior ou igual a 1 em todas as rotas, inclusive na atualização, em que o legado não fazia essa checagem.
 8. **Datas na resposta:** são serializadas em ISO 8601 (`Date` convertido para JSON), enquanto o DataSnap retornava a representação textual do FireDAC.
 9. **Exclusão física:** `fornecedor-delete` executa `DELETE` na linha do fornecedor do tenant informado, sem exclusão em massa.

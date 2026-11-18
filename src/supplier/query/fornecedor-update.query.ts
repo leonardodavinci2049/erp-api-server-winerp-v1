@@ -11,10 +11,7 @@ interface FornecedorUpdateQueryResult {
 /**
  * Ported from `acceptFornecedorV1` (`UsvmFornecedor.pas`).
  *
- * Every column updated by the DataSnap method is kept, including the fact that
- * `DATADONASCIMENTO` is not part of the update. Missing values are stored as
- * `NULL` and the tenant filter keeps using `ID_SYSTEM_CLIENTE`, as in the
- * original statement.
+ * The update also saves the birth date supplied by the client.
  */
 export function FornecedorUpdateQuery(
   dataJsonDto: FornecedorUpdateDto,
@@ -47,6 +44,7 @@ export function FornecedorUpdateQuery(
       INSC_MUNICIPAL = ?, -- PE_INSC_MUNICIPAL
       NOME_FANTASIA = ?, -- PE_NOME_FANTASIA
       DATA_CNPJ = ?, -- PE_DATA_CNPJ
+      DATADONASCIMENTO = ?, -- PE_DATADONASCIMENTO
       NOME_RESPONSAVEL = ?, -- PE_NOME_RESPONSAVEL
       CARGO_RESPOSNAVEL = ?, -- PE_CARGO_RESPOSNAVEL
       ATIVIDADE_PRINCIPAL = ?, -- PE_ATIVIDADE_PRINCIPAL
@@ -115,6 +113,7 @@ export function FornecedorUpdateQuery(
     dataJsonDto.PE_INSC_MUNICIPAL ?? null,
     dataJsonDto.PE_NOME_FANTASIA ?? null,
     toSqlDate(dataJsonDto.PE_DATA_CNPJ),
+    toSqlDate(dataJsonDto.PE_DATADONASCIMENTO),
     dataJsonDto.PE_NOME_RESPONSAVEL ?? null,
     dataJsonDto.PE_CARGO_RESPOSNAVEL ?? null,
     dataJsonDto.PE_ATIVIDADE_PRINCIPAL ?? null,

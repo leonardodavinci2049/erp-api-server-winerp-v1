@@ -100,22 +100,29 @@ describe('fornecedor query builders', () => {
     expect(queryString).toContain('CURRENT_TIMESTAMP, -- DATADOCADASTRO');
   });
 
-  it('fornecedor-update keeps the legacy update columns and tenant filter', () => {
+  it.each([
+    ['10/10/2010', '2010-10-10'],
+    ['2010-10-10', '2010-10-10'],
+    ['', null],
+  ])('fornecedor-update binds birth date %j and filters by tenant', (input, expected) => {
     const { queryString, queryParams } = FornecedorUpdateQuery({
       PE_ID_SYSTEM: 7,
       PE_ID_FORNECEDOR: 42,
       PE_NOME: 'FORNECEDOR API',
       PE_ID_CATEGORIA: 3,
+      PE_DATADONASCIMENTO: input,
     } as FornecedorUpdateDto);
 
     expect(countPlaceholders(queryString)).toBe(queryParams.length);
-    expect(queryParams).toHaveLength(63);
+    expect(queryParams).toHaveLength(64);
     expect(queryParams[0]).toBe(3);
     expect(queryParams[2]).toBe('FORNECEDOR API');
-    expect(queryParams[60]).toBeNull();
-    expect(queryParams[61]).toBe(7);
-    expect(queryParams[62]).toBe(42);
-    expect(queryString).not.toContain('DATADONASCIMENTO');
+    expect(queryParams[61]).toBeNull();
+    expect(queryParams[62]).toBe(7);
+    expect(queryParams[63]).toBe(42);
+    expect(queryString).toContain('DATADONASCIMENTO = ?');
+    const birthDateIndex = countPlaceholders(queryString.split('DATADONASCIMENTO = ?')[0]);
+    expect(queryParams[birthDateIndex]).toBe(expected);
     expect(queryString).toContain('ID_SYSTEM_CLIENTE = ?');
     expect(queryString).toContain('ID_FORNECEDOR = ?');
   });
