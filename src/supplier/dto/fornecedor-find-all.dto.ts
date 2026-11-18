@@ -1,4 +1,4 @@
-import { IsOptional, IsString, Min } from 'class-validator';
+import { IsDefined, IsString, Min } from 'class-validator';
 
 import { BaseRequestDto } from '../../core/dto/base-request.dto.js';
 
@@ -11,8 +11,8 @@ export class FornecedorFindAllDto extends BaseRequestDto {
   declare PE_ID_SYSTEM: number;
 
   @IsString()
-  @IsOptional()
-  PE_FORNECEDOR?: string | null;
+  @IsDefined()
+  PE_FORNECEDOR!: string;
 }
 
 /*

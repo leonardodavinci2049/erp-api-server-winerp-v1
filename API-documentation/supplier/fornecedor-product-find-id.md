@@ -2,7 +2,7 @@
 
 ### Descrição
 
-Endpoint para consultar os vínculos entre produtos e fornecedores existentes em `tbl_produto_fornecedor`, cruzados com `tbl_produto`. Todos os filtros são opcionais e a resposta é entregue no result set `Supplier product find id`, com os aliases `PS_*` preservados do contrato legado.
+Endpoint para consultar os vínculos entre produtos e fornecedores existentes em `tbl_produto_fornecedor`, cruzados com `tbl_produto`. Todos os campos dos filtros são obrigatórios; IDs com `0` e textos vazios desativam os respectivos filtros e a resposta é entregue no result set `Supplier product find id`, com os aliases `PS_*` preservados do contrato legado.
 
 ## Informações do Endpoint
 
@@ -30,20 +30,24 @@ Se a chave for inválida ou ausente, a API retornará `401 Unauthorized`.
 
 ## Estrutura da Requisição (Body)
 
+Todos os campos da tabela são obrigatórios e rejeitam `null`. Textos vazios (`""`) são aceitos.
+
 | Campo | Tipo | Obrigatório | Descrição | Restrições |
 | --- | --- | --- | --- | --- |
 | `PE_ID_SYSTEM` | number | Sim | ID do cliente do sistema (tenant) | Número maior ou igual a 1 (`@Min(1)`); aceito pelo DTO, mas **não** usado na consulta, como no legado |
 | `PE_ID_LOJA` | number | Sim | ID da loja | Número; aceito pelo DTO, mas **não** usado na consulta |
 | `PE_ID_DEPARTAMENTO` | number | Sim | ID do departamento | Número; aceito pelo DTO, mas **não** usado na consulta |
 | `PE_ID_USUARIO` | number | Sim | ID do usuário | Número; aceito pelo DTO, mas **não** usado na consulta |
-| `PE_ID_PRODUTO` | number | Não | ID do produto | O filtro `id_tbl_produto = ?` só é aplicado quando o valor é maior que `0` |
-| `PE_ID_FORNECEDOR` | number | Não | ID do fornecedor | O filtro `ID_TBL_FORNECEDOR = ?` só é aplicado quando o valor é maior que `0` |
-| `PE_PRODUTO_DESCRICAO` | string | Não | Descrição do produto | `LOWER(tbl_produto.produto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
-| `PE_COD_PRODUTO_FORN` | string | Não | Código do produto no fornecedor | `LOWER(codigodoproduto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
+| `PE_ID_PRODUTO` | number | Sim | ID do produto | O filtro `id_tbl_produto = ?` só é aplicado quando o valor é maior que `0` |
+| `PE_ID_FORNECEDOR` | number | Sim | ID do fornecedor | O filtro `ID_TBL_FORNECEDOR = ?` só é aplicado quando o valor é maior que `0` |
+| `PE_PRODUTO_DESCRICAO` | string | Sim | Descrição do produto | `LOWER(tbl_produto.produto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
+| `PE_COD_PRODUTO_FORN` | string | Sim | Código do produto no fornecedor | `LOWER(codigodoproduto) LIKE LOWER(?)` aplicado quando o texto não está vazio. Não há `%` automático |
 
 > A consulta não possui filtro de tenant, porque `tbl_produto_fornecedor` não tem coluna de cliente no contrato legado.
 
 ### Exemplo de Requisição
+
+Exemplo adaptado do [relatório HTTP histórico](supplier.controller-test.md) para incluir todos os campos exigidos pelos DTOs atuais. Este corpo completo ainda não foi retestado via HTTP; as respostas abaixo preservam as evidências da execução anterior.
 
 ```http
 POST /supplier/v1/fornecedor-product-find-id
@@ -57,7 +61,10 @@ Content-Type: application/json
   "PE_ID_LOJA": 1,
   "PE_ID_DEPARTAMENTO": 1,
   "PE_ID_USUARIO": 1,
-  "PE_ID_FORNECEDOR": 36971
+  "PE_ID_FORNECEDOR": 36971,
+  "PE_ID_PRODUTO": 0,
+  "PE_PRODUTO_DESCRICAO": "",
+  "PE_COD_PRODUTO_FORN": ""
 }
 ```
 
@@ -126,7 +133,7 @@ Quando nenhum vínculo atende aos filtros, o retorno mantém `statusCode` `10020
 
 ### 400 Bad Request (Erro de Validação)
 
-Ocorre quando um campo obrigatório do contexto está ausente ou um campo desconhecido é enviado:
+Ocorre quando qualquer campo está ausente ou é enviado como `null` ou um campo desconhecido é enviado:
 
 ```json
 {
