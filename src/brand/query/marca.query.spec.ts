@@ -25,7 +25,9 @@ describe('Marca legacy queries', () => {
     expect(result.queryString).toContain('LOWER(NOME) LIKE LOWER(?)');
     expect(result.queryString.match(/\?/g)).toHaveLength(3);
     expect(result.queryString).toContain('ID_MARCA AS PS_ID_PESSOA');
-    expect(result.queryString).toContain("'' AS PS_ANOTACOES");
+    expect(result.queryString).toContain(
+      "COALESCE(tbl_produto_marca.ANOTACOES, '') AS PS_ANOTACOES",
+    );
     expect(result.queryString).toContain('AS PS_DATADOCADASTRO');
     const empty = MarcaFindAllQuery({
       ...context,
